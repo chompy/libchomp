@@ -8,7 +8,7 @@ linux:
 	mkdir -p $(TGT)/linux
 	cd src; make COMPILETO="linux"
 	$(CXX) $(LDFLAGS) $(TGT)/linux/*.o -DSDL2=1 -shared \
-	-o $(TGT)/linux/libchomp.so -lsdl2 -lsdl2_image -lsdl2_ttf -lSDL2main -lSDL2main
+	-o $(TGT)/linux/libchomp.so -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2main
 
 emscripten:
 	mkdir -p $(TGT)/emscripten

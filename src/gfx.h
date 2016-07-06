@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
+#include <algorithm>
 #include <stdint.h>
 #include "asset/bitmap.h"
 
@@ -45,6 +46,7 @@ public:
 
     ChompGfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture, ChompGfxSize* _size);
     ~ChompGfxLayer();
+    bool operator<(const ChompGfxLayer &layer) const { return layer.position.z > position.z; }
 
     // sdl texture
     SDL_Texture* texture;

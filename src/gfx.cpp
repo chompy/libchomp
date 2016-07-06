@@ -52,11 +52,11 @@ void ChompGfxWindow::toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* 
     int ww,wh;
     SDL_GetWindowSize(window, &ww, &wh);
     if (ww > wh) {
-        *width = (uint16_t) abs( size->w * (float) wh );
-        *height = (uint16_t) abs( size->h * (float) wh );
+        *width = (uint16_t) abs( (size ? size->w : 1.0) * (float) wh );
+        *height = (uint16_t) abs( (size ? size->h : 1.0) * (float) wh );
     } else {
-        *width = (uint16_t) abs( size->w * (float) ww );
-        *height = (uint16_t) abs( size->h * (float) ww );
+        *width = (uint16_t) abs( (size ? size->w : 1.0) * (float) ww );
+        *height = (uint16_t) abs( (size ? size->h : 1.0) * (float) ww );
     }
 }
 
@@ -124,7 +124,27 @@ ChompGfxLayer ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame
     );
 }
 
-//addLayerToRenderer
+void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer)
+{
+    if (layer) {
+        renderLayers.push_back(layer);
+    }
+}
+
+void ChompGfxWindow::render()
+{
+    
+    uint16_t windowPixelWidth, windowPixelHeight, layerPixelX, layerPixelY;
+    toPixelSize(nullptr, &windowPixelWidth, &windowPixelHeight);
+
+    std::sort(renderLayers.begin(), renderLayers.end());
+    for (auto &layer : renderLayers) {
+
+        layerPixelX = layer->position.x * (float) windowPixelWidth;
+        layerPixelY = layer->position.y * (float) windowPixelHeight;
+
+    }
+}
 
 ////////////////////////////
 // LAYERS
