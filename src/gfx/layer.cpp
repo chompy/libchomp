@@ -20,6 +20,8 @@ ChompGfxLayer::ChompGfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture, Cho
         );
         pixelWidth = (uint16_t) _pixelWidth;
         pixelHeight = (uint16_t) _pixelHeight;
+        pixelUnitWidth = pixelWidth / _size.w;
+        pixelUnitHeight = pixelHeight / size.h;
     }
 }
 
@@ -28,4 +30,23 @@ ChompGfxLayer::~ChompGfxLayer()
     if (texture) {
         SDL_DestroyTexture(texture);
     }
+}
+
+void ChompGfxLayer::toPixelSize(ChompGfxSize* _size, uint16_t* width, uint16_t* height)
+{
+    *width = (uint16_t) abs( _size ? _size->w : 1.0 * (float) pixelUnitWidth );
+    *height = (uint16_t) abs( _size ? _size->h : 1.0 * (float) pixelUnitHeight );
+}
+
+ChompGfxSize ChompGfxLayer::fromPixelSize(uint16_t width, uint16_t height)
+{
+    ChompGfxSize _size;
+    _size.w = (float) width / (float) pixelUnitWidth;
+    _size.h = (float) height / (float) pixelUnitHeight;
+    return _size;
+}
+
+void ChompGfxLayer::drawLayer(ChompGfxLayer* layer, ChompGfxPosition* position, ChompGfxSize* size)
+{
+    
 }

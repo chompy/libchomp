@@ -19,6 +19,10 @@ public:
     ChompGfxPosition position;
     ChompGfxSize size;    
 
+    // conversions
+    void toPixelSize(ChompGfxSize* _size, uint16_t* width, uint16_t* height);
+    ChompGfxSize fromPixelSize(uint16_t width, uint16_t height);
+
     // general draw
     void drawLayer(ChompGfxLayer* layer, ChompGfxPosition* position, ChompGfxSize* size);
 
@@ -26,6 +30,7 @@ protected:
 
     SDL_Renderer* renderer;
     uint16_t pixelWidth, pixelHeight;
+    uint16_t pixelUnitWidth, pixelUnitHeight;
 
 };
 
