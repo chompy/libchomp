@@ -5,13 +5,19 @@
 #include <vector>
 #include <algorithm>
 #include <stdint.h>
-#include "asset/bitmap.h"
+#include "../asset/bitmap.h"
 #include "structs.h"
 #include "layer.h"
 
 #define DEFAULT_WINDOW_W 640
 #define DEFAULT_WINDOW_H 480
 #define DEFAULT_CAMERA_Z 20
+
+struct RenderLayers {
+    bool operator<(const RenderLayers &renderLayer) const { return renderLayer.layer->position.z > layer->position.z; }
+    ChompGfxLayer* layer;
+    ChompGfxRect rect;
+};
 
 class ChompGfxWindow
 {
@@ -40,7 +46,7 @@ public:
     ChompGfxLayer newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size);
 
     // renderer
-    void addLayerToRenderer(ChompGfxLayer* layer);
+    void addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* rect);
     void render();
 
 protected:
@@ -48,7 +54,7 @@ protected:
     SDL_Window* window;
     SDL_Renderer* renderer;
     ChompGfxPosition camera;
-    std::vector<ChompGfxLayer*> renderLayers;
+    std::vector<RenderLayers> renderLayers;
 
 };
 

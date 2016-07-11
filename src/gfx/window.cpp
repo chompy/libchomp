@@ -120,24 +120,43 @@ ChompGfxLayer ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame
     );
 }
 
-void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer)
+void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* rect)
 {
+    RenderLayers renderLayer;
+    renderLayer.rect.x = rect ? rect->x : 0;
+    renderLayer.rect.y = rect ? rect->y : 0;
+    renderLayer.rect.w = rect ? rect->w : layer->size.w;
+    renderLayer.rect.h = rect ? rect->h : layer->size.h;
     if (layer) {
-        renderLayers.push_back(layer);
+        renderLayer.layer = layer;
+        renderLayers.push_back(renderLayer);
     }
 }
 
 void ChompGfxWindow::render()
 {
     
-    uint16_t windowPixelWidth, windowPixelHeight, layerPixelX, layerPixelY;
-    toPixelSize(nullptr, &windowPixelWidth, &windowPixelHeight);
-
+    int windowPixelWidth,windowPixelHeight;
+    SDL_GetWindowSize(window, &windowPixelWidth, &windowPixelHeight); 
+    uint16_t windowUnitSize = windowPixelWidth > windowPixelHeight ? windowPixelWidth : windowPixelHeight;
+    SDL_SetRenderTarget(renderer, nullptr);
     std::sort(renderLayers.begin(), renderLayers.end());
-    for (auto &layer : renderLayers) {
+    for (auto &renderLayer : renderLayers) {
 
-        layerPixelX = layer->position.x * (float) windowPixelWidth;
-        layerPixelY = layer->position.y * (float) windowPixelHeight;
+        ChompGfxRect dstRect;
+        dstRect.x = renderLayer.layer->position.x;
+        dstRect.y = renderLayer.layer->position.y;
+        dstRect.w = renderLayer.layer->size.w;
+        dstRect.h = renderLayer.layer->size.h;
+
+        ChompGfxLayer::drawLayerToRenderTarget(
+            renderer,
+            renderLayer.layer,
+            &renderLayer.rect,
+            &dstRect,
+            windowUnitSize,
+            windowUnitSize
+        );
 
     }
 }
