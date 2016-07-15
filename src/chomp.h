@@ -2,8 +2,10 @@
 #define CHOMP_H
 
 #include <SDL2/SDL.h>
+#include "exception.h"
+#include "state.h"
 #include "asset.h"
-#include "gfx.h"
+#include "gfx/window.h"
 
 class Chomp
 {

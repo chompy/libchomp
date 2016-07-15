@@ -18,7 +18,6 @@ struct ChompGfxPosition
 {
     float x;
     float y;
-    float z;
 };
 
 struct ChompGfxRect

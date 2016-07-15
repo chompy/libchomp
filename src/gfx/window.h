@@ -11,12 +11,12 @@
 
 #define DEFAULT_WINDOW_W 640
 #define DEFAULT_WINDOW_H 480
-#define DEFAULT_CAMERA_Z 20
 
 struct RenderLayers {
-    bool operator<(const RenderLayers &renderLayer) const { return renderLayer.layer->position.z > layer->position.z; }
+    bool operator<(const RenderLayers &renderLayer) const { return renderLayer.layer->zIndex > layer->zIndex; }
     ChompGfxLayer* layer;
-    ChompGfxRect rect;
+    ChompGfxRect srcRect;
+    ChompGfxRect dstRect;
 };
 
 class ChompGfxWindow
@@ -46,7 +46,7 @@ public:
     ChompGfxLayer newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size);
 
     // renderer
-    void addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* rect);
+    void addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect);
     void render();
 
 protected:

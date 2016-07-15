@@ -75,7 +75,6 @@ void ChompGfxWindow::setCameraPosition(ChompGfxPosition* position)
 {
     camera.x = position ? position->x : 0;
     camera.y = position ? position->y : 0;
-    camera.z = position ? position->z : DEFAULT_CAMERA_Z;
 }
 
 void ChompGfxWindow::setDrawColor(ChompGfxColor* color)
@@ -120,22 +119,26 @@ ChompGfxLayer ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame
     );
 }
 
-void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* rect)
+void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect)
 {
-    RenderLayers renderLayer;
-    renderLayer.rect.x = rect ? rect->x : 0;
-    renderLayer.rect.y = rect ? rect->y : 0;
-    renderLayer.rect.w = rect ? rect->w : layer->size.w;
-    renderLayer.rect.h = rect ? rect->h : layer->size.h;
-    if (layer) {
-        renderLayer.layer = layer;
-        renderLayers.push_back(renderLayer);
+    if (!layer) {
+        return;
     }
+    RenderLayers renderLayer;
+    renderLayer.srcRect.x = srcRect ? srcRect->x : 0;
+    renderLayer.srcRect.y = srcRect ? srcRect->y : 0;
+    renderLayer.srcRect.w = srcRect ? srcRect->w : layer->size.w;
+    renderLayer.srcRect.h = srcRect ? srcRect->h : layer->size.h;
+    renderLayer.dstRect.x = dstRect ? dstRect->x : 0;
+    renderLayer.dstRect.y = dstRect ? dstRect->y : 0;
+    renderLayer.dstRect.w = dstRect ? dstRect->w : layer->size.w;
+    renderLayer.dstRect.w = dstRect ? dstRect->h : layer->size.h;
+    renderLayer.layer = layer;
+    renderLayers.push_back(renderLayer);
 }
 
 void ChompGfxWindow::render()
 {
-    
     int windowPixelWidth,windowPixelHeight;
     SDL_GetWindowSize(window, &windowPixelWidth, &windowPixelHeight); 
     uint16_t windowUnitSize = windowPixelWidth > windowPixelHeight ? windowPixelWidth : windowPixelHeight;
@@ -143,20 +146,17 @@ void ChompGfxWindow::render()
     std::sort(renderLayers.begin(), renderLayers.end());
     for (auto &renderLayer : renderLayers) {
 
-        ChompGfxRect dstRect;
-        dstRect.x = renderLayer.layer->position.x;
-        dstRect.y = renderLayer.layer->position.y;
-        dstRect.w = renderLayer.layer->size.w;
-        dstRect.h = renderLayer.layer->size.h;
-
         ChompGfxLayer::drawLayerToRenderTarget(
             renderer,
             renderLayer.layer,
-            &renderLayer.rect,
-            &dstRect,
+            &renderLayer.srcRect,
+            &renderLayer.dstRect,
+            windowPixelWidth,
+            windowPixelHeight,
             windowUnitSize,
             windowUnitSize
         );
 
     }
+    renderLayers.clear();
 }

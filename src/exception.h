@@ -1,21 +1,22 @@
-#ifndef CHOMP_EXCEPTION_H
-#define CHOMP_EXCEPTION_H
+#ifndef CHOMP_EXCEPTION
+#define CHOMP_EXCEPTION
 
+#include <SDL2/SDL.h>
+#include <exception>
 #include <string>
 
-class ChompException
+class ChompSdlInitException : public std::exception
 {
+
 public:
-    
-    ChompException(std::string _message);
-    ~ChompException();
-
-    std::string getMessage();
-
-protected:
-
-    std::string message;
+    ChompSdlInitException();
+    ChompSdlInitException(const std::string&);
+    virtual ~ChompSdlInitException() throw();
+    virtual const char* what() const throw();
+private:
+    std::string msg;
 
 };
+
 
 #endif

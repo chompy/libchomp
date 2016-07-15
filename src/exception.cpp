@@ -1,19 +1,21 @@
 #include "exception.h"
 
-ChompException::ChompException(std::string _message)
+ChompSdlInitException::ChompSdlInitException():exception() 
 {
-    message = _message;
+    msg = SDL_GetError();
 }
 
-ChompException::~ChompException()
+ChompSdlInitException::ChompSdlInitException(const std::string& _msg):exception() 
+{
+    msg = _msg;
+}
+
+ChompSdlInitException::~ChompSdlInitException() throw()
 {
 
 }
 
-std::string ChompException::getMessage()
+const char* ChompSdlInitException::what() const throw()
 {
-    if (message.empty()) {
-        return std::string("An unknown error has occured.");
-    }
-    return message;
+    return msg.c_str();
 }

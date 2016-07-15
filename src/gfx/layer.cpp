@@ -6,9 +6,7 @@ ChompGfxLayer::ChompGfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture, Cho
     texture = _texture;
     size.w = _size ? _size->w : 1;
     size.h = _size ? _size->h : 1;
-    position.x = 0;
-    position.y = 0;
-    position.z = 0;
+    zIndex = 0;
     rotation = 0;
     flip = FLIP_NONE;
     if (texture) {
@@ -71,13 +69,15 @@ void ChompGfxLayer::drawLayerToLayer(SDL_Renderer* renderer, ChompGfxLayer* srcL
         srcLayer,
         srcRect,
         dstRect,
+        dstLayer->getPixelWidth(),
+        dstLayer->getPixelHeight(),
         dstLayer->getPixelUnitWidth(),
         dstLayer->getPixelUnitHeight()
     );
 
 }
 
-void ChompGfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLayer* srcLayer, ChompGfxRect* srcRect, ChompGfxRect* dstRect, uint16_t targetUnitWidth, uint16_t targetUnitHeight)
+void ChompGfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLayer* srcLayer, ChompGfxRect* srcRect, ChompGfxRect* dstRect, uint16_t targetWidth, uint16_t targetHeight, uint16_t targetUnitWidth, uint16_t targetUnitHeight)
 {
 
     // must have renderer and source layer
@@ -94,8 +94,8 @@ void ChompGfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLaye
     SDL_Rect sdlDstRect;
     sdlDstRect.x = dstRect ? dstRect->x * targetUnitWidth : 0;
     sdlDstRect.y = dstRect ? dstRect->x * targetUnitHeight : 0;
-    sdlDstRect.w = dstRect ? dstRect->w * targetUnitWidth : targetUnitWidth; // @TODO window width?
-    sdlDstRect.h = dstRect ? dstRect->h * targetUnitHeight : targetUnitHeight; // @TODO window height?
+    sdlDstRect.w = dstRect ? dstRect->w * targetUnitWidth : targetWidth;
+    sdlDstRect.h = dstRect ? dstRect->h * targetUnitHeight : targetHeight;
 
     // if no rotations or flips then use basic render copy for speed
     if (srcLayer->rotation == 0 && srcLayer->flip == FLIP_NONE) {
