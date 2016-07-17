@@ -1,14 +1,17 @@
 #ifndef CHOMP_STATE_BASE
 #define CHOMP_STATE_BASE
 
+#include "core.h"
+
 class ChompState
 {
 public:
 
-    ChompState();
+    ChompState(ChompCore* _core);
     virtual ~ChompState();
 
     static void changeState(ChompState* s_currentState);
+    static void updateState();
 
     // fires upon starting a new state
     virtual void enter();
@@ -21,6 +24,7 @@ public:
 
 protected:
     static ChompState* s_currentState;
+    ChompCore* core;
 
 };
 

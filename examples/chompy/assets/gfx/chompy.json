@@ -1,0 +1,11 @@
+{
+    "frame_size" : [128,128],
+    "image" : {
+        "sdl2" : "chompy.png"
+    },
+    "animation" : {
+        "stop" : ["0-20"],
+        "walk" : ["21-40"]
+    },
+    "animation_fps" : 24
+}

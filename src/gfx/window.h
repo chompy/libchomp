@@ -8,6 +8,7 @@
 #include "../asset/bitmap.h"
 #include "structs.h"
 #include "layer.h"
+#include "../exception.h"
 
 #define DEFAULT_WINDOW_W 640
 #define DEFAULT_WINDOW_H 480
@@ -42,8 +43,8 @@ public:
     void setDrawColor(ChompGfxColor* color);
 
     // layer management
-    ChompGfxLayer newLayer(uint16_t pixelWidth, uint16_t pixelHeight, ChompGfxSize* size);
-    ChompGfxLayer newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size);
+    ChompGfxLayer* newLayer(uint16_t pixelWidth, uint16_t pixelHeight, ChompGfxSize* size);
+    ChompGfxLayer* newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size);
 
     // renderer
     void addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect);

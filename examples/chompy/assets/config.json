@@ -1,0 +1,6 @@
+{
+    "default_lang" : "eng",
+    "default_entity_sprite" : "entity_chompy",
+    "tile_width" : 128,
+    "tile_height" : 128
+}

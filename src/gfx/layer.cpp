@@ -99,6 +99,7 @@ void ChompGfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLaye
 
     // if no rotations or flips then use basic render copy for speed
     if (srcLayer->rotation == 0 && srcLayer->flip == FLIP_NONE) {
+
         SDL_RenderCopy(
             renderer,
             srcLayer->texture,

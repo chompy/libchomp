@@ -4,8 +4,9 @@
 #include <SDL2/SDL.h>
 #include "exception.h"
 #include "state.h"
-#include "asset.h"
-#include "gfx/window.h"
+#include "core.h"
+
+#define TARGET_FPS 60
 
 class Chomp
 {
@@ -14,8 +15,16 @@ public:
     Chomp();
     ~Chomp();
 
-    ChompAsset asset;
-    ChompGfxWindow window;
+    ChompCore core;
+
+    void start(ChompState* state);
+
+    static void emscriptenLoop(void* core);
+    static bool loop(ChompCore* core);
+
+private:
+
+    uint32_t lastFrameTime;
 
 };
 

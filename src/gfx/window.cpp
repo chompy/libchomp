@@ -3,6 +3,15 @@
 ChompGfxWindow::ChompGfxWindow()
 {
 
+    // init sdl systems
+    if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
+        if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+            throw ChompSdlInitException();
+            return;
+        }
+    }
+    
+    // create window
     window = SDL_CreateWindow(
         "LibChomp Window",
         SDL_WINDOWPOS_UNDEFINED,
@@ -12,11 +21,22 @@ ChompGfxWindow::ChompGfxWindow()
         SDL_WINDOW_SHOWN |
         SDL_WINDOW_RESIZABLE
     );
+    if (!window) {
+        throw ChompSdlInitException();
+        return;
+    }
+
+    // create renderer
     renderer = SDL_CreateRenderer(
         window,
         -1,
         SDL_RENDERER_ACCELERATED
     );
+    if (!renderer) {
+        throw ChompSdlInitException();
+        return;
+    }
+
     setCameraPosition(nullptr);
     setDrawColor(nullptr);
 
@@ -91,7 +111,7 @@ void ChompGfxWindow::setDrawColor(ChompGfxColor* color)
     );
 }
 
-ChompGfxLayer ChompGfxWindow::newLayer(uint16_t pixelWidth, uint16_t pixelHeight, ChompGfxSize* size)
+ChompGfxLayer* ChompGfxWindow::newLayer(uint16_t pixelWidth, uint16_t pixelHeight, ChompGfxSize* size)
 {
     SDL_Texture* texture = SDL_CreateTexture(
         renderer,
@@ -100,19 +120,19 @@ ChompGfxLayer ChompGfxWindow::newLayer(uint16_t pixelWidth, uint16_t pixelHeight
         pixelWidth,
         pixelHeight
     );
-    return ChompGfxLayer(
+    return new ChompGfxLayer(
         renderer,
         texture,
         size
     );
 }
 
-ChompGfxLayer ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size)
+ChompGfxLayer* ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size)
 {
     if (!bitmap) {
         return newLayer(1, 1, size);
     }
-    return ChompGfxLayer(
+    return new ChompGfxLayer(
         renderer,
         ChompBitmap::getTexture(renderer, bitmap, frame),
         size
@@ -132,16 +152,26 @@ void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcR
     renderLayer.dstRect.x = dstRect ? dstRect->x : 0;
     renderLayer.dstRect.y = dstRect ? dstRect->y : 0;
     renderLayer.dstRect.w = dstRect ? dstRect->w : layer->size.w;
-    renderLayer.dstRect.w = dstRect ? dstRect->h : layer->size.h;
+    renderLayer.dstRect.h = dstRect ? dstRect->h : layer->size.h;
     renderLayer.layer = layer;
     renderLayers.push_back(renderLayer);
 }
 
 void ChompGfxWindow::render()
 {
+
+    #ifndef EMSCRIPTEN
+    SDL_RenderPresent(renderer);
+    ChompGfxColor originalColor;
+    SDL_GetRenderDrawColor(renderer, &originalColor.r, &originalColor.g, &originalColor.b, &originalColor.a);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    setDrawColor(&originalColor);
+    #endif
+
     int windowPixelWidth,windowPixelHeight;
     SDL_GetWindowSize(window, &windowPixelWidth, &windowPixelHeight); 
-    uint16_t windowUnitSize = windowPixelWidth > windowPixelHeight ? windowPixelWidth : windowPixelHeight;
+    uint16_t windowUnitSize = windowPixelWidth > windowPixelHeight ? windowPixelHeight : windowPixelWidth;
     SDL_SetRenderTarget(renderer, nullptr);
     std::sort(renderLayers.begin(), renderLayers.end());
     for (auto &renderLayer : renderLayers) {
