@@ -9,7 +9,7 @@ class ChompGfxLayer
 public:
 
     ChompGfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture, ChompGfxSize* _size);
-    ~ChompGfxLayer();
+    virtual ~ChompGfxLayer();
 
     // sdl texture
     SDL_Texture* texture;
@@ -39,6 +39,8 @@ protected:
     SDL_Renderer* renderer;
     uint16_t pixelWidth, pixelHeight;
     uint16_t pixelUnitWidth, pixelUnitHeight;
+
+    void setPixelSize();
 
 };
 

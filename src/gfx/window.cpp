@@ -130,11 +130,39 @@ ChompGfxLayer* ChompGfxWindow::newLayer(uint16_t pixelWidth, uint16_t pixelHeigh
 ChompGfxLayer* ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size)
 {
     if (!bitmap) {
-        return newLayer(1, 1, size);
+        return nullptr;
     }
     return new ChompGfxLayer(
         renderer,
         ChompBitmap::getTexture(renderer, bitmap, frame),
+        size
+    );
+}
+
+ChompGfxLayer* ChompGfxWindow::newSprite(char* spriteName, ChompGfxSize* size)
+{
+    if (!spriteName) {
+        return nullptr;
+    }
+    // build asset name string
+    uint8_t assetPrefixLen = strlen(ChompGfxSprite::SPRITE_ASSET_PREFIX);
+    char assetName[assetPrefixLen + strlen(spriteName) + 1];
+    memcpy(assetName, ChompGfxSprite::SPRITE_ASSET_PREFIX, assetPrefixLen);
+    memcpy(&assetName[assetPrefixLen], spriteName, strlen(spriteName));
+    assetName[assetPrefixLen + strlen(spriteName)] = '\0';
+    // load asset
+    if (!ChompAsset::assetExists(assetName)) {
+        return nullptr;
+    }
+    // get filesize
+    uint32_t fileSize = ChompAsset::getAssetSize(assetName);
+    // make bitmap
+    uint8_t bitmap[fileSize];
+    ChompAsset::readFile(assetName, 0, &bitmap[0], fileSize);
+    // new sprite layer
+    return new ChompGfxSprite(
+        renderer,
+        bitmap,
         size
     );
 }

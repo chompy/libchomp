@@ -9,20 +9,7 @@ ChompGfxLayer::ChompGfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture, Cho
     zIndex = 0;
     rotation = 0;
     flip = FLIP_NONE;
-    if (texture) {
-        int _pixelWidth, _pixelHeight;
-        SDL_QueryTexture(
-            texture,
-            nullptr,
-            nullptr,
-            &_pixelWidth,
-            &_pixelHeight
-        );
-        pixelWidth = (uint16_t) _pixelWidth;
-        pixelHeight = (uint16_t) _pixelHeight;
-        pixelUnitWidth = pixelWidth / size.w;
-        pixelUnitHeight = pixelHeight / size.h;
-    }
+    setPixelSize();
 }
 
 ChompGfxLayer::~ChompGfxLayer()
@@ -139,4 +126,27 @@ void ChompGfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLaye
         );
     }
 
+}
+
+void ChompGfxLayer::setPixelSize()
+{
+    if (texture) {
+        int _pixelWidth, _pixelHeight;
+        SDL_QueryTexture(
+            texture,
+            nullptr,
+            nullptr,
+            &_pixelWidth,
+            &_pixelHeight
+        );
+        pixelWidth = (uint16_t) _pixelWidth;
+        pixelHeight = (uint16_t) _pixelHeight;
+        pixelUnitWidth = pixelWidth / size.w;
+        pixelUnitHeight = pixelHeight / size.h;
+    } else {
+        pixelWidth = 1;
+        pixelHeight = 1;
+        pixelUnitWidth = 1;
+        pixelUnitHeight = 1;
+    }
 }

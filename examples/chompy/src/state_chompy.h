@@ -21,8 +21,8 @@ public:
 
 protected:
 
-    ChompGfxLayer* chompyLayer;
-    //SpriteAnimation* chompySprite;
+    ChompGfxSprite* chompySprite;
+
 
 };
 
