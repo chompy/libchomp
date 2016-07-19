@@ -13,7 +13,7 @@ void ChompyExampleState::enter()
             (char*) ChompyExampleState::CHOMPY_ASSET,
             &spriteSize
         );
-        chompySprite->setFrame(12);
+        chompySprite->setAnimation((char*) ChompyExampleState::CHOMPY_ANIM);
     }
 }
 
@@ -26,5 +26,6 @@ void ChompyExampleState::exit()
 
 void ChompyExampleState::update()
 {
+    chompySprite->updateAnimationFrame();
     core->window.addLayerToRenderer(chompySprite, nullptr, nullptr);
 }

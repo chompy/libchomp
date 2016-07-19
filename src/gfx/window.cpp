@@ -139,7 +139,7 @@ ChompGfxLayer* ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t fram
     );
 }
 
-ChompGfxLayer* ChompGfxWindow::newSprite(char* spriteName, ChompGfxSize* size)
+ChompGfxSprite* ChompGfxWindow::newSprite(char* spriteName, ChompGfxSize* size)
 {
     if (!spriteName) {
         return nullptr;

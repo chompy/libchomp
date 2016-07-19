@@ -18,6 +18,29 @@ bool ChompGfxSprite::setFrame(uint16_t frame)
     return true;
 }
 
+bool ChompGfxSprite::setAnimation(char* name)
+{
+    std::string nameString = std::string(name);
+    if (currentAnimation && currentAnimation->name == nameString) {
+        return true;
+    }
+    for (auto &animation : animationData) {
+        if (animation.name == nameString) {
+            currentAnimation = &animation;
+            return true;
+        }
+    }
+    return false;
+}
+
+void ChompGfxSprite::updateAnimationFrame()
+{
+    if (!currentAnimation) {
+        return;
+    }
+    setFrame( currentAnimation->frames[ (SDL_GetTicks() / animationFramerate) % currentAnimation->frames.size() ] );
+}
+
 void ChompGfxSprite::setTextures(uint8_t* bitmap)
 {
     spriteTextures.clear();
@@ -33,4 +56,38 @@ void ChompGfxSprite::setTextures(uint8_t* bitmap)
     if (setFrame(0)) {
         setPixelSize();
     }
+}
+
+void ChompGfxSprite::getAnimationData(uint8_t* bitmap)
+{
+    uint8_t* data = ChompBitmap::getAnimationData(bitmap);
+    uint8_t animationCount = data[0];
+    animationFramerate = 1000 / data[1];
+    uint32_t pos = 2;
+    uint8_t animationNameLength;
+    uint8_t animationFrames;
+
+    for (uint8_t i = 0; i < animationCount; i++) {
+
+        ChompGfxSpriteAnimationData animation;
+
+        animationNameLength = data[pos];
+        char animationName[animationNameLength + 1];
+        memcpy(
+            animationName,
+            &data[pos + 1],
+            animationNameLength
+        );
+        animationName[animationNameLength] = '\0';
+        animation.name = std::string(animationName, animationNameLength);
+
+        animationFrames = data[pos + 1 + animationNameLength];
+        for (uint8_t j = 0; j < animationFrames; j++) {
+            animation.frames.push_back(data[pos + 2 + animationNameLength + j]);
+        }
+        animationData.push_back(animation);
+        pos += 2 + animationNameLength + animationFrames;
+
+    }
+
 }
