@@ -5,3 +5,4 @@ build
 *.dll
 *.so
 *.pyc
+assets.dat
