@@ -27,6 +27,9 @@ bool ChompGfxSprite::setAnimation(char* name)
     for (auto &animation : animationData) {
         if (animation.name == nameString) {
             currentAnimation = &animation;
+            lastAnimationTick = SDL_GetTicks();
+            animationIndex = 0;
+            setFrame( currentAnimation->frames[ animationIndex ] );
             return true;
         }
     }
@@ -38,7 +41,15 @@ void ChompGfxSprite::updateAnimationFrame()
     if (!currentAnimation) {
         return;
     }
-    setFrame( currentAnimation->frames[ (SDL_GetTicks() / animationFramerate) % currentAnimation->frames.size() ] );
+    if ( lastAnimationTick + animationFramerate > SDL_GetTicks() ) {
+        return;
+    }
+    animationIndex++;
+    if (animationIndex >= currentAnimation->frames.size() ) {
+        animationIndex = 0;
+    }
+    setFrame( currentAnimation->frames[ animationIndex ] );
+    lastAnimationTick = SDL_GetTicks();
 }
 
 void ChompGfxSprite::setTextures(uint8_t* bitmap)
@@ -62,7 +73,7 @@ void ChompGfxSprite::getAnimationData(uint8_t* bitmap)
 {
     uint8_t* data = ChompBitmap::getAnimationData(bitmap);
     uint8_t animationCount = data[0];
-    animationFramerate = 1000 / data[1];
+    animationFramerate = 1000 / (uint16_t) data[1];
     uint32_t pos = 2;
     uint8_t animationNameLength;
     uint8_t animationFrames;

@@ -25,6 +25,8 @@ public:
         setTextures(bitmap);
         getAnimationData(bitmap);
         currentAnimation = nullptr;
+        lastAnimationTick = 0;
+        animationIndex = 0;
     }
     ~ChompGfxSprite();
 
@@ -41,7 +43,9 @@ protected:
 
     std::vector<ChompGfxSpriteAnimationData> animationData;
     ChompGfxSpriteAnimationData* currentAnimation;
-    uint8_t animationFramerate;
+    uint16_t animationFramerate;
+    uint32_t lastAnimationTick;
+    uint16_t animationIndex;
 };
 
 #endif
