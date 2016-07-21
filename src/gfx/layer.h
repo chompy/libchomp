@@ -30,11 +30,12 @@ public:
     uint16_t getPixelUnitHeight() { return pixelUnitHeight; }
 
     // general draw
+    void fill();
     void drawLine(ChompGfxPosition* pos1, ChompGfxPosition* pos2);
     void drawLayer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect);
     
     static void drawLayerToLayer(SDL_Renderer* renderer, ChompGfxLayer* srcLayer, ChompGfxLayer* dstLayer, ChompGfxRect* srcRect, ChompGfxRect* dstRect);
-    static void drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLayer* srcLayer, ChompGfxRect* srcRect, ChompGfxRect* dstRect, uint16_t targetWidth, uint16_t targetHeight, uint16_t targetUnitWidth, uint16_t targetUnitHeight);
+    static void drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLayer* srcLayer, ChompGfxRect* srcRect, ChompGfxRect* dstRect, uint16_t targetUnitWidth, uint16_t targetUnitHeight);
 
 
 protected:

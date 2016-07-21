@@ -120,6 +120,7 @@ ChompGfxLayer* ChompGfxWindow::newLayer(uint16_t pixelWidth, uint16_t pixelHeigh
         pixelWidth,
         pixelHeight
     );
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     return new ChompGfxLayer(
         renderer,
         texture,
@@ -188,8 +189,13 @@ void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcR
 void ChompGfxWindow::render()
 {
 
+    if (!window || !renderer) {
+        return;
+    }
+
+    SDL_SetRenderTarget(renderer, nullptr);
+
     #ifndef EMSCRIPTEN
-    SDL_RenderPresent(renderer);
     ChompGfxColor originalColor;
     SDL_GetRenderDrawColor(renderer, &originalColor.r, &originalColor.g, &originalColor.b, &originalColor.a);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -200,7 +206,6 @@ void ChompGfxWindow::render()
     int windowPixelWidth,windowPixelHeight;
     SDL_GetWindowSize(window, &windowPixelWidth, &windowPixelHeight); 
     uint16_t windowUnitSize = windowPixelWidth > windowPixelHeight ? windowPixelHeight : windowPixelWidth;
-    SDL_SetRenderTarget(renderer, nullptr);
     std::sort(renderLayers.begin(), renderLayers.end());
     for (auto &renderLayer : renderLayers) {
 
@@ -209,12 +214,14 @@ void ChompGfxWindow::render()
             renderLayer.layer,
             &renderLayer.srcRect,
             &renderLayer.dstRect,
-            windowPixelWidth,
-            windowPixelHeight,
             windowUnitSize,
             windowUnitSize
         );
 
     }
     renderLayers.clear();
+
+    #ifndef EMSCRIPTEN
+    SDL_RenderPresent(renderer);
+    #endif
 }

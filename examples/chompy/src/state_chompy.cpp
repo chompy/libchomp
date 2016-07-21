@@ -19,13 +19,14 @@ void ChompyExampleState::enter()
             1000,
             nullptr
         );
-        layer->zIndex = 3;
+        layer->zIndex = 1;
         ChompGfxPosition pos1;
         pos1.x = 0;
         pos1.y = .5;
         ChompGfxPosition pos2;
         pos2.x = 1;
         pos2.y = .5;
+        //layer->fill();
         layer->drawLine(&pos1, &pos2);
     }
     if (!chompySprite) {
