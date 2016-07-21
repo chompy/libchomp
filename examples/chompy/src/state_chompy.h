@@ -21,6 +21,7 @@ public:
 
 protected:
 
+    ChompGfxLayer* layer;
     ChompGfxSprite* chompySprite;
 
 

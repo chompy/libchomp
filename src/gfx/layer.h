@@ -20,14 +20,17 @@ public:
     uint8_t flip;
 
     // conversions
-    void toPixelSize(ChompGfxSize* _size, uint16_t* width, uint16_t* height);
-    ChompGfxSize fromPixelSize(uint16_t width, uint16_t height);
+    void toPixels(ChompGfxSize* _size, uint16_t* width, uint16_t* height);
+    void toPixels(ChompGfxPosition* _pos, uint16_t* x, uint16_t* y);
+    ChompGfxSize getPixelSize(uint16_t width, uint16_t height);
+    ChompGfxPosition getPixelPosition(uint16_t x, uint16_t y);
     uint16_t getPixelWidth() { return pixelWidth; }
     uint16_t getPixelHeight() { return pixelHeight; }
     uint16_t getPixelUnitWidth() { return pixelUnitWidth; }
     uint16_t getPixelUnitHeight() { return pixelUnitHeight; }
 
     // general draw
+    void drawLine(ChompGfxPosition* pos1, ChompGfxPosition* pos2);
     void drawLayer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect);
     
     static void drawLayerToLayer(SDL_Renderer* renderer, ChompGfxLayer* srcLayer, ChompGfxLayer* dstLayer, ChompGfxRect* srcRect, ChompGfxRect* dstRect);

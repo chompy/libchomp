@@ -19,18 +19,51 @@ ChompGfxLayer::~ChompGfxLayer()
     }
 }
 
-void ChompGfxLayer::toPixelSize(ChompGfxSize* _size, uint16_t* width, uint16_t* height)
+void ChompGfxLayer::toPixels(ChompGfxSize* _size, uint16_t* width, uint16_t* height)
 {
-    *width = (uint16_t) abs( _size ? _size->w : 1.0 * (float) pixelUnitWidth );
-    *height = (uint16_t) abs( _size ? _size->h : 1.0 * (float) pixelUnitHeight );
+    *width = (uint16_t) abs( _size ? (float) _size->w * (float) pixelUnitWidth : pixelUnitWidth );
+    *height = (uint16_t) abs( _size ? (float) _size->h * (float) pixelUnitHeight : pixelUnitHeight );
 }
 
-ChompGfxSize ChompGfxLayer::fromPixelSize(uint16_t width, uint16_t height)
+void ChompGfxLayer::toPixels(ChompGfxPosition* _pos, uint16_t* x, uint16_t* y)
+{
+    *x = (uint16_t) abs( _pos ? (float) _pos->x * (float) pixelUnitWidth : pixelUnitWidth );
+    *y = (uint16_t) abs( _pos ? (float) _pos->y * (float) pixelUnitHeight : pixelUnitHeight );
+}
+
+ChompGfxSize ChompGfxLayer::getPixelSize(uint16_t width, uint16_t height)
 {
     ChompGfxSize _size;
     _size.w = (float) width / (float) pixelUnitWidth;
     _size.h = (float) height / (float) pixelUnitHeight;
     return _size;
+}
+
+ChompGfxPosition ChompGfxLayer::getPixelPosition(uint16_t x, uint16_t y)
+{
+    ChompGfxSize size = getPixelSize(x, y);
+    ChompGfxPosition pos;
+    pos.x = size.w;
+    pos.y = size.h;
+    return pos;
+}
+
+void ChompGfxLayer::drawLine(ChompGfxPosition* pos1, ChompGfxPosition* pos2)
+{
+    if (!pos1 || !pos2) {
+        return;
+    }
+    uint16_t x1, y1, x2, y2;
+    toPixels(pos1, &x1, &y1);
+    toPixels(pos2, &x2, &y2);
+    SDL_SetRenderTarget(renderer, texture);
+    SDL_RenderDrawLine(
+        renderer,
+        x1,
+        y1,
+        x2,
+        y2
+    );
 }
 
 void ChompGfxLayer::drawLayer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect)
