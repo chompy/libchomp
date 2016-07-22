@@ -19,23 +19,31 @@ ChompGfxLayer::~ChompGfxLayer()
     }
 }
 
-void ChompGfxLayer::toPixels(ChompGfxSize* _size, uint16_t* width, uint16_t* height)
+void ChompGfxLayer::toPixels(ChompGfxSize* _size, uint16_t* w, uint16_t* h)
 {
-    *width = (uint16_t) abs( _size ? (float) _size->w * (float) pixelUnitWidth : pixelUnitWidth );
-    *height = (uint16_t) abs( _size ? (float) _size->h * (float) pixelUnitHeight : pixelUnitHeight );
+    *w = (uint16_t) abs( _size ? (float) _size->w * (float) pixelUnitWidth : pixelUnitWidth );
+    *h = (uint16_t) abs( _size ? (float) _size->h * (float) pixelUnitHeight : pixelUnitHeight );
 }
 
-void ChompGfxLayer::toPixels(ChompGfxPosition* _pos, uint16_t* x, uint16_t* y)
+void ChompGfxLayer::toPixels(ChompGfxPosition* pos, uint16_t* x, uint16_t* y)
 {
-    *x = (uint16_t) abs( _pos ? (float) _pos->x * (float) pixelUnitWidth : pixelUnitWidth );
-    *y = (uint16_t) abs( _pos ? (float) _pos->y * (float) pixelUnitHeight : pixelUnitHeight );
+    *x = (uint16_t) abs( pos ? (float) pos->x * (float) pixelUnitWidth : pixelUnitWidth );
+    *y = (uint16_t) abs( pos ? (float) pos->y * (float) pixelUnitHeight : pixelUnitHeight );
 }
 
-ChompGfxSize ChompGfxLayer::getPixelSize(uint16_t width, uint16_t height)
+void ChompGfxLayer::toPixels(ChompGfxRect* rect, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h)
+{
+    *x = (uint16_t) abs( rect ? (float) rect->x * (float) pixelUnitWidth : pixelUnitWidth );
+    *y = (uint16_t) abs( rect ? (float) rect->y * (float) pixelUnitHeight : pixelUnitHeight );
+    *w = (uint16_t) abs( rect ? (float) rect->w * (float) pixelUnitWidth : pixelUnitWidth );
+    *h = (uint16_t) abs( rect ? (float) rect->h * (float) pixelUnitHeight : pixelUnitHeight );
+}
+
+ChompGfxSize ChompGfxLayer::getPixelSize(uint16_t w, uint16_t h)
 {
     ChompGfxSize _size;
-    _size.w = (float) width / (float) pixelUnitWidth;
-    _size.h = (float) height / (float) pixelUnitHeight;
+    _size.w = (float) w / (float) pixelUnitWidth;
+    _size.h = (float) h / (float) pixelUnitHeight;
     return _size;
 }
 
@@ -70,6 +78,32 @@ void ChompGfxLayer::drawLine(ChompGfxPosition* pos1, ChompGfxPosition* pos2)
         x2,
         y2
     );
+}
+
+void ChompGfxLayer::drawRect(ChompGfxRect* rect)
+{
+    uint16_t x, y, w, h;
+    SDL_Rect sdlRect;
+    toPixels(rect, &x, &y, &w, &h);
+    sdlRect.x = x;
+    sdlRect.y = y;
+    sdlRect.w = w;
+    sdlRect.h = h;
+    SDL_SetRenderTarget(renderer, texture);
+    SDL_RenderDrawRect(renderer, &sdlRect);
+}
+
+void ChompGfxLayer::drawFillRect(ChompGfxRect* rect)
+{
+    uint16_t x, y, w, h;
+    SDL_Rect sdlRect;
+    toPixels(rect, &x, &y, &w, &h);
+    sdlRect.x = x;
+    sdlRect.y = y;
+    sdlRect.w = w;
+    sdlRect.h = h;
+    SDL_SetRenderTarget(renderer, texture);
+    SDL_RenderFillRect(renderer, &sdlRect);
 }
 
 void ChompGfxLayer::drawLayer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect)

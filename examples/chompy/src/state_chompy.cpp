@@ -27,6 +27,13 @@ void ChompyExampleState::enter()
         pos2.x = 1;
         pos2.y = .5;
         //layer->fill();
+        ChompGfxRect rect;
+        rect.x = .1;
+        rect.y = .1;
+        rect.w = .8;
+        rect.h = .8;
+
+        layer->drawRect(&rect);
         layer->drawLine(&pos1, &pos2);
     }
     if (!chompySprite) {
