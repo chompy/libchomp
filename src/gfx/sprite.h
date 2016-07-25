@@ -7,6 +7,8 @@
 #include "layer.h"
 #include "../asset/bitmap.h"
 
+#include <iostream>
+
 struct ChompGfxSpriteAnimationData
 {
     std::string name;
@@ -22,6 +24,7 @@ public:
 
     ChompGfxSprite(SDL_Renderer* _renderer, uint8_t* bitmap, ChompGfxSize* _size) : ChompGfxLayer(_renderer, nullptr, _size)
     {
+        animationFramerate = 10;
         setTextures(bitmap);
         getAnimationData(bitmap);
         currentAnimation = nullptr;

@@ -12,7 +12,8 @@ public:
 
     ChompyExampleState(ChompCore* _core) : ChompState(_core)
     {
-        //chompySprite = 0;
+        chompySprite = nullptr;
+        layer = nullptr;
     }
 
     void enter();

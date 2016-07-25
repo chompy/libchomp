@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <stdint.h>
 #include <string>
-#include "../asset.h"
+#include "../asset/asset.h"
 #include "../asset/bitmap.h"
 #include "structs.h"
 #include "layer.h"
