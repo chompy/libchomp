@@ -22,6 +22,11 @@ COMPILERS = {
         "filepath" : "assets/config.json",
         "filename" : "_config",
         "method" : "compile_config"
+    },
+    "audio" : {
+        "filepath" : "assets/sfx",
+        "prefix" : "sfx_",
+        "method" : "compile_audio"
     }
 }
 

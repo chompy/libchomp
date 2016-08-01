@@ -3,6 +3,7 @@ import os
 import json
 import struct
 from PIL import Image, ImageFont
+from pydub import AudioSegment
 import StringIO
 
 # parse json array
@@ -235,6 +236,40 @@ class AssetCompilerCore:
         # done
         print "done"
         return outputBuffer
+
+    # compile audio
+    def compile_audio(self, filepath):
+
+        # must be JSON file
+        if os.path.splitext(filepath)[1] != ".json":
+            return None
+
+        # debug
+        print "  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0],
+
+        # convert json to array
+        config = parse_json(filepath)
+
+        # determine filename of audio clip
+        if not "audio" in config or not self.PLATFORM_NAME in config["audio"]:
+            print "skipped"
+            print "\t----> audio '%s' not provided" % os.path.splitext(filename)[0]
+            return None
+        audioFilename = config["audio"][self.PLATFORM_NAME]
+
+        # name of audio clip
+        audioName = os.path.splitext(os.path.basename(filepath))[0].strip().replace(" ", "_").lower()[:255]
+
+        # prepare output
+        outputBuffer = ""
+
+        # @todo use pydub to convert audio clip as needed
+        with open( os.path.join( os.path.dirname(filepath), audioFilename ) , "rb") as f:
+            outputBuffer += f.read()
+
+        # done
+        print "done"
+        return outputBuffer        
 
     # modify final output
     def output(self, outputBuffer):

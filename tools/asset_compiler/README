@@ -1,0 +1,10 @@
+# LibChomp Asset Dumper
+## By Nathan Ogden
+
+Packs all Libchomp application files in to a single file.
+
+# Dependencies
+
+* Python 2.7
+    * Pillow
+    * pydub - https://github.com/jiaaro/pydub#installation
