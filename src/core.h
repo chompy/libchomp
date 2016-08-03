@@ -3,14 +3,14 @@
 
 #include <SDL2/SDL.h>
 #include "asset/asset.h"
-#include "gfx/window.h"
+#include "gfx/gfx.h"
 #include "exception.h"
 
 class ChompCore
 {
 public:
 
-    ChompGfxWindow window;
+    ChompGfx gfx;
 
 };
 

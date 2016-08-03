@@ -11,4 +11,5 @@ $(TGT)/%.o: %.cpp
 all: $(OBJS)
 	cd asset; make
 	cd gfx; make
+	cd sfx; make
 	echo "$^"

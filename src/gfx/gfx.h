@@ -1,5 +1,5 @@
-#ifndef CHOMP_GFX_WINDOW_H
-#define CHOMP_GFX_WINDOW_H
+#ifndef CHOMP_GFX_H
+#define CHOMP_GFX_H
 
 #include <SDL2/SDL.h>
 #include <vector>
@@ -23,12 +23,12 @@ struct RenderLayers {
     ChompGfxRect dstRect;
 };
 
-class ChompGfxWindow
+class ChompGfx
 {
 public:
 
-    ChompGfxWindow();
-    ~ChompGfxWindow();
+    ChompGfx();
+    ~ChompGfx();
 
     // window data
     ChompGfxSize getWindowSize();

@@ -1,6 +1,6 @@
-#include "window.h"
+#include "gfx.h"
 
-ChompGfxWindow::ChompGfxWindow()
+ChompGfx::ChompGfx()
 {
 
     // init sdl systems
@@ -42,7 +42,7 @@ ChompGfxWindow::ChompGfxWindow()
 
 }
 
-ChompGfxWindow::~ChompGfxWindow()
+ChompGfx::~ChompGfx()
 {
     if (renderer) {
         SDL_DestroyRenderer(renderer);
@@ -52,18 +52,18 @@ ChompGfxWindow::~ChompGfxWindow()
     }
 }
 
-ChompGfxSize ChompGfxWindow::getWindowSize()
+ChompGfxSize ChompGfx::getWindowSize()
 {
     ChompGfxSize size;
     return size;
 }
 
-ChompGfxPosition ChompGfxWindow::getCameraPosition()
+ChompGfxPosition ChompGfx::getCameraPosition()
 {
     return camera;
 }
 
-void ChompGfxWindow::toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* height)
+void ChompGfx::toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* height)
 {
     int ww,wh;
     SDL_GetWindowSize(window, &ww, &wh);
@@ -76,7 +76,7 @@ void ChompGfxWindow::toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* 
     }
 }
 
-ChompGfxSize ChompGfxWindow::fromPixelSize(uint16_t width, uint16_t height)
+ChompGfxSize ChompGfx::fromPixelSize(uint16_t width, uint16_t height)
 {
     ChompGfxSize size;
     int ww,wh;
@@ -91,13 +91,13 @@ ChompGfxSize ChompGfxWindow::fromPixelSize(uint16_t width, uint16_t height)
     return size;
 }
 
-void ChompGfxWindow::setCameraPosition(ChompGfxPosition* position)
+void ChompGfx::setCameraPosition(ChompGfxPosition* position)
 {
     camera.x = position ? position->x : 0;
     camera.y = position ? position->y : 0;
 }
 
-void ChompGfxWindow::setDrawColor(ChompGfxColor* color)
+void ChompGfx::setDrawColor(ChompGfxColor* color)
 {
     if (!renderer) {
         return;
@@ -111,7 +111,7 @@ void ChompGfxWindow::setDrawColor(ChompGfxColor* color)
     );
 }
 
-ChompGfxLayer* ChompGfxWindow::newLayer(uint16_t pixelWidth, uint16_t pixelHeight, ChompGfxSize* size)
+ChompGfxLayer* ChompGfx::newLayer(uint16_t pixelWidth, uint16_t pixelHeight, ChompGfxSize* size)
 {
     SDL_Texture* texture = SDL_CreateTexture(
         renderer,
@@ -128,7 +128,7 @@ ChompGfxLayer* ChompGfxWindow::newLayer(uint16_t pixelWidth, uint16_t pixelHeigh
     );
 }
 
-ChompGfxLayer* ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size)
+ChompGfxLayer* ChompGfx::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size)
 {
     if (!bitmap) {
         return nullptr;
@@ -140,7 +140,7 @@ ChompGfxLayer* ChompGfxWindow::newLayerFromBitmap(uint8_t* bitmap, uint16_t fram
     );
 }
 
-ChompGfxSprite* ChompGfxWindow::newSprite(char* spriteName, ChompGfxSize* size)
+ChompGfxSprite* ChompGfx::newSprite(char* spriteName, ChompGfxSize* size)
 {
     if (!spriteName) {
         return nullptr;
@@ -168,7 +168,7 @@ ChompGfxSprite* ChompGfxWindow::newSprite(char* spriteName, ChompGfxSize* size)
     );
 }
 
-void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect)
+void ChompGfx::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect)
 {
     if (!layer) {
         return;
@@ -186,7 +186,7 @@ void ChompGfxWindow::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcR
     renderLayers.push_back(renderLayer);
 }
 
-void ChompGfxWindow::render()
+void ChompGfx::render()
 {
 
     if (!window || !renderer) {

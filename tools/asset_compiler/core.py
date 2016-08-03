@@ -179,7 +179,6 @@ class AssetCompilerCore:
             return None
 
         # debug
-        print filepath
         print "  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0],
 
         # parse json

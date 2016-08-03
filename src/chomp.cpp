@@ -114,7 +114,7 @@ bool Chomp::loop(ChompCore* core)
     ChompState::updateState();
 
     // draw
-    core->window.render();
+    core->gfx.render();
 
     // continue
     return true;

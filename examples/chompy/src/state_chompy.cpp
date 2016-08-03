@@ -12,9 +12,9 @@ void ChompyExampleState::enter()
         color.g = 0;
         color.b = 0;
         color.a = 255;
-        core->window.setDrawColor(&color);
+        core->gfx.setDrawColor(&color);
 
-        layer = core->window.newLayer(
+        layer = core->gfx.newLayer(
             1000,
             1000,
             nullptr
@@ -40,7 +40,7 @@ void ChompyExampleState::enter()
         ChompGfxSize spriteSize;
         spriteSize.w = 1;
         spriteSize.h = 1;
-        chompySprite = core->window.newSprite(
+        chompySprite = core->gfx.newSprite(
             (char*) ChompyExampleState::CHOMPY_ASSET,
             &spriteSize
         );
@@ -62,6 +62,6 @@ void ChompyExampleState::exit()
 void ChompyExampleState::update()
 {
     chompySprite->updateAnimationFrame();
-    core->window.addLayerToRenderer(chompySprite, nullptr, nullptr);
-    core->window.addLayerToRenderer(layer, nullptr, nullptr);
+    core->gfx.addLayerToRenderer(chompySprite, nullptr, nullptr);
+    core->gfx.addLayerToRenderer(layer, nullptr, nullptr);
 }
