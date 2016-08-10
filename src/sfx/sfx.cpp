@@ -5,6 +5,7 @@ char ChompSfx::MUSIC_ASSET_PREFIX[] = "mus_";
 ChompSfx::ChompSfx()
 {
     music = nullptr;
+    musicData.clear();
     queuedMusic = "";
     queuedMusicOperation = 0;
     queuedMusicLoops = 0;
@@ -17,6 +18,9 @@ ChompSfx::ChompSfx()
             exceptionMsg = "Failed to init SDL Mixer.";
         }
         throw ChompSdlInitException(exceptionMsg);
+    }
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
+        throw ChompSdlInitException(Mix_GetError());   
     }
 
 }
@@ -67,10 +71,12 @@ uint8_t ChompSfx::loadMusic(char* name, uint8_t operation, int16_t loops, int16_
     if (!ChompAsset::assetExists(assetName)) {
         return MUSIC_LOAD_FAILED;
     }
+
     // get filesize
     uint32_t fileSize = ChompAsset::getAssetSize(assetName);
+
     // get data
-    uint8_t musicData[fileSize];
+    musicData.resize(fileSize);
     ChompAsset::readFile(assetName, 0, &musicData[0], fileSize);
     SDL_RWops* musicDataRW = SDL_RWFromMem(&musicData[0], fileSize);
 
@@ -88,6 +94,7 @@ void ChompSfx::unloadMusic()
     if (music) {
         Mix_FreeMusic(music);
         music = nullptr;
+        musicData.clear();
     }
 }
 

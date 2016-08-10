@@ -158,12 +158,12 @@ ChompGfxSprite* ChompGfx::newSprite(char* spriteName, ChompGfxSize* size)
     // get filesize
     uint32_t fileSize = ChompAsset::getAssetSize(assetName);
     // make bitmap
-    uint8_t bitmap[fileSize];
+    std::vector<uint8_t> bitmap(fileSize, 0);
     ChompAsset::readFile(assetName, 0, &bitmap[0], fileSize);
     // new sprite layer
     return new ChompGfxSprite(
         renderer,
-        bitmap,
+        &bitmap[0],
         size
     );
 }

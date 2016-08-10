@@ -1,6 +1,6 @@
 {
     "frame_size" : [128,128],
-    "image" : {
+    "source" : {
         "sdl2" : "chompy.png"
     },
     "animation" : {

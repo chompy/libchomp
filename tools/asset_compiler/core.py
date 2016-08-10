@@ -81,11 +81,11 @@ class AssetCompilerCore:
         config = parse_json(filepath)
 
         # determine filename of sprite
-        if not "image" in config or not self.PLATFORM_NAME in config["image"]:
+        if not "source" in config or not self.PLATFORM_NAME in config["source"]:
             print "skipped"
             print "\t----> sprite '%s' not provided" % os.path.splitext(filename)[0]
             return None
-        spriteFilename = config["image"][self.PLATFORM_NAME]
+        spriteFilename = config["source"][self.PLATFORM_NAME]
 
         # name of sprite
         spriteName = os.path.splitext(os.path.basename(filepath))[0].strip().replace(" ", "_").lower()[:255]
@@ -236,8 +236,12 @@ class AssetCompilerCore:
         print "done"
         return outputBuffer
 
-    # compile audio
-    def compile_audio(self, filepath):
+    # compile music
+    def compile_music(self, filepath):
+        return self.compile_audio(filepath, "ogg")
+
+    # compile all types of audio
+    def compile_audio(self, filepath, output = "wav"):
 
         # must be JSON file
         if os.path.splitext(filepath)[1] != ".json":
@@ -250,11 +254,12 @@ class AssetCompilerCore:
         config = parse_json(filepath)
 
         # determine filename of audio clip
-        if not "audio" in config or not self.PLATFORM_NAME in config["audio"]:
+        if not "source" in config or not self.PLATFORM_NAME in config["source"]:
             print "skipped"
             print "\t----> audio '%s' not provided" % os.path.splitext(filename)[0]
             return None
-        audioFilename = config["audio"][self.PLATFORM_NAME]
+        audioFilename = config["source"][self.PLATFORM_NAME]
+        audioExt = os.path.splitext(audioFilename)[1].replace(".", "")
 
         # name of audio clip
         audioName = os.path.splitext(os.path.basename(filepath))[0].strip().replace(" ", "_").lower()[:255]
@@ -262,13 +267,21 @@ class AssetCompilerCore:
         # prepare output
         outputBuffer = ""
 
-        # @todo use pydub to convert audio clip as needed
-        with open( os.path.join( os.path.dirname(filepath), audioFilename ) , "rb") as f:
-            outputBuffer += f.read()
+        # open with pydub
+        outputBitrate = "192k"
+        if "bitrate" in config and config["bitrate"]:
+            outputBitrate = config["bitrate"]
+        pyDubAudio = AudioSegment.from_file( os.path.join( os.path.dirname(filepath), audioFilename ) )
+        audioData = StringIO.StringIO()
+        pyDubAudio.export(audioData, format=output, bitrate=outputBitrate)
+
+        # add to output
+        outputBuffer = str( audioData.read() )
+        audioData.close()
 
         # done
         print "done"
-        return outputBuffer        
+        return outputBuffer
 
     # modify final output
     def output(self, outputBuffer):

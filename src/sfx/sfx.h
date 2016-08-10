@@ -2,10 +2,13 @@
 #define CHOMP_SFX_H
 
 #include <string>
+#include <vector>
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_mixer.h"
 #include "../exception.h"
 #include "../asset/asset.h"
+
+#include <iostream>
 
 #define MUSIC_STOP 0
 #define MUSIC_PLAY 1
@@ -39,10 +42,12 @@ public:
     // sfx
     void loadChunk(char* name);
 
+    Mix_Music* music;
+
 protected:
 
-    Mix_Music* music;    
-
+    std::vector<uint8_t> musicData;
+    
     std::string queuedMusic;
     uint8_t queuedMusicOperation;
     int16_t queuedMusicLoops;

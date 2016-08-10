@@ -23,11 +23,16 @@ COMPILERS = {
         "filename" : "_config",
         "method" : "compile_config"
     },
-    "audio" : {
+    "sound effects" : {
         "filepath" : "assets/sfx",
         "prefix" : "sfx_",
         "method" : "compile_audio"
-    }
+    },
+    "music" : {
+        "filepath" : "assets/music",
+        "prefix" : "mus_",
+        "method" : "compile_music"
+    },
 }
 
 # default platform
