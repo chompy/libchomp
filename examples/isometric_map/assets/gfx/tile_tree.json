@@ -1,0 +1,6 @@
+{
+    "frame_size" : [256,512],
+    "source" : {
+        "sdl2" : "tile_tree.png"
+    }
+}
