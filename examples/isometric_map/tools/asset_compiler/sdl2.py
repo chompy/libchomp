@@ -8,6 +8,8 @@ from core import AssetCompilerCore, parse_json
 class AssetCompiler(AssetCompilerCore):
     PLATFORM_NAME = "sdl2"
 
+    MAX_TILE_DIMENSION = 65535
+
     # compile map
     def compile_map(self, filepath):
 
@@ -36,13 +38,13 @@ class AssetCompiler(AssetCompilerCore):
         # tile set should contain one image
         if len(tiledMap.tile_sets[0].images) != 1:
             print "error"
-            print "\t----> Tile set should contain one image."
+            print "\t----> Tile set should contain only one image."
             return None
 
-        # map width/height should be under 256 (1 byte)
-        if tiledMap.width > 255 or tiledMap.height > 255:
+        # map width/height should be under 65535 (2 bytes)
+        if tiledMap.width > self.MAX_TILE_DIMENSION or tiledMap.height > self.MAX_TILE_DIMENSION:
             print "error"
-            print "\t----> Map too large (255x255 tile max)."
+            print "\t----> Map too large (%dx%d tile max)." % (self.MAX_TILE_DIMENSION, self.MAX_TILE_DIMENSION)
 
         # output buffer
         outputBuffer = ""
@@ -50,6 +52,11 @@ class AssetCompiler(AssetCompilerCore):
         # write tile sprite name
         outputBuffer += struct.pack("<B", len( tiledMap.tile_sets[0].name ))
         outputBuffer += str(tiledMap.tile_sets[0].name)
+
+        # TODO
+        # tileset offset (4 bytes x + y)
+        # layer size (4 bytes)
+        # tile data
 
         # write background name
         backgroundName = ""
