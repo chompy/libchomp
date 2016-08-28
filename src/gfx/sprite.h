@@ -33,9 +33,9 @@ public:
     }
     ~ChompGfxSprite();
 
-    bool setFrame(uint16_t frame);
+    bool setFrame(const uint16_t frame);
 
-    bool setAnimation(char* name);
+    bool setAnimation(const char* name);
     void updateAnimationFrame();
 
 protected:

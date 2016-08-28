@@ -2,7 +2,7 @@
 
 const char ChompAsset::ASSET_FILE[] = "assets.dat";
 
-uint8_t ChompAsset::readFileByte(char* name, uint32_t position)
+uint8_t ChompAsset::readFileByte(const char* name, const uint32_t position)
 {
     // get position/size of asset
     uint32_t assetPosition, assetSize;
@@ -46,7 +46,7 @@ uint8_t ChompAsset::readFileByte(char* name, uint32_t position)
     return output;
 }
 
-void ChompAsset::readFile(char* name, uint32_t position, void* buffer, uint32_t length)
+void ChompAsset::readFile(const char* name, const uint32_t position, void* buffer, const uint32_t length)
 {
 
     // get position/size of asset
@@ -85,7 +85,7 @@ void ChompAsset::readFile(char* name, uint32_t position, void* buffer, uint32_t 
     SDL_RWclose(file);
 }
 
-bool ChompAsset::assetExists(char* name)
+bool ChompAsset::assetExists(const char* name)
 {
     uint32_t size = 0;
     uint8_t nameLength = 0;    
@@ -93,14 +93,14 @@ bool ChompAsset::assetExists(char* name)
     return size > 0 && nameLength > 0;
 }
 
-uint32_t ChompAsset::getAssetSize(char* name)
+uint32_t ChompAsset::getAssetSize(const char* name)
 {
     uint32_t size = 0;
     ChompAsset::getAssetData(name, nullptr, &size, nullptr);
     return size;
 }
 
-void ChompAsset::getAssetData(char* name, uint32_t* position, uint32_t* size, uint8_t* nameLength)
+void ChompAsset::getAssetData(const char* name, uint32_t* position, uint32_t* size, uint8_t* nameLength)
 {
 
     // open asset file

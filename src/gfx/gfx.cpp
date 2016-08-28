@@ -76,7 +76,7 @@ void ChompGfx::toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* height
     }
 }
 
-ChompGfxSize ChompGfx::fromPixelSize(uint16_t width, uint16_t height)
+ChompGfxSize ChompGfx::fromPixelSize(const uint16_t width, const uint16_t height)
 {
     ChompGfxSize size;
     int ww,wh;
@@ -111,7 +111,7 @@ void ChompGfx::setDrawColor(ChompGfxColor* color)
     );
 }
 
-ChompGfxLayer* ChompGfx::newLayer(uint16_t pixelWidth, uint16_t pixelHeight, ChompGfxSize* size)
+ChompGfxLayer* ChompGfx::newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size)
 {
     SDL_Texture* texture = SDL_CreateTexture(
         renderer,
@@ -128,7 +128,7 @@ ChompGfxLayer* ChompGfx::newLayer(uint16_t pixelWidth, uint16_t pixelHeight, Cho
     );
 }
 
-ChompGfxLayer* ChompGfx::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size)
+ChompGfxLayer* ChompGfx::newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame, ChompGfxSize* size)
 {
     if (!bitmap) {
         return nullptr;
@@ -140,7 +140,7 @@ ChompGfxLayer* ChompGfx::newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, Cho
     );
 }
 
-ChompGfxSprite* ChompGfx::newSprite(char* spriteName, ChompGfxSize* size)
+ChompGfxSprite* ChompGfx::newSprite(const char* spriteName, ChompGfxSize* size)
 {
     if (!spriteName) {
         return nullptr;

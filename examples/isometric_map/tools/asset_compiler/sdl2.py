@@ -9,6 +9,12 @@ class AssetCompiler(AssetCompilerCore):
     PLATFORM_NAME = "sdl2"
 
     MAX_TILE_DIMENSION = 65535
+    MAP_TILE_TYPES = {
+        "none"  : 0,
+        "solid" : 1,
+        "slope" : 2,
+        "hazard": 3
+    }
 
     # compile map
     def compile_map(self, filepath):
@@ -45,6 +51,20 @@ class AssetCompiler(AssetCompilerCore):
         if tiledMap.width > self.MAX_TILE_DIMENSION or tiledMap.height > self.MAX_TILE_DIMENSION:
             print "error"
             print "\t----> Map too large (%dx%d tile max)." % (self.MAX_TILE_DIMENSION, self.MAX_TILE_DIMENSION)
+            return None
+
+        # should contain at least one layer
+        if len(tiledMap.layers) == 0:
+            print "error"
+            print "\t----> Map must contain at least one layer."
+            return None
+
+        # all layers must be same size as map
+        for layer in tiledMap.layers:
+            if layer.width != tiledMap.width or layer.height != tiledMap.height:
+                print "error"
+                print "\t----> All layers must have same tile width/height as map"
+                return None
 
         # output buffer
         outputBuffer = ""
@@ -53,21 +73,28 @@ class AssetCompiler(AssetCompilerCore):
         outputBuffer += struct.pack("<B", len( tiledMap.tile_sets[0].name ))
         outputBuffer += str(tiledMap.tile_sets[0].name)
 
-        # TODO
-        # tileset offset (4 bytes x + y)
-        # layer size (4 bytes)
-        # tile data
+        # write tile sprite frame size
+        outputBuffer += struct.pack("<H", int(tiledMap.tile_sets[0].tilewidth))
+        outputBuffer += struct.pack("<H", int(tiledMap.tile_sets[0].tileheight))
 
-        # write background name
-        backgroundName = ""
-        if "background" in tiledMap.properties:
-            backgroundName = tiledMap.properties["background"]
-        outputBuffer += struct.pack("<B", len(backgroundName))
-        outputBuffer += str(backgroundName)
+        # write map width/height
+        outputBuffer += struct.pack("<H", int(tiledMap.width))
+        outputBuffer += struct.pack("<H", int(tiledMap.height))
 
-        # write map tile data
-        binaryData = ""
-        for i in range(16):
+        # write map tile width/height
+        outputBuffer += struct.pack("<H", int(tiledMap.tilewidth))
+        outputBuffer += struct.pack("<H", int(tiledMap.tileheight))
+
+        # write layer count
+        outputBuffer += struct.pack("<B", len(tiledMap.layers))
+
+        # write tile date
+        for layer in tiledMap.layers:
+            for tile in layer.decoded_content:
+                outputBuffer += struct.pack("<B", int(tile))
+
+        # write tile type data
+        for i in range(256):
             tile = None
             for _tile in tiledMap.tile_sets[0].tiles:
                 if int(_tile.id) == i - 1:
@@ -76,68 +103,7 @@ class AssetCompiler(AssetCompilerCore):
             tileTypeValue = 0
             if tile and "type" in tile.properties and tile.properties["type"] in self.MAP_TILE_TYPES:
                 tileTypeValue = int(self.MAP_TILE_TYPES[tile.properties["type"]])
-
-            binaryData += "{0:b}".format(tileTypeValue).zfill(2)
-
-            if len(binaryData) == 8:
-                outputBuffer += struct.pack("<B", int(binaryData, 2))
-                binaryData = ""
-
-        if len(binaryData) > 0:
-            outputBuffer += struct.pack("<B", int(binaryData.zfill(8), 2))
-
-        # write map size
-        outputBuffer += struct.pack("<B", tiledMap.width)
-        outputBuffer += struct.pack("<B", tiledMap.height)
-
-        # write map data
-        previousValue = None
-        for tile in tiledMap.layers[0].decoded_content:
-            # 4 bit uint
-            tile = tile % 16;
-
-            if previousValue is None:
-                previousValue = tile
-                continue
-            else:
-                outputBuffer += struct.pack("<B", int( "0x%s%s" % (hex(previousValue)[2], hex(tile)[2]), 16))
-                previousValue = None
-
-        if previousValue:
-            outputBuffer += struct.pack("<B", int( "0x%s0" % hex(previousValue)[2], 16 ))
-
-        # spawn point data
-        if len(tiledMap.layers) > 1 and tiledMap.layers[1].is_object_group:
-
-            outputBuffer += struct.pack("<B", len(tiledMap.layers[1].objects))
-
-            for mapObject in tiledMap.layers[1].objects:
-
-                outputBuffer += struct.pack("<B", len(mapObject.properties["entity"]))
-                outputBuffer += str(mapObject.properties["entity"])
-
-                outputBuffer += struct.pack("<B", mapObject.x / tiledMap.tilewidth )
-                outputBuffer += struct.pack("<B", mapObject.y / tiledMap.tileheight )
-                outputBuffer += struct.pack("<B", mapObject.width / tiledMap.tilewidth )
-                outputBuffer += struct.pack("<B", mapObject.height / tiledMap.tileheight )
-
-                count = 1
-                if "count" in mapObject.properties:
-                    count = int(mapObject.properties["count"])
-                outputBuffer += struct.pack("<B", count)
-
-                respawn = 30
-                if "respawn" in mapObject.properties:
-                    respawn = int(mapObject.properties["respawn"])
-                outputBuffer += struct.pack("<H", respawn)
-
-                chance = self.RAND_MAX
-                if "chance" in mapObject.properties:
-                    chance = ((( float(mapObject.properties["chance"]) ) * (self.RAND_MAX)) / (100.0))
-                    outputBuffer += struct.pack("<H", int(chance))
-
-        else:
-            outputBuffer += struct.pack("<B", 0)
+            outputBuffer += struct.pack("<B", tileTypeValue)
 
         # done
         print "done"

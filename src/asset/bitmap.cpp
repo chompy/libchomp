@@ -30,7 +30,7 @@ uint16_t ChompBitmap::getFrameCount(uint8_t* bitmap)
     return bitmapFrameCount;
 }
 
-uint8_t* ChompBitmap::getFrame(uint8_t* bitmap, uint8_t frame)
+uint8_t* ChompBitmap::getFrame(uint8_t* bitmap, const uint8_t frame)
 {
     if (!bitmap) {
         return 0;
@@ -58,7 +58,7 @@ uint8_t* ChompBitmap::getAnimationData(uint8_t* bitmap)
     return ChompBitmap::getFrame(bitmap, ChompBitmap::getFrameCount(bitmap) + 1);
 }
 
-SDL_Texture* ChompBitmap::getTexture(SDL_Renderer* renderer, uint8_t* bitmap, uint16_t frame)
+SDL_Texture* ChompBitmap::getTexture(SDL_Renderer* renderer, uint8_t* bitmap, const uint16_t frame)
 {
     uint8_t* frameData = ChompBitmap::getFrame(bitmap, frame);
     uint32_t frameDataSize = 0;

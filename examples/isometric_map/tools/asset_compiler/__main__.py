@@ -7,7 +7,7 @@ import imp
 COMPILERS = imp.load_source("", os.path.join(os.path.dirname(__file__), "../../../../tools/asset_compiler/__main__.py")).COMPILERS
 COMPILERS["maps"] = {
     "filepath" : "assets/map",
-    "prefix" : "map_",
+    "prefix" : "imap_",
     "method" : "compile_map"
 }
 

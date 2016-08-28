@@ -15,7 +15,7 @@ public:
     SDL_Texture* texture;
 
     ChompGfxSize size;
-    int8_t zIndex;
+    int16_t zIndex;
     float rotation;
     uint8_t flip;
 
@@ -23,8 +23,8 @@ public:
     void toPixels(ChompGfxSize* _size, uint16_t* w, uint16_t* h);
     void toPixels(ChompGfxPosition* _pos, uint16_t* x, uint16_t* y);
     void toPixels(ChompGfxRect* _rect, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h);
-    ChompGfxSize getPixelSize(uint16_t w, uint16_t h);
-    ChompGfxPosition getPixelPosition(uint16_t x, uint16_t y);
+    ChompGfxSize getPixelSize(const uint16_t w, const uint16_t h);
+    ChompGfxPosition getPixelPosition(const uint16_t x, const uint16_t y);
     uint16_t getPixelWidth() { return pixelWidth; }
     uint16_t getPixelHeight() { return pixelHeight; }
     uint16_t getPixelUnitWidth() { return pixelUnitWidth; }

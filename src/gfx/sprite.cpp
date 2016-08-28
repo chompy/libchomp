@@ -9,7 +9,7 @@ ChompGfxSprite::~ChompGfxSprite()
     spriteTextures.clear();
 }
 
-bool ChompGfxSprite::setFrame(uint16_t frame)
+bool ChompGfxSprite::setFrame(const uint16_t frame)
 {
     if (frame >= spriteTextures.size()) {
         return false;
@@ -18,7 +18,7 @@ bool ChompGfxSprite::setFrame(uint16_t frame)
     return true;
 }
 
-bool ChompGfxSprite::setAnimation(char* name)
+bool ChompGfxSprite::setAnimation(const char* name)
 {
     std::string nameString = std::string(name);
     if (currentAnimation && currentAnimation->name == nameString) {

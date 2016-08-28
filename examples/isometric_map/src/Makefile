@@ -9,4 +9,5 @@ $(TGT)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -DSDL2 -c $< -o $@
 
 all: $(OBJS)
+	cd component; make
 	echo "$^"

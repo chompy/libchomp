@@ -39,7 +39,7 @@ void ChompGfxLayer::toPixels(ChompGfxRect* rect, uint16_t* x, uint16_t* y, uint1
     *h = (uint16_t) abs( rect ? (float) rect->h * (float) pixelUnitHeight : pixelUnitHeight );
 }
 
-ChompGfxSize ChompGfxLayer::getPixelSize(uint16_t w, uint16_t h)
+ChompGfxSize ChompGfxLayer::getPixelSize(const uint16_t w, const uint16_t h)
 {
     ChompGfxSize _size;
     _size.w = (float) w / (float) pixelUnitWidth;
@@ -47,7 +47,7 @@ ChompGfxSize ChompGfxLayer::getPixelSize(uint16_t w, uint16_t h)
     return _size;
 }
 
-ChompGfxPosition ChompGfxLayer::getPixelPosition(uint16_t x, uint16_t y)
+ChompGfxPosition ChompGfxLayer::getPixelPosition(const uint16_t x, const uint16_t y)
 {
     ChompGfxSize size = getPixelSize(x, y);
     ChompGfxPosition pos;

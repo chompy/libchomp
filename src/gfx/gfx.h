@@ -32,11 +32,11 @@ public:
 
     // window data
     ChompGfxSize getWindowSize();
-    void setWindowPixelSize(uint16_t width, uint16_t height);
+    void setWindowPixelSize(const uint16_t width, const uint16_t height);
 
     // conversions
     void toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* height);
-    ChompGfxSize fromPixelSize(uint16_t width, uint16_t height);
+    ChompGfxSize fromPixelSize(const uint16_t width, const uint16_t height);
 
     // camera
     ChompGfxPosition getCameraPosition();
@@ -46,9 +46,9 @@ public:
     void setDrawColor(ChompGfxColor* color);
 
     // layer management
-    ChompGfxLayer* newLayer(uint16_t pixelWidth, uint16_t pixelHeight, ChompGfxSize* size);
-    ChompGfxLayer* newLayerFromBitmap(uint8_t* bitmap, uint16_t frame, ChompGfxSize* size);
-    ChompGfxSprite* newSprite(char* spriteName, ChompGfxSize* size);
+    ChompGfxLayer* newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size);
+    ChompGfxLayer* newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame, ChompGfxSize* size);
+    ChompGfxSprite* newSprite(const char* spriteName, ChompGfxSize* size);
 
     // renderer
     void addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect);
