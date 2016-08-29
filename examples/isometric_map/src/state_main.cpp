@@ -8,7 +8,9 @@ void ChompyStateMain::enter()
     std::cout << map->getTileWidth() << " x " << map->getTileHeight() << std::endl;
     std::cout << map->getMapWidth() << " x " << map->getMapHeight() << std::endl;
 
-    std::cout << (int) map->getTileIdAt(15,15,0) << std::endl;
+    uint8_t tileId = map->getTileIdAt(15,15,0);
+    std::cout << (int) tileId << std::endl;
+    std::cout << (int) map->getTileType(tileId) << std::endl;
 
 }
 
@@ -19,5 +21,5 @@ void ChompyStateMain::exit()
 
 void ChompyStateMain::update()
 {
-
+    map->draw(&core->gfx);
 }

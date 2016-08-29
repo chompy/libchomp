@@ -89,15 +89,17 @@ class AssetCompiler(AssetCompilerCore):
         outputBuffer += struct.pack("<B", len(tiledMap.layers))
 
         # write tile date
+        tileTypeCount = 0
         for layer in tiledMap.layers:
             for tile in layer.decoded_content:
+                if int(tile) > tileTypeCount: tileTypeCount = int(tile)
                 outputBuffer += struct.pack("<B", int(tile))
 
         # write tile type data
-        for i in range(256):
+        for i in range(tileTypeCount):
             tile = None
             for _tile in tiledMap.tile_sets[0].tiles:
-                if int(_tile.id) == i - 1:
+                if int(tiledMap.tile_sets[0].firstgid) + int(_tile.id) == i + 1:
                     tile = _tile
                     break
             tileTypeValue = 0

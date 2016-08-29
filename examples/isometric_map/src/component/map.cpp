@@ -11,6 +11,7 @@ ChompyIsometricMap::ChompyIsometricMap(const char* name)
     tileHeight = 0;
     mapWidth = 0; 
     mapHeight = 0;
+    tileSprite = nullptr;
 
     // build asset name string
     uint8_t assetPrefixLen = strlen(ChompyIsometricMap::ISO_MAP_ASSET_PREFIX);
@@ -53,15 +54,24 @@ ChompyIsometricMap::ChompyIsometricMap(const char* name)
     uint32_t totalTileCount = layerTileCount * layerCount;
 
     // iterate tiles
+    uint16_t totalTypes = 0;
     tiles.clear();
     for (uint32_t i = 0; i < totalTileCount; i++) {
         //tile.z = i / totalTileCount;
         //tile.y = (i % layerTileCount) / mapWidth;
         //tile.x = (i % layerTileCount) % mapWidth;
         tiles.push_back( mapData[14 + i + spriteNameLength] );
+        if (tiles.back() > totalTypes) {
+            totalTypes = tiles.back();
+        }
     }
 
-    // map tile types   
+    // map tile types
+    uint32_t position = 14 + (mapWidth * mapHeight * layerCount) + spriteNameLength;
+    types.clear();
+    for (uint16_t i = 0; i < totalTypes; i++) {
+        types.push_back( (uint8_t) mapData[position + i] );
+    }
 
     delete[] mapData;
 
@@ -74,4 +84,22 @@ uint8_t ChompyIsometricMap::getTileIdAt(uint16_t x, uint16_t y, uint16_t z)
         return 0;
     }
     return tiles[index];
+}
+
+uint8_t ChompyIsometricMap::getTileType(uint8_t tid)
+{
+    if (tid == 0 || (uint16_t) (tid - 1) >= types.size()) {
+        return TILE_TYPE_NONE;
+    }
+    return types[tid - 1];
+}
+
+void ChompyIsometricMap::draw(ChompGfx* gfx)
+{
+    if (!tileSprite) {
+        ChompGfxSize size;
+        size.w = spriteFrameWidth;
+        size.h = spriteFrameHeight;
+        tileSprite = gfx->newSprite(spriteName.c_str(), &size);
+    }
 }

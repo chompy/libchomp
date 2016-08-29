@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "asset/asset.h"
+#include "gfx/gfx.h"
 
 #define TILE_TYPE_NONE 0
 #define TILE_TYPE_SOLID 1
@@ -28,13 +29,18 @@ public:
     uint16_t getMapHeight() { return mapHeight; }
 
     uint8_t getTileIdAt(uint16_t x, uint16_t y, uint16_t z);
-    uint8_t getTileType(uint8_t id);
+    uint8_t getTileType(uint8_t tid);
+
+    void draw(ChompGfx* gfx);
 
 protected:
 
     std::string spriteName;
     uint16_t spriteFrameWidth, spriteFrameHeight, tileWidth, tileHeight, mapWidth, mapHeight;
     std::vector<uint8_t> tiles;
+    std::vector<uint8_t> types;
+
+    ChompGfxSprite* tileSprite;
 
 };
 
