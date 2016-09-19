@@ -57,9 +57,6 @@ ChompyIsometricMap::ChompyIsometricMap(const char* name)
     uint16_t totalTypes = 0;
     tiles.clear();
     for (uint32_t i = 0; i < totalTileCount; i++) {
-        //tile.z = i / totalTileCount;
-        //tile.y = (i % layerTileCount) / mapWidth;
-        //tile.x = (i % layerTileCount) % mapWidth;
         tiles.push_back( mapData[14 + i + spriteNameLength] );
         if (tiles.back() > totalTypes) {
             totalTypes = tiles.back();
@@ -98,8 +95,11 @@ void ChompyIsometricMap::draw(ChompGfx* gfx)
 {
     if (!tileSprite) {
         ChompGfxSize size;
-        size.w = spriteFrameWidth;
-        size.h = spriteFrameHeight;
+        size.w = 1;
+        size.h = 1;
         tileSprite = gfx->newSprite(spriteName.c_str(), &size);
     }
+    tileSprite->setFrame(0);
+    tileSprite->zIndex = 5;
+    gfx->addLayerToRenderer(tileSprite, nullptr, nullptr);
 }
