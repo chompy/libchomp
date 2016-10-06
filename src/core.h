@@ -5,6 +5,7 @@
 #include "asset/asset.h"
 #include "gfx/gfx.h"
 #include "sfx/sfx.h"
+#include "input/input.h"
 #include "exception.h"
 
 class ChompCore
@@ -13,6 +14,7 @@ public:
 
     ChompGfx gfx;
     ChompSfx sfx;
+    ChompInput input;
 
 };
 

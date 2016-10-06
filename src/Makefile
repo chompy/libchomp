@@ -12,4 +12,5 @@ all: $(OBJS)
 	cd asset; make
 	cd gfx; make
 	cd sfx; make
+	cd input; make
 	echo "$^"

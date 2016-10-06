@@ -104,7 +104,7 @@ bool Chomp::loop(ChompCore* core)
             case SDL_MOUSEMOTION:
             case SDL_MOUSEWHEEL:
             {
-                // todo
+                core->input.event(&e);
                 break;
             }
         }
