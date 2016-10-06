@@ -18,7 +18,7 @@ public:
 
 protected:
 
-    void rectToPixelCoords(ChompGfxRect* rect, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h);
+    void rectToPixelCoords(ChompGfxRect* rect, ChompGfxRect* offset, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h);
 
     ChompGfxLayer* layer;
 

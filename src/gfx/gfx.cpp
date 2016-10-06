@@ -54,7 +54,16 @@ ChompGfx::~ChompGfx()
 
 ChompGfxSize ChompGfx::getWindowSize()
 {
+    int ww,wh;
+    SDL_GetWindowSize(window, &ww, &wh);
     ChompGfxSize size;
+    if (ww > wh) {
+        size.h = 1.0;
+        size.w = (float) ww / (float) wh;
+    } else {
+        size.w = 1.0;
+        size.h = (float) wh / (float) ww;
+    }
     return size;
 }
 

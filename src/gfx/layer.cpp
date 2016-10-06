@@ -151,7 +151,7 @@ void ChompGfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLaye
 
     SDL_Rect sdlDstRect;
     sdlDstRect.x = dstRect ? dstRect->x * targetUnitWidth : 0;
-    sdlDstRect.y = dstRect ? dstRect->x * targetUnitHeight : 0;
+    sdlDstRect.y = dstRect ? dstRect->y * targetUnitHeight : 0;
     sdlDstRect.w = dstRect ? dstRect->w * targetUnitWidth : targetUnitWidth * srcLayer->size.w;
     sdlDstRect.h = dstRect ? dstRect->h * targetUnitHeight : targetUnitHeight * srcLayer->size.h;
 
