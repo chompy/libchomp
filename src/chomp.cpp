@@ -8,7 +8,7 @@ Chomp::Chomp()
     SDL_SetMainReady();
     #endif
     if (SDL_Init(SDL_INIT_EVENTS) != 0) {
-        throw ChompSdlInitException();
+        throw ChompSdlException();
         return;
     }
 

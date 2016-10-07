@@ -11,7 +11,7 @@
 #include "structs.h"
 #include "layer.h"
 #include "sprite.h"
-#include "../exception.h"
+#include "../exception/sdl_exception.h"
 
 #define DEFAULT_WINDOW_W 640
 #define DEFAULT_WINDOW_H 480

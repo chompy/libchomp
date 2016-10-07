@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <SDL2/SDL.h>
-#include "SDL2/SDL_mixer.h"
-#include "../exception.h"
+#include <SDL2/SDL_mixer.h>
+#include "../exception/sdl_mixer_exception.h"
 #include "../asset/asset.h"
 
 #include <iostream>

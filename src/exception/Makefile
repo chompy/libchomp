@@ -1,5 +1,5 @@
 SRC=$(wildcard ./*.cpp)
-TGT=../build/${COMPILETO}
+TGT=../../build/${COMPILETO}
 INCLUDES=
 CXXFLAGS=-Wall -std=c++11  $(INCLUDES)
 LDFLAGS = -Wall -std=c++11 -g
@@ -9,9 +9,4 @@ $(TGT)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -fPIC $< -o $@
 
 all: $(OBJS)
-	cd asset; make
-	cd gfx; make
-	cd sfx; make
-	cd input; make
-	cd exception; make
 	echo "$^"

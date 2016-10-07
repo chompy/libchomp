@@ -17,10 +17,10 @@ ChompSfx::ChompSfx()
         if (exceptionMsg.empty()) {
             exceptionMsg = "Failed to init SDL Mixer.";
         }
-        throw ChompSdlInitException(exceptionMsg);
+        throw ChompSdlMixerException(exceptionMsg);
     }
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
-        throw ChompSdlInitException(Mix_GetError());   
+        throw ChompSdlMixerException(Mix_GetError());   
     }
 
 }

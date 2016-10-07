@@ -6,7 +6,7 @@ ChompInput::ChompInput()
     // init joystic
     if (SDL_WasInit(SDL_INIT_JOYSTICK) == 0) {
         if (SDL_Init(SDL_INIT_JOYSTICK) != 0) {
-            throw ChompSdlInitException();
+            throw ChompSdlException();
             return;
         }
     }

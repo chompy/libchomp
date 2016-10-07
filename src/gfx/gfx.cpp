@@ -6,7 +6,7 @@ ChompGfx::ChompGfx()
     // init sdl systems
     if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
         if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-            throw ChompSdlInitException();
+            throw ChompSdlException();
             return;
         }
     }
@@ -22,7 +22,7 @@ ChompGfx::ChompGfx()
         SDL_WINDOW_RESIZABLE
     );
     if (!window) {
-        throw ChompSdlInitException();
+        throw ChompSdlException();
         return;
     }
 
@@ -33,7 +33,7 @@ ChompGfx::ChompGfx()
         SDL_RENDERER_ACCELERATED
     );
     if (!renderer) {
-        throw ChompSdlInitException();
+        throw ChompSdlException();
         return;
     }
 

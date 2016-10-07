@@ -6,7 +6,6 @@
 #include "gfx/gfx.h"
 #include "sfx/sfx.h"
 #include "input/input.h"
-#include "exception.h"
 
 class ChompCore
 {

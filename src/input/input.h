@@ -2,7 +2,7 @@
 #define CHOMP_INPUT_H
 
 #include <SDL2/SDL.h>
-#include "../exception.h"
+#include "../exception/sdl_exception.h"
 #include "mouse.h"
 
 

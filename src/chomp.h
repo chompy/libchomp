@@ -2,7 +2,7 @@
 #define CHOMP_H
 
 #include <SDL2/SDL.h>
-#include "exception.h"
+#include "exception/sdl_exception.h"
 #include "state.h"
 #include "core.h"
 

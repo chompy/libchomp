@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
-#include "../exception.h"
 #include "../gfx/structs.h"
 #include "mouse.h"
 
