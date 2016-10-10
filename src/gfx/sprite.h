@@ -12,8 +12,6 @@
 #include "layer.h"
 #include "../asset/bitmap.h"
 
-#include <iostream>
-
 struct ChompGfxSpriteAnimationData
 {
     std::string name;

@@ -12,7 +12,6 @@
 class ChompAssetException : public ChompException
 {
 public:
-    ChompAssetException() : ChompException(SDL_GetError()) { }
     ChompAssetException(const std::string& _msg) : ChompException(_msg) { }
 };
 

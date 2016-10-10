@@ -1,2 +1,1 @@
 - Namespacing Chomp::?
-- Ability to remove components at compile time. (Ex. no SDL_Mixer if not needed.)
