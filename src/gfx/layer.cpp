@@ -59,7 +59,7 @@ ChompGfxPosition ChompGfxLayer::getPixelPosition(const uint16_t x, const uint16_
 void ChompGfxLayer::fill()
 {
     SDL_SetRenderTarget(renderer, texture);
-    SDL_RenderFillRect(renderer, nullptr);
+    SDL_RenderFillRect(renderer, NULL);
 }
 
 void ChompGfxLayer::drawLine(ChompGfxPosition* pos1, ChompGfxPosition* pos2)
@@ -192,7 +192,7 @@ void ChompGfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, ChompGfxLaye
             &sdlSrcRect,
             &sdlDstRect,
             srcLayer->rotation,
-            nullptr,        // @todo implement center point ?
+            NULL,        // @todo implement center point ?
             flip
         );
     }
@@ -205,8 +205,8 @@ void ChompGfxLayer::setPixelSize()
         int _pixelWidth, _pixelHeight;
         SDL_QueryTexture(
             texture,
-            nullptr,
-            nullptr,
+            NULL,
+            NULL,
             &_pixelWidth,
             &_pixelHeight
         );

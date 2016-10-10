@@ -1,7 +1,12 @@
 #ifndef CHOMP_GFX_SPRITE_H
 #define CHOMP_GFX_SPRITE_H
 
+#ifndef ANDROID
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
+
 #include <vector>
 #include <string>
 #include "layer.h"
@@ -22,12 +27,12 @@ public:
 
     static char SPRITE_ASSET_PREFIX[];
 
-    ChompGfxSprite(SDL_Renderer* _renderer, uint8_t* bitmap, ChompGfxSize* _size) : ChompGfxLayer(_renderer, nullptr, _size)
+    ChompGfxSprite(SDL_Renderer* _renderer, uint8_t* bitmap, ChompGfxSize* _size) : ChompGfxLayer(_renderer, NULL, _size)
     {
         animationFramerate = 10;
         setTextures(bitmap);
         getAnimationData(bitmap);
-        currentAnimation = nullptr;
+        currentAnimation = NULL;
         lastAnimationTick = 0;
         animationIndex = 0;
     }

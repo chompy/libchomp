@@ -1,10 +1,14 @@
 #ifndef CHOMP_INPUT_MOUSE_H
 #define CHOMP_INPUT_MOUSE_H
 
+#ifndef ANDROID
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
+
 #include <vector>
 #include "../gfx/structs.h"
-#include "mouse.h"
 
 #define MOUSE_BUTTON_LEFT SDL_BUTTON_LEFT
 #define MOUSE_BUTTON_MIDDLE SDL_BUTTON_MIDDLE

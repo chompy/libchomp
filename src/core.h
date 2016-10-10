@@ -1,7 +1,12 @@
 #ifndef CHOMP_CORE_H
 #define CHOMP_CORE_H
 
+#ifndef ANDROID
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
+
 #include "asset/asset.h"
 #include "gfx/gfx.h"
 #include "sfx/sfx.h"

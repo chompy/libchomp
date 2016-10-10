@@ -53,7 +53,7 @@ uint8_t ChompBitmap::getAnimationFps(uint8_t* bitmap)
 uint8_t* ChompBitmap::getAnimationData(uint8_t* bitmap)
 {
     if (!bitmap) {
-        return nullptr;
+        return NULL;
     }
     return ChompBitmap::getFrame(bitmap, ChompBitmap::getFrameCount(bitmap) + 1);
 }
@@ -65,11 +65,16 @@ SDL_Texture* ChompBitmap::getTexture(SDL_Renderer* renderer, uint8_t* bitmap, co
     memcpy(&frameDataSize, &frameData[0], 4);
     SDL_RWops* frameDataRW = SDL_RWFromMem(&frameData[4], frameDataSize);
     if (!frameDataRW) {
-        return nullptr;
+        return NULL;
     }
+    #ifndef WITHOUT_SDL_IMAGE
     SDL_Surface* surface = IMG_LoadPNG_RW(frameDataRW);
+    #else
+    // use bmp if SDL_Image is not available
+    SDL_Surface* surface = SDL_LoadBMP_RW(frameDataRW);
+    #endif
     if (!surface) {
-        return nullptr;
+        return NULL;
     }
     SDL_Texture* texture = SDL_CreateTextureFromSurface(
         renderer,

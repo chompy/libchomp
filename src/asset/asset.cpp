@@ -11,24 +11,16 @@ uint8_t ChompAsset::readFileByte(const char* name, const uint32_t position)
 
     // does not exist
     if (assetSize == 0 || nameLength == 0) {
-        SDL_LogMessage(
-            SDL_LOG_CATEGORY_APPLICATION,
-            SDL_LOG_PRIORITY_WARN,
-            "Asset '%s' does not exist.",
-            name
-        );
+        std::string message = "Asset '" + std::string( name ) + "' does not exist.";
+        throw ChompAssetException(message.c_str());
         return 0;
     }
 
     // open asset file
     SDL_RWops* file = SDL_RWFromFile(ChompAsset::ASSET_FILE, "rb");
     if (!file) {
-        SDL_LogMessage(
-            SDL_LOG_CATEGORY_APPLICATION,
-            SDL_LOG_PRIORITY_ERROR,
-            "Unable to open asset file. (%s)",
-            ChompAsset::ASSET_FILE
-        );
+        std::string message = "Unable to open asset file. (" + std::string( ChompAsset::ASSET_FILE ) + ")";
+        throw ChompAssetException(message.c_str());
         return 0;
     }    
 
@@ -56,24 +48,16 @@ void ChompAsset::readFile(const char* name, const uint32_t position, void* buffe
 
     // does not exist
     if (assetSize == 0 || nameLength == 0) {
-        SDL_LogMessage(
-            SDL_LOG_CATEGORY_APPLICATION,
-            SDL_LOG_PRIORITY_WARN,
-            "Asset '%s' does not exist.",
-            name
-        );
+        std::string message = "Asset '" + std::string( name ) + "' does not exist.";
+        throw ChompAssetException(message.c_str());
         return;
     }
 
     // open asset file
     SDL_RWops* file = SDL_RWFromFile(ChompAsset::ASSET_FILE, "rb");
     if (!file) {
-        SDL_LogMessage(
-            SDL_LOG_CATEGORY_APPLICATION,
-            SDL_LOG_PRIORITY_ERROR,
-            "Unable to open asset file. (%s)",
-            ChompAsset::ASSET_FILE
-        );
+        std::string message = "Unable to open asset file. (" + std::string( ChompAsset::ASSET_FILE ) + ")";
+        throw ChompAssetException(message.c_str());
         return;
     }    
 
@@ -89,14 +73,14 @@ bool ChompAsset::assetExists(const char* name)
 {
     uint32_t size = 0;
     uint8_t nameLength = 0;    
-    ChompAsset::getAssetData(name, nullptr, &size, &nameLength);
+    ChompAsset::getAssetData(name, NULL, &size, &nameLength);
     return size > 0 && nameLength > 0;
 }
 
 uint32_t ChompAsset::getAssetSize(const char* name)
 {
     uint32_t size = 0;
-    ChompAsset::getAssetData(name, nullptr, &size, nullptr);
+    ChompAsset::getAssetData(name, NULL, &size, NULL);
     return size;
 }
 
@@ -106,12 +90,8 @@ void ChompAsset::getAssetData(const char* name, uint32_t* position, uint32_t* si
     // open asset file
     SDL_RWops* file = SDL_RWFromFile(ChompAsset::ASSET_FILE, "rb");
     if (!file) {
-        SDL_LogMessage(
-            SDL_LOG_CATEGORY_APPLICATION,
-            SDL_LOG_PRIORITY_ERROR,
-            "Unable to open asset file. (%s)",
-            ChompAsset::ASSET_FILE
-        );
+        std::string message = "Unable to open asset file. (" + std::string( ChompAsset::ASSET_FILE ) + ")";
+        throw ChompAssetException(message.c_str());
         return;
     }
 

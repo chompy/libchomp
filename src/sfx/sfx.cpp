@@ -4,12 +4,14 @@ char ChompSfx::MUSIC_ASSET_PREFIX[] = "mus_";
 
 ChompSfx::ChompSfx()
 {
-    music = nullptr;
+
+    music = NULL;
     musicData.clear();
     queuedMusic = "";
     queuedMusicOperation = 0;
     queuedMusicLoops = 0;
     queuedMusicFadeDuration = 0;
+    #ifndef WITHOUT_SDL_MIXER
     int flags = MIX_INIT_OGG;
     int initted = Mix_Init(MIX_INIT_OGG);
     if ((initted&flags) != flags) {
@@ -22,13 +24,16 @@ ChompSfx::ChompSfx()
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
         throw ChompSdlMixerException(Mix_GetError());   
     }
+    #endif
 
 }
 
 ChompSfx::~ChompSfx()
 {
     unloadMusic();
+    #ifndef WITHOUT_SDL_MIXER
     Mix_Quit();
+    #endif
 }
 
 uint8_t ChompSfx::loadMusic(char* name)
@@ -48,6 +53,7 @@ uint8_t ChompSfx::loadMusic(char* name, uint8_t operation, int16_t loops)
 
 uint8_t ChompSfx::loadMusic(char* name, uint8_t operation, int16_t loops, int16_t fadeDuration)
 {
+    #ifndef WITHOUT_SDL_MIXER
     if (!name || operation == MUSIC_FADEOUT) {
         return MUSIC_LOAD_FAILED;
     }
@@ -85,21 +91,26 @@ uint8_t ChompSfx::loadMusic(char* name, uint8_t operation, int16_t loops, int16_
     music = Mix_LoadMUS_RW(musicDataRW, 1);
     setMusic(operation, loops, fadeDuration);
     return MUSIC_LOAD_COMPLETE;
-
+    #else
+    return MUSIC_LOAD_FAILED;
+    #endif
 }
 
 void ChompSfx::unloadMusic()
 {
+    #ifndef WITHOUT_SDL_MIXER
     Mix_HaltMusic();
     if (music) {
         Mix_FreeMusic(music);
-        music = nullptr;
+        music = NULL;
         musicData.clear();
     }
+    #endif
 }
 
 void ChompSfx::checkMusicQueue()
 {
+    #ifndef WITHOUT_SDL_MIXER
     if (!queuedMusic.empty() && Mix_FadingMusic() != MIX_FADING_OUT && !Mix_PlayingMusic()) {
         loadMusic((char*) queuedMusic.c_str(), queuedMusicOperation, queuedMusicLoops, queuedMusicFadeDuration);
         queuedMusic = "";
@@ -107,6 +118,7 @@ void ChompSfx::checkMusicQueue()
         queuedMusicLoops = 0;
         queuedMusicFadeDuration = 0;
     }
+    #endif
 }
 
 void ChompSfx::setMusic(uint8_t operation)
@@ -121,6 +133,7 @@ void ChompSfx::setMusic(uint8_t operation, int16_t loops)
 
 void ChompSfx::setMusic(uint8_t operation, int16_t loops, int16_t fadeDuration)
 {
+    #ifndef WITHOUT_SDL_MIXER
     switch (operation) {
         case MUSIC_STOP:
         {
@@ -149,4 +162,5 @@ void ChompSfx::setMusic(uint8_t operation, int16_t loops, int16_t fadeDuration)
             break;
         }
     }
+    #endif
 }

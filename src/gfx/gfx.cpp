@@ -37,8 +37,8 @@ ChompGfx::ChompGfx()
         return;
     }
 
-    setCameraPosition(nullptr);
-    setDrawColor(nullptr);
+    setCameraPosition(NULL);
+    setDrawColor(NULL);
 
 }
 
@@ -140,7 +140,7 @@ ChompGfxLayer* ChompGfx::newLayer(const uint16_t pixelWidth, const uint16_t pixe
 ChompGfxLayer* ChompGfx::newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame, ChompGfxSize* size)
 {
     if (!bitmap) {
-        return nullptr;
+        return NULL;
     }
     return new ChompGfxLayer(
         renderer,
@@ -152,7 +152,7 @@ ChompGfxLayer* ChompGfx::newLayerFromBitmap(uint8_t* bitmap, const uint16_t fram
 ChompGfxSprite* ChompGfx::newSprite(const char* spriteName, ChompGfxSize* size)
 {
     if (!spriteName) {
-        return nullptr;
+        return NULL;
     }
     // build asset name string
     uint8_t assetPrefixLen = strlen(ChompGfxSprite::SPRITE_ASSET_PREFIX);
@@ -162,7 +162,7 @@ ChompGfxSprite* ChompGfx::newSprite(const char* spriteName, ChompGfxSize* size)
     assetName[assetPrefixLen + strlen(spriteName)] = '\0';
     // load asset
     if (!ChompAsset::assetExists(assetName)) {
-        return nullptr;
+        return NULL;
     }
     // get filesize
     uint32_t fileSize = ChompAsset::getAssetSize(assetName);
@@ -202,7 +202,7 @@ void ChompGfx::render()
         return;
     }
 
-    SDL_SetRenderTarget(renderer, nullptr);
+    SDL_SetRenderTarget(renderer, NULL);
 
     #ifndef EMSCRIPTEN
     ChompGfxColor originalColor;
@@ -216,8 +216,9 @@ void ChompGfx::render()
     SDL_GetWindowSize(window, &windowPixelWidth, &windowPixelHeight); 
     uint16_t windowUnitSize = windowPixelWidth > windowPixelHeight ? windowPixelHeight : windowPixelWidth;
     std::sort(renderLayers.begin(), renderLayers.end());
-    for (auto &renderLayer : renderLayers) {
 
+    for (uint16_t i = 0; i < renderLayers.size(); i++) {
+        RenderLayers renderLayer = renderLayers[i];
         ChompGfxLayer::drawLayerToRenderTarget(
             renderer,
             renderLayer.layer,

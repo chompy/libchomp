@@ -1,7 +1,13 @@
 #ifndef CHOMP_ASSET_H
 #define CHOMP_ASSET_H
 
+#ifndef ANDROID
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
+#include <string>
+#include "../exception/asset_exception.h"
 
 class ChompAsset
 {

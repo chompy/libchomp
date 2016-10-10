@@ -3,9 +3,22 @@
 
 #include <string>
 #include <vector>
+
+#ifndef ANDROID
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
+
+#ifndef WITHOUT_SDL_MIXER
+#ifndef ANDROID
 #include <SDL2/SDL_mixer.h>
+#else
+#include <SDL_mixer.h>
+#endif
 #include "../exception/sdl_mixer_exception.h"
+#endif
+
 #include "../asset/asset.h"
 
 #include <iostream>
@@ -42,7 +55,11 @@ public:
     // sfx
     void loadChunk(char* name);
 
+    #ifndef WITHOUT_SDL_MIXER
     Mix_Music* music;
+    #else
+    void* music;
+    #endif
 
 protected:
 

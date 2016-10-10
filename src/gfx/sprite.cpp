@@ -3,8 +3,8 @@ char ChompGfxSprite::SPRITE_ASSET_PREFIX[] = "spr_";
 
 ChompGfxSprite::~ChompGfxSprite()
 {
-    for (auto &spriteTexture : spriteTextures) {
-        SDL_DestroyTexture(spriteTexture);
+    for (uint16_t i = 0; i < spriteTextures.size(); i++) {
+        SDL_DestroyTexture(spriteTextures[i]);
     }
     spriteTextures.clear();
 }
@@ -24,7 +24,8 @@ bool ChompGfxSprite::setAnimation(const char* name)
     if (currentAnimation && currentAnimation->name == nameString) {
         return true;
     }
-    for (auto &animation : animationData) {
+    for (uint16_t i = 0; i < animationData.size(); i++) {
+        ChompGfxSpriteAnimationData animation = animationData[i];
         if (animation.name == nameString) {
             currentAnimation = &animation;
             lastAnimationTick = SDL_GetTicks();

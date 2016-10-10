@@ -1,7 +1,11 @@
 #ifndef CHOMP_H
 #define CHOMP_H
 
+#ifndef ANDROID
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
 #include "exception/sdl_exception.h"
 #include "state.h"
 #include "core.h"

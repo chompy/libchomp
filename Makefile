@@ -5,29 +5,53 @@ LDFLAGS = -Wall -std=c++11 -g
 OBJS = $(addprefix $(TGT)/, $(notdir $(SOURCES:.cpp=.o)))
 OS=$(shell tools/get_os.sh)
 
+OPTS=
+LINUX_LIBS = -lSDL2
+EMSCRIPTEN_LIBS = -s USE_SDL=2
+WIN32_LIBS = -lsdl2
+
+ifeq ($(WITHOUT_SDL_MIXER), 1)
+OPTS += -DWITHOUT_SDL_MIXER
+else
+LINUX_LIBS += -lSDL2_mixer
+EMSCRIPTEN_LIBS += -s USE_SDL_MIXER=2
+WIN32_LIBS += -lsdl2_mixer
+endif
+ifeq ($(WITHOUT_SDL_IMAGE), 1)
+OPTS += -DWITHOUT_SDL_IMAGE
+else
+LINUX_LIBS += -lSDL2_image
+EMSCRIPTEN_LIBS += -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]'
+WIN32_LIBS += -lsdl2_image
+endif
+
+LINUX_LIBS += -lSDL2_ttf -lSDL2main
+EMSCRIPTEN_LIBS += -s USE_SDL_TTF=2
+WIN32_LIBS += -lsdl2_ttf -lSDL2main
+
 all:
 	make $(OS)
 
 linux:
 	mkdir -p $(TGT)/linux
-	cd src; make COMPILETO="linux"
-	$(CXX) $(LDFLAGS) $(TGT)/linux/*.o -DSDL2=1 -shared \
-	-o $(TGT)/linux/libchomp.so -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2main
+	cd src; make COMPILETO="linux" OPTS="$(OPTS)"
+	$(CXX) $(OPTS) $(LDFLAGS) $(TGT)/linux/*.o -DSDL2=1 -shared \
+	-o $(TGT)/linux/libchomp.so $(LINUX_LIBS)
 
 emscripten:
 	mkdir -p $(TGT)/emscripten
-	cd src; make COMPILETO="emscripten"
-	$(CXX) $(LDFLAGS) $(TGT)/emscripten/*.o \
+	cd src; make COMPILETO="emscripten" OPTS="$(OPTS)"
+	$(CXX) $(OPTS) $(LDFLAGS) $(TGT)/emscripten/*.o \
 		-DSDL2=1 -shared -Ilib/include \
-		-s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2 -s USE_SDL_MIXER=2 -s SDL2_IMAGE_FORMATS='["png"]' \
+		$(EMSCRIPTEN_LIBS) \
 		-O2 -o $(TGT)/emscripten/libchomp.bc
 
 win32:
 	mkdir -p $(TGT)/win32
-	cd src; make COMPILETO="win32"
-	$(CXX) $(LDFLAGS) $(TGT)/win32/*.o -DSDL2=1 -shared -o \
+	cd src; make COMPILETO="win32" OPTS="$(OPTS)"
+	$(CXX) $(OPTS) $(LDFLAGS) $(TGT)/win32/*.o -DSDL2=1 -shared -o \
 	$(TGT)/win32/libchomp.dll -static-libgcc -static-libstdc++ \
-	-Llib/win32 -lsdl2 -lsdl2_image -lsdl2_ttf -lsdl2_mixer -lSDL2main
+	-Llib/win32 $(WIN32_LIBS)
 
 cleanup:
 	rm -rf $(TGT)/*

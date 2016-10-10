@@ -1,7 +1,12 @@
 #ifndef CHOMP_GFX_H
 #define CHOMP_GFX_H
 
+#ifndef ANDROID
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
+
 #include <vector>
 #include <algorithm>
 #include <stdint.h>
