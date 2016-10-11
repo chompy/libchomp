@@ -4,13 +4,17 @@ ChompGfx::ChompGfx()
 {
 
     // init sdl systems
-    if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
-        if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-            throw ChompSdlException();
-            return;
-        }
+    if (!SDL_WasInit(SDL_INIT_VIDEO) == 0 && SDL_Init(SDL_INIT_VIDEO) != 0) {
+        throw ChompSdlException();
     }
     
+    // init sdl ttf
+    #ifndef WITHOUT_SDL_TTF
+    if (!TTF_WasInit() && TTF_Init() == -1) {
+        throw ChompSdlTtfException();
+    }
+    #endif
+
     // create window
     window = SDL_CreateWindow(
         "LibChomp Window",
@@ -50,6 +54,11 @@ ChompGfx::~ChompGfx()
     if (window) {
         SDL_DestroyWindow(window);
     }
+    #ifndef WITHOUT_SDL_TTF
+    if (TTF_WasInit()) {
+        TTF_Quit();
+    }
+    #endif
 }
 
 ChompGfxSize ChompGfx::getWindowSize()
@@ -173,6 +182,36 @@ ChompGfxSprite* ChompGfx::newSprite(const char* spriteName, ChompGfxSize* size)
     return new ChompGfxSprite(
         renderer,
         &bitmap[0],
+        size
+    );
+}
+
+ChompGfxText* ChompGfx::newTextLayer(const char* fontName, uint16_t ptSize, ChompGfxSize* size)
+{
+    if (!fontName) {
+        return NULL;
+    }
+    // build asset name string
+    uint8_t assetPrefixLen = strlen(ChompGfxText::FONT_ASSET_PREFIX);
+    char assetName[assetPrefixLen + strlen(fontName) + 1];
+    memcpy(assetName, ChompGfxText::FONT_ASSET_PREFIX, assetPrefixLen);
+    memcpy(&assetName[assetPrefixLen], fontName, strlen(fontName));
+    assetName[assetPrefixLen + strlen(fontName)] = '\0';
+    // load asset
+    if (!ChompAsset::assetExists(assetName)) {
+        return NULL;
+    }
+    // get filesize
+    uint32_t fileSize = ChompAsset::getAssetSize(assetName);
+    // get font data
+    std::vector<uint8_t> fontData(fileSize, 0);
+    ChompAsset::readFile(assetName, 0, &fontData[0], fileSize);
+    // new text layer
+    return new ChompGfxText(
+        renderer,
+        &fontData[0],
+        fileSize,
+        ptSize,
         size
     );
 }
