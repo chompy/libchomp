@@ -6,7 +6,7 @@ void ChompyStateMain::enter()
         ChompGfxSize layerSize;
         layerSize.w = 1;
         layerSize.h = 1;
-        textLayer = core->gfx.newTextLayer("dungeon", 24, &layerSize);
+        textLayer = core->gfx.newTextLayer("impact", 48, &layerSize);
 
         ChompGfxColor color;
         color.r = 255;
@@ -20,6 +20,7 @@ void ChompyStateMain::enter()
             TEXT_CENTER,
             TEXT_MIDDLE
         );
+        textLayer->zIndex = 1;
     }
 }
 

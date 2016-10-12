@@ -24,10 +24,16 @@ LINUX_LIBS += -lSDL2_image
 EMSCRIPTEN_LIBS += -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]'
 WIN32_LIBS += -lsdl2_image
 endif
-
-LINUX_LIBS += -lSDL2_ttf -lSDL2main
+ifeq ($(WITHOUT_SDL_TTF), 1)
+OPTS += -DWITHOUT_SDL_TTF
+else
+LINUX_LIBS += -lSDL2_ttf
 EMSCRIPTEN_LIBS += -s USE_SDL_TTF=2
-WIN32_LIBS += -lsdl2_ttf -lSDL2main
+WIN32_LIBS += -lsdl2_ttf
+endif
+
+LINUX_LIBS += -lSDL2main
+WIN32_LIBS += -lSDL2main
 
 all:
 	make $(OS)

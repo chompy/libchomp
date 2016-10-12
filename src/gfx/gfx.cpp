@@ -197,10 +197,6 @@ ChompGfxText* ChompGfx::newTextLayer(const char* fontName, uint16_t ptSize, Chom
     memcpy(assetName, ChompGfxText::FONT_ASSET_PREFIX, assetPrefixLen);
     memcpy(&assetName[assetPrefixLen], fontName, strlen(fontName));
     assetName[assetPrefixLen + strlen(fontName)] = '\0';
-    // load asset
-    if (!ChompAsset::assetExists(assetName)) {
-        return NULL;
-    }
     // get filesize
     uint32_t fileSize = ChompAsset::getAssetSize(assetName);
     // get font data
@@ -230,6 +226,7 @@ void ChompGfx::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, C
     renderLayer.dstRect.y = dstRect ? dstRect->y : 0;
     renderLayer.dstRect.w = dstRect ? dstRect->w : layer->size.w;
     renderLayer.dstRect.h = dstRect ? dstRect->h : layer->size.h;
+
     renderLayer.layer = layer;
     renderLayers.push_back(renderLayer);
 }

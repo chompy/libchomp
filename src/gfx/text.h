@@ -53,6 +53,7 @@ protected:
     #endif
 
     void setFont(uint8_t* fontData, uint32_t fontDataSize, uint16_t fontPtSize);
+    void buildTexture();
 
 };
 
