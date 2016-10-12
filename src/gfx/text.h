@@ -35,14 +35,23 @@ public:
 
     static char FONT_ASSET_PREFIX[];
 
-    ChompGfxText(SDL_Renderer* _renderer, uint8_t* fontData, uint32_t fontDataSize, uint16_t fontPtSize, ChompGfxSize* _size) : ChompGfxLayer(_renderer, NULL, _size)
+    ChompGfxText(
+        SDL_Renderer* _renderer,
+        uint8_t* fontData, 
+        const uint32_t fontDataSize,
+        const uint16_t fontPtSize,
+        SDL_Texture* _texture,
+        ChompGfxSize* _size
+    ) : ChompGfxLayer(_renderer, _texture, _size)
     {
         font = NULL;
         setFont(fontData, fontDataSize, fontPtSize);
     }
     ~ChompGfxText();
 
-    void setText(const char* text, uint8_t hAlign, uint8_t vAlign);
+    void setText(const char* text);
+    void setText(const char* text, const uint8_t hAlign);
+    void setText(const char* text, const uint8_t hAlign, const uint8_t vAlign);
 
 protected:
 
@@ -52,8 +61,7 @@ protected:
     void* font;
     #endif
 
-    void setFont(uint8_t* fontData, uint32_t fontDataSize, uint16_t fontPtSize);
-    void buildTexture();
+    void setFont(uint8_t* fontData, const uint32_t fontDataSize, const uint16_t fontPtSize);
 
 };
 

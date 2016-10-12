@@ -9,38 +9,29 @@ ChompGfxText::~ChompGfxText()
     }
 }
 
-void ChompGfxText::setFont(uint8_t* fontData, uint32_t fontDataSize, uint16_t fontPtSize)
+void ChompGfxText::setFont(uint8_t* fontData, const uint32_t fontDataSize, const uint16_t fontPtSize)
 {
     #ifndef WITHOUT_SDL_TTF
-    SDL_RWops* fontDataRW = SDL_RWFromMem(&fontData, fontDataSize);
+    SDL_RWops* fontDataRW = SDL_RWFromMem(&fontData[0], fontDataSize);
     if (!fontDataRW) {
         throw ChompSdlException();
     }
-    //font = TTF_OpenFont("assets/font/ariali.ttf", fontPtSize);
-    font = TTF_OpenFontRW(fontDataRW, 1, fontPtSize);
+    font = TTF_OpenFont("assets/font/impact.ttf", fontPtSize);
+    //font = TTF_OpenFontRW(fontDataRW, 1, fontPtSize);
     if (!font) {
         throw ChompSdlTtfException();
     }
     #endif
 }
 
-void ChompGfxText::buildTexture()
+void ChompGfxText::setText(const char* text)
 {
-    if (texture) {
-        SDL_DestroyTexture(texture);
-    }
-    texture = SDL_CreateTexture(
-        renderer,
-        SDL_PIXELFORMAT_RGBA8888,
-        SDL_TEXTUREACCESS_TARGET,
-        512, // @TODO allow user to set
-        512        
-    );
-    if (!texture) {
-        throw ChompSdlException();
-    }
-    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-    setPixelSize();
+    setText(text, TEXT_LEFT, TEXT_TOP);
+}
+
+void ChompGfxText::setText(const char* text, uint8_t hAlign)
+{
+    setText(text, hAlign, TEXT_TOP);
 }
 
 void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
@@ -49,19 +40,24 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
         return;
     }
 
-    buildTexture();
-    ChompGfxRect testRect;
-    testRect.x = .9;
-    testRect.y = 0;
-    testRect.w = 1;
-    testRect.h = 1;
-    drawFillRect(&testRect);
-
-    // draw text
-    #ifndef WITHOUT_SDL_TTF
+    // get current color
     uint8_t r,g,b,a;
     SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
     SDL_Color color = {r, g, b, a};
+
+    // change color to wipe texture
+    SDL_SetRenderTarget(renderer, texture);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+    SDL_RenderFillRect(renderer, NULL);
+    SDL_SetRenderDrawColor(renderer, r, g, b, a);
+
+    // no need to proceed if text was not provided
+    if (!text) {
+        return;
+    }
+
+    #ifndef WITHOUT_SDL_TTF 
+    // create texture surface
     SDL_Surface* textSurface = TTF_RenderText_Blended(
         font,
         text,
@@ -71,6 +67,7 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
         throw ChompSdlTtfException();
     }
 
+    // convert to texture
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(
         renderer,
         textSurface
@@ -78,13 +75,10 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
     if (!textTexture) {
         throw ChompSdlException();
     }
-
     SDL_Rect destRect = {0, 0, textSurface->w, textSurface->h}; 
     SDL_FreeSurface(textSurface);
 
-
-
-    SDL_SetRenderTarget(renderer, texture);
+    // draw to layer
     if (
         SDL_RenderCopy(
             renderer,

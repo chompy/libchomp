@@ -29,6 +29,7 @@
 
 #define DEFAULT_WINDOW_W 640
 #define DEFAULT_WINDOW_H 480
+#define DEFAULT_LAYER_PIXEL_SIZE 512
 
 struct RenderLayers {
     bool operator<(const RenderLayers &renderLayer) const { return renderLayer.layer->zIndex > layer->zIndex; }
@@ -60,10 +61,12 @@ public:
     void setDrawColor(ChompGfxColor* color);
 
     // layer management
+    ChompGfxLayer* newLayer(ChompGfxSize* size);
     ChompGfxLayer* newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size);
     ChompGfxLayer* newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame, ChompGfxSize* size);
     ChompGfxSprite* newSprite(const char* spriteName, ChompGfxSize* size);
-    ChompGfxText* newTextLayer(const char* fontName, uint16_t ptSize, ChompGfxSize* size);
+    ChompGfxText* newTextLayer(const char* fontName, const uint16_t ptSize, ChompGfxSize* size);
+    ChompGfxText* newTextLayer(const char* fontName, const uint16_t ptSize, const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size);
 
     // renderer
     void addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect);

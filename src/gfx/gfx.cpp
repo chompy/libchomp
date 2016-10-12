@@ -129,6 +129,15 @@ void ChompGfx::setDrawColor(ChompGfxColor* color)
     );
 }
 
+ChompGfxLayer* ChompGfx::newLayer(ChompGfxSize* size)
+{
+    return newLayer(
+        size->w * DEFAULT_LAYER_PIXEL_SIZE,
+        size->h * DEFAULT_LAYER_PIXEL_SIZE,
+        size
+    );
+}
+
 ChompGfxLayer* ChompGfx::newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size)
 {
     SDL_Texture* texture = SDL_CreateTexture(
@@ -186,7 +195,18 @@ ChompGfxSprite* ChompGfx::newSprite(const char* spriteName, ChompGfxSize* size)
     );
 }
 
-ChompGfxText* ChompGfx::newTextLayer(const char* fontName, uint16_t ptSize, ChompGfxSize* size)
+ChompGfxText* ChompGfx::newTextLayer(const char* fontName, const uint16_t ptSize, ChompGfxSize* size)
+{
+    return newTextLayer(
+        fontName,
+        ptSize,
+        size->w * DEFAULT_LAYER_PIXEL_SIZE,
+        size->h * DEFAULT_LAYER_PIXEL_SIZE,
+        size
+    );
+}
+
+ChompGfxText* ChompGfx::newTextLayer(const char* fontName, const uint16_t ptSize, const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size)
 {
     if (!fontName) {
         return NULL;
@@ -202,12 +222,22 @@ ChompGfxText* ChompGfx::newTextLayer(const char* fontName, uint16_t ptSize, Chom
     // get font data
     std::vector<uint8_t> fontData(fileSize, 0);
     ChompAsset::readFile(assetName, 0, &fontData[0], fileSize);
+    // new texture
+    SDL_Texture* texture = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        pixelWidth,
+        pixelHeight
+    );
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     // new text layer
     return new ChompGfxText(
         renderer,
         &fontData[0],
         fileSize,
         ptSize,
+        texture,
         size
     );
 }
