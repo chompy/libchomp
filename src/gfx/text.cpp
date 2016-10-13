@@ -58,7 +58,8 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
 
     #ifndef WITHOUT_SDL_TTF 
     // create texture surface
-    SDL_Surface* textSurface = TTF_RenderText_Blended(
+    // @TODO option to use other render methods
+    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(
         font,
         text,
         color
@@ -77,6 +78,32 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
     }
     SDL_Rect destRect = {0, 0, textSurface->w, textSurface->h}; 
     SDL_FreeSurface(textSurface);
+
+    // alignment
+    switch (hAlign) {
+        case TEXT_CENTER:
+        {
+            destRect.x = (getPixelWidth() / 2) - (textSurface->w / 2);
+            break;
+        }
+        case TEXT_RIGHT:
+        {
+            destRect.x = getPixelWidth() - textSurface->w;
+            break;
+        }
+    }
+    switch (vAlign) {
+        case TEXT_MIDDLE:
+        {
+            destRect.y = (getPixelHeight() / 2) - (textSurface->h / 2);
+            break;
+        }
+        case TEXT_BOTTOM:
+        {
+            destRect.y = getPixelHeight() - textSurface->h;
+            break;
+        }
+    }
 
     // draw to layer
     if (

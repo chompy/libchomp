@@ -33,5 +33,11 @@ void ChompyStateMain::exit()
 
 void ChompyStateMain::update()
 {
-    core->gfx.addLayerToRenderer(textLayer, nullptr, nullptr);
+    ChompGfxSize windowSize = core->gfx.getWindowSize();
+    ChompGfxRect dstRect;
+    dstRect.x = (windowSize.w / 2) - (textLayer->size.w / 2);
+    dstRect.y = (windowSize.h / 2) - (textLayer->size.h / 2);
+    dstRect.w = textLayer->size.w;
+    dstRect.h = textLayer->size.h;
+    core->gfx.addLayerToRenderer(textLayer, nullptr, &dstRect);
 }
