@@ -19,8 +19,8 @@ COMPILERS = {
         "method" : "compile_font"
     },
     "config" : {
-        "filepath" : "assets/config.json",
-        "filename" : "_config",
+        "filepath" : "assets/config",
+        "prefix" : "conf_",
         "method" : "compile_config"
     },
     "sound effects" : {

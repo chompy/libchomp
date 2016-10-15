@@ -18,6 +18,10 @@ class AssetCompilerCore:
     OUTPUT_PATH = "assets.dat"
     RAND_MAX = 32767
 
+    CONFIG_TYPE_STRING = 0
+    CONFIG_TYPE_INT = 1
+    CONFIG_TYPE_FLOAT = 2
+
     def compile_sprite_frames(self, imagePath, frameSize):
 
         # image does not exist
@@ -171,39 +175,15 @@ class AssetCompilerCore:
         print "done"
         return outputBuffer
 
-    # compile language
-    def compile_language(self, filepath):
+    # compile config
+    def compile_config(self, filepath):
 
         # must be JSON file
         if os.path.splitext(filepath)[1] != ".json":
             return None
 
         # debug
-        print "  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0],
-
-        # parse json
-        config = parse_json(filepath)
-
-        # prepare output
-        outputBuffer = ""
-
-        # compile number of entries
-        outputBuffer += struct.pack("<H", len(config))
-
-        # compile key values
-        for key in config:
-            value = config[key]
-            outputBuffer += struct.pack("<B", len(key))
-            outputBuffer += key
-            outputBuffer += struct.pack("<B", len(value))
-            outputBuffer += value
-
-        # done
-        print "done"
-        return outputBuffer
-
-    # compile config
-    def compile_config(self, filepath):
+        print "  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0], 
 
         # config file not found
         if not os.path.exists(filepath):
@@ -217,20 +197,58 @@ class AssetCompilerCore:
         # prepare output
         outputBuffer = ""
 
-        # iterate params
-        for param in config:
-            value = config[param]
-            outputBuffer += struct.pack("<B", len(param))
-            outputBuffer += str(param)
-            if type(value) == int:
-                outputBuffer += struct.pack("<B", 4)
+        # function to recursively iterate over config
+        def iterateConfig(value, keys = [], outputBuffer = ""):
+            
+            configKey = ""
+            if (keys):
+                configKey = '.'.join(keys)
+
+            # dict, recursive
+            if type(value) is dict:
+                for key in value:
+                    newKeys = list(keys)
+                    newKeys.append(key)
+                    iterateConfig(
+                        value[key],
+                        newKeys,
+                        outputBuffer
+                    )
+            
+            # list 
+            elif type(value) is list:
+                count = 0
+                for subValue in value:
+                    iterateConfig(
+                        subValue,
+                        keys.append(str(count)),
+                        outputBuffer
+                    )
+                    count += 1
+
+            # integer
+            elif type(value) is int:
+                outputBuffer += struct.pack("<B", self.CONFIG_TYPE_INT)
                 outputBuffer += struct.pack("<l", value)
-            elif type(value) == float:
-                outputBuffer += struct.pack("<B", 4)
+
+            # float
+            elif type(value) is float:
+                outputBuffer += struct.pack("<B", self.CONFIG_TYPE_FLOAT)
                 outputBuffer += struct.pack("<f", value)
+
+            # string (treat everything else as a string)
             else:
-                outputBuffer += struct.pack("<B", len(value))
+                outputBuffer += struct.pack("<B", self.CONFIG_TYPE_STRING)
+                outputBuffer += struct.pack("<H", len(configKey))
                 outputBuffer += str(value)
+
+        # config must be a dict
+        if type(config) is not dict:
+            print "error"
+            print "\t----> config should be in dict format ({ 'key' : 'value' })."
+
+        # recursively process
+        iterateConfig(config, [], outputBuffer)
 
         # done
         print "done"

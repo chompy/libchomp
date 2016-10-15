@@ -1,1 +1,6 @@
 - Namespacing Chomp::?
+- Config reader
+- Gamepad/Joystick input
+- Keyboard input
+- Requirements.txt for asset compiler
+- Docblock commenting?
