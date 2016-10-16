@@ -194,12 +194,10 @@ class AssetCompilerCore:
         # parse json
         config = parse_json(filepath)
 
-        # prepare output
-        outputBuffer = ""
-
         # function to recursively iterate over config
-        def iterateConfig(value, keys = [], outputBuffer = ""):
+        def iterateConfig(value, keys = []):
             
+            outputBuffer = ""
             configKey = ""
             if (keys):
                 configKey = '.'.join(keys)
@@ -209,25 +207,31 @@ class AssetCompilerCore:
                 for key in value:
                     newKeys = list(keys)
                     newKeys.append(key)
-                    iterateConfig(
+                    outputBuffer += iterateConfig(
                         value[key],
-                        newKeys,
-                        outputBuffer
+                        newKeys
                     )
+                return outputBuffer
             
             # list 
             elif type(value) is list:
                 count = 0
                 for subValue in value:
-                    iterateConfig(
+                    newKeys = list(keys)
+                    newKeys.append(str(count))
+                    outputBuffer += iterateConfig(
                         subValue,
-                        keys.append(str(count)),
-                        outputBuffer
+                        newKeys
                     )
                     count += 1
+                return outputBuffer
+
+            # key
+            outputBuffer += struct.pack("<H", len(configKey))
+            outputBuffer += str(configKey)
 
             # integer
-            elif type(value) is int:
+            if type(value) is int:
                 outputBuffer += struct.pack("<B", self.CONFIG_TYPE_INT)
                 outputBuffer += struct.pack("<l", value)
 
@@ -239,8 +243,10 @@ class AssetCompilerCore:
             # string (treat everything else as a string)
             else:
                 outputBuffer += struct.pack("<B", self.CONFIG_TYPE_STRING)
-                outputBuffer += struct.pack("<H", len(configKey))
+                outputBuffer += struct.pack("<H", len(value))
                 outputBuffer += str(value)
+
+            return outputBuffer
 
         # config must be a dict
         if type(config) is not dict:
@@ -248,7 +254,7 @@ class AssetCompilerCore:
             print "\t----> config should be in dict format ({ 'key' : 'value' })."
 
         # recursively process
-        iterateConfig(config, [], outputBuffer)
+        outputBuffer = iterateConfig(config)
 
         # done
         print "done"

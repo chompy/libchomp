@@ -8,6 +8,7 @@
 #endif
 
 #include "asset/asset.h"
+#include "asset/config.h"
 #include "gfx/gfx.h"
 #include "sfx/sfx.h"
 #include "input/input.h"
