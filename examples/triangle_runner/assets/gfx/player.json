@@ -1,0 +1,12 @@
+{
+    "frame_size" : [1024,1024],
+    "source" : {
+        "sdl2" : "player.png"
+    },
+    "animation" : {
+        "stop" : [0],
+        "move" : [0],
+        "die" : [0]
+    },
+    "animation_fps" : 24
+}

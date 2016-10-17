@@ -1,0 +1,6 @@
+{
+    "frame_size" : [256,256],
+    "source" : {
+        "sdl2" : "coin.png"
+    }
+}

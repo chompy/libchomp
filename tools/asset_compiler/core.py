@@ -53,7 +53,7 @@ class AssetCompilerCore:
             outputBuffer += struct.pack("<H", int(i))
 
         # write frame count
-        outputBuffer += struct.pack("<H", (sprite.size[1] / frameSize[1]) * (sprite.size[0] / frameSize[0]) - 1)
+        outputBuffer += struct.pack("<H", (sprite.size[1] / frameSize[1]) * (sprite.size[0] / frameSize[0]))
 
         # compile tile data
         for y in range( sprite.size[1] / frameSize[1] ):
