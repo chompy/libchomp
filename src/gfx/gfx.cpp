@@ -129,6 +129,15 @@ void ChompGfx::setDrawColor(ChompGfxColor* color)
     );
 }
 
+void ChompGfx::setCursorVisibility(bool state)
+{
+    if (state) {
+        SDL_ShowCursor(SDL_ENABLE);
+        return;
+    }
+    SDL_ShowCursor(SDL_DISABLE);
+}
+
 ChompGfxLayer* ChompGfx::newLayer(ChompGfxSize* size)
 {
     return newLayer(

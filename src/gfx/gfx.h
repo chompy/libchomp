@@ -60,6 +60,9 @@ public:
     // general draw
     void setDrawColor(ChompGfxColor* color);
 
+    // misc functions
+    void setCursorVisibility(bool state);
+
     // layer management
     ChompGfxLayer* newLayer(ChompGfxSize* size);
     ChompGfxLayer* newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size);
