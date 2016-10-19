@@ -3,8 +3,13 @@
 
 #include "state.h"
 
+#include <stdlib.h>
+#include <time.h>
+
 #define PLAYER_MOVE_INC .03
 #define WALL_SPACING .75
+#define WALL_V_GAP 3
+#define START_SPEED .01
 
 class ChompyStatePlay : public ChompState
 {
@@ -17,6 +22,7 @@ public:
         playerYTo = 0;
         playerYAt = 0;
         playerX = 0;
+        speed = 0;
     }
 
     void enter();
@@ -28,6 +34,7 @@ protected:
     float playerX;
     float playerYTo;
     float playerYAt;
+    float speed;
     ChompGfxSprite* playerSprite;
     ChompGfxSprite* wallSprite;
     std::vector<std::vector<bool>> walls;

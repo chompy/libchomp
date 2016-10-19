@@ -2,6 +2,8 @@
 
 void ChompyStatePlay::enter()
 {
+    // seed random
+    srand (time(NULL));
     // hide cursor
     core->gfx.setCursorVisibility(false);
     // load player sprite
@@ -23,6 +25,7 @@ void ChompyStatePlay::enter()
     playerYTo = (windowSize.h - playerSprite->size.h) / 2;
     playerYAt = playerYTo;
     playerX = 0;
+    speed = START_SPEED;
 
     startRound();
 }
@@ -82,14 +85,20 @@ void ChompyStatePlay::update()
     rect.w = wallSprite->size.w;
     rect.h = wallSprite->size.h;
     for (uint16_t x = 0; x < walls.size(); x++) {
+        if (x * WALL_SPACING < playerX) {
+            continue;
+        }
         for (uint16_t y = 0; y < walls[x].size(); y++) {
-            rect.x = x * WALL_SPACING;
+            if (!walls[x][y]) {
+                continue;
+            }
+            rect.x = (x * WALL_SPACING) - playerX;
             rect.y = vOffset + (y * wallSprite->size.h);
             core->gfx.addLayerToRenderer(wallSprite, NULL, &rect);
         }
     }
     
-
+    playerX += .01;
 }
 
 void ChompyStatePlay::startRound()
@@ -104,8 +113,14 @@ void ChompyStatePlay::startRound()
 void ChompyStatePlay::generateWall()
 {
     std::vector<bool> wall;
-    for (uint16_t i = 0; i < 1.0 / wallSprite->size.h; i++) {
-        wall.push_back(true);
+    uint16_t wallVerCount = 1.0 / wallSprite->size.h;
+    uint16_t gapPos = rand() % (wallVerCount - WALL_V_GAP) + 1;
+    for (uint16_t i = 0; i < wallVerCount; i++) {
+        if (i >= gapPos && i < gapPos + WALL_V_GAP) {
+            wall.push_back(false);
+        } else {
+            wall.push_back(true);
+        }
     }
     walls.push_back(wall);
 }
