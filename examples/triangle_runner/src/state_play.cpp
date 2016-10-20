@@ -51,9 +51,9 @@ void ChompyStatePlay::update()
 
     // player movement
     if (playerYAt > playerYTo) {
-        playerYAt -= PLAYER_MOVE_INC;
+        playerYAt -= (PLAYER_MOVE_INC * core->deltaTime);
     } else if (playerYAt < playerYTo) {
-        playerYAt += PLAYER_MOVE_INC;
+        playerYAt += (PLAYER_MOVE_INC * core->deltaTime);
     }
     if (fabs(playerYAt - playerYTo) < PLAYER_MOVE_INC) {
         playerYAt = playerYTo;
@@ -98,7 +98,7 @@ void ChompyStatePlay::update()
         }
     }
     
-    playerX += .01;
+    playerX += .01 * core->deltaTime;
 }
 
 void ChompyStatePlay::startRound()

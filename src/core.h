@@ -21,6 +21,10 @@ public:
     ChompSfx sfx;
     ChompInput input;
 
+    float deltaTime = 1;
+
+    uint32_t getTicks() { return SDL_GetTicks(); }
+
 };
 
 #endif

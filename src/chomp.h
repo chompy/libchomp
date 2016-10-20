@@ -28,7 +28,8 @@ public:
 
 private:
 
-    uint32_t lastFrameTime;
+    static float targetFrameDelay;
+    static uint32_t lastFrameTime;
 
 };
 

@@ -1,4 +1,6 @@
 #include "chomp.h"
+uint32_t Chomp::lastFrameTime = 0;
+float Chomp::targetFrameDelay = 0;
 
 Chomp::Chomp()
 {
@@ -26,6 +28,7 @@ void Chomp::start(ChompState* state)
     ChompState::changeState(state);
 
     // start main loop
+    targetFrameDelay = 1000 / TARGET_FPS;
     lastFrameTime = 0;
     #ifdef EMSCRIPTEN
     emscripten_set_main_loop_arg(
@@ -36,13 +39,16 @@ void Chomp::start(ChompState* state)
     );
     emscripten_set_main_loop_timing(EM_TIMING_RAF, 1);
     #else
-    int32_t targetFrameDelay = 1000 / TARGET_FPS;
-    while( Chomp::loop(&core) ) { 
-        int16_t deltaTime = (SDL_GetTicks() - lastFrameTime) / targetFrameDelay;
-        if (targetFrameDelay - deltaTime >= 0) {
-            SDL_Delay(targetFrameDelay - deltaTime);
+    float delay = 0;
+    while(Chomp::loop(&core)) {
+        lastFrameTime = core.getTicks();
+        delay = targetFrameDelay / core.deltaTime;
+        if (delay > targetFrameDelay) {
+            delay = targetFrameDelay;
         }
-        lastFrameTime = SDL_GetTicks();
+        if (delay > 0) {
+            SDL_Delay( delay );
+        }
     }
     #endif
 
@@ -54,11 +60,12 @@ void Chomp::start(ChompState* state)
 void Chomp::emscriptenLoop(void* core)
 {
     Chomp::loop((ChompCore*) core);
+    ChompCore* _core = (ChompCore*) core;
+    lastFrameTime = _core->getTicks();
 }
 
 bool Chomp::loop(ChompCore* core)
 {
-
     // handle sdl events
     SDL_Event e;
     while( SDL_PollEvent(&e) ) {
@@ -115,6 +122,12 @@ bool Chomp::loop(ChompCore* core)
 
     // draw
     core->gfx.render();
+
+    // delta time
+    core->deltaTime = ((float) core->getTicks() - (float) lastFrameTime) / (float) targetFrameDelay;
+    if (core->deltaTime > 2) {
+        core->deltaTime = 2;
+    }
 
     // continue
     return true;
