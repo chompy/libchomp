@@ -27,6 +27,8 @@ void ChompyStatePlay::enter()
     playerX = 0;
     speed = START_SPEED;
 
+    // start first round
+    round = 0;
     startRound();
 }
 
@@ -98,14 +100,28 @@ void ChompyStatePlay::update()
         }
     }
     
-    playerX += .01 * core->deltaTime;
+    // move player
+    playerX += speed * core->deltaTime;
+
+    // next round
+    if (playerX > (WALL_SPACING * WALLS_PER_ROUND) + 3) {
+        startRound();
+    }
 }
 
 void ChompyStatePlay::startRound()
 {
-    playerX = 0;
+    round += 1;
+    if (round % SPEED_UP_RATE == 0) {
+        speed = speed * ROUND_SPEED_MOD;
+        if (speed > MAX_SPEED) {
+            speed = MAX_SPEED;
+        }
+        std::cout << speed << std::endl;
+    }
+    playerX = -2;
     walls.clear();
-    for (uint16_t i = 0; i < 100; i++) {
+    for (uint16_t i = 0; i < WALLS_PER_ROUND; i++) {
         generateWall();
     }
 }

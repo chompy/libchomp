@@ -9,7 +9,11 @@
 #define PLAYER_MOVE_INC .03
 #define WALL_SPACING .75
 #define WALL_V_GAP 3
-#define START_SPEED .01
+#define WALLS_PER_ROUND 10
+#define START_SPEED .015
+#define ROUND_SPEED_MOD 1.1
+#define MAX_SPEED .03
+#define SPEED_UP_RATE 5
 
 class ChompyStatePlay : public ChompState
 {
@@ -23,6 +27,7 @@ public:
         playerYAt = 0;
         playerX = 0;
         speed = 0;
+        round = 0;
     }
 
     void enter();
@@ -30,6 +35,9 @@ public:
     void update();
 
 protected:
+
+    uint32_t score;
+    uint16_t round;
 
     float playerX;
     float playerYTo;

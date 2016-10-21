@@ -47,7 +47,7 @@ public:
 
     // window data
     ChompGfxSize getWindowSize();
-    void setWindowPixelSize(const uint16_t width, const uint16_t height);
+    void setWindowTitle(const char* title);
 
     // conversions
     void toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* height);

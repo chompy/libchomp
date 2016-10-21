@@ -76,6 +76,14 @@ ChompGfxSize ChompGfx::getWindowSize()
     return size;
 }
 
+void ChompGfx::setWindowTitle(const char* title)
+{
+    SDL_SetWindowTitle(
+        window,
+        title
+    );
+}
+
 ChompGfxPosition ChompGfx::getCameraPosition()
 {
     return camera;
