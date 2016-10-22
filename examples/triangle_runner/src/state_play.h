@@ -23,6 +23,7 @@ public:
     {
         playerSprite = NULL;
         wallSprite = NULL;
+        scoreText = NULL;
         playerYTo = 0;
         playerYAt = 0;
         playerX = 0;
@@ -46,6 +47,7 @@ protected:
     ChompGfxSprite* playerSprite;
     ChompGfxSprite* wallSprite;
     std::vector<std::vector<bool>> walls;
+    ChompGfxText* scoreText;
 
     void startRound();
     void generateWall();

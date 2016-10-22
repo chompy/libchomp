@@ -16,8 +16,8 @@ void ChompGfxText::setFont(uint8_t* fontData, const uint32_t fontDataSize, const
     if (!fontDataRW) {
         throw ChompSdlException();
     }
-    font = TTF_OpenFont("assets/font/impact.ttf", fontPtSize);
-    //font = TTF_OpenFontRW(fontDataRW, 1, fontPtSize);
+    //font = TTF_OpenFont("assets/font/impact.ttf", fontPtSize);
+    font = TTF_OpenFontRW(fontDataRW, 1, fontPtSize);
     if (!font) {
         throw ChompSdlTtfException();
     }
@@ -59,7 +59,7 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
     #ifndef WITHOUT_SDL_TTF 
     // create texture surface
     // @TODO option to use other render methods
-    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(
+    SDL_Surface* textSurface = TTF_RenderUTF8_Blended(
         font,
         text,
         color
