@@ -23,15 +23,17 @@ void ChompyStatePlay::enter()
     // load score text
     size.w = .4;
     scoreText = core->gfx.newTextLayer("tahoma", 24, &size);
-    scoreText->setText("SCORE: 0");
+    //scoreText->setText("SCORE: 0");
     // center player
     ChompGfxSize windowSize = core->gfx.getWindowSize();
     playerYTo = (windowSize.h - playerSprite->size.h) / 2;
     playerYAt = playerYTo;
     playerX = 0;
     speed = START_SPEED;
+    lastScoreTextUpdate = 0;
 
     // start first round
+    score = 0;
     round = 0;
     startRound();
 }
@@ -43,6 +45,9 @@ void ChompyStatePlay::exit()
     }
     if (wallSprite) {
         delete wallSprite;
+    }
+    if (scoreText) {
+        delete scoreText;
     }
     core->gfx.setCursorVisibility(true);
 }
@@ -106,8 +111,15 @@ void ChompyStatePlay::update()
     
     // move player
     playerX += speed * core->deltaTime;
+    score += 1;
 
     // draw score
+    if (core->getTicks() - lastScoreTextUpdate > REDRAW_SCORE_RATE) {
+        char scoreTextStr[24];
+        sprintf(scoreTextStr, "SCORE: %d", score);
+        scoreText->setText(scoreTextStr);
+        lastScoreTextUpdate = core->getTicks();
+    }
     rect.x = .01;
     rect.y = .01;
     rect.w = scoreText->size.w;
@@ -128,7 +140,6 @@ void ChompyStatePlay::startRound()
         if (speed > MAX_SPEED) {
             speed = MAX_SPEED;
         }
-        std::cout << speed << std::endl;
     }
     playerX = -2;
     walls.clear();

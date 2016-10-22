@@ -3,6 +3,7 @@
 
 #include "state.h"
 
+#include <string>
 #include <stdlib.h>
 #include <time.h>
 
@@ -14,6 +15,7 @@
 #define ROUND_SPEED_MOD 1.1
 #define MAX_SPEED .03
 #define SPEED_UP_RATE 5
+#define REDRAW_SCORE_RATE 1000
 
 class ChompyStatePlay : public ChompState
 {
@@ -29,6 +31,7 @@ public:
         playerX = 0;
         speed = 0;
         round = 0;
+        lastScoreTextUpdate = 0;
     }
 
     void enter();
@@ -48,6 +51,7 @@ protected:
     ChompGfxSprite* wallSprite;
     std::vector<std::vector<bool>> walls;
     ChompGfxText* scoreText;
+    uint32_t lastScoreTextUpdate;
 
     void startRound();
     void generateWall();
