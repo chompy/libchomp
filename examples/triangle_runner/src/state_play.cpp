@@ -66,7 +66,7 @@ void ChompyStatePlay::update()
     } else if (playerYAt < playerYTo) {
         playerYAt += (PLAYER_MOVE_INC * core->deltaTime);
     }
-    if (fabs(playerYAt - playerYTo) < PLAYER_MOVE_INC) {
+    if (fabs(playerYAt - playerYTo) < PLAYER_MOVE_INC * 1.5) {
         playerYAt = playerYTo;
     }
     if (playerYAt < 0) {
@@ -96,31 +96,36 @@ void ChompyStatePlay::update()
     rect.w = wallSprite->size.w;
     rect.h = wallSprite->size.h;
     for (uint16_t x = 0; x < walls.size(); x++) {
-        if (x * WALL_SPACING < playerX) {
+        /*if (x * WALL_SPACING < playerX) {
             continue;
-        }
+        }*/
         for (uint16_t y = 0; y < walls[x].size(); y++) {
             if (!walls[x][y]) {
                 continue;
             }
-            rect.x = (x * WALL_SPACING) - playerX;
+            rect.x = (x * WALL_SPACING) - playerX - (windowSize.w / 2);
             rect.y = vOffset + (y * wallSprite->size.h);
             core->gfx.addLayerToRenderer(wallSprite, NULL, &rect);
         }
+
+        // collision
+        if (playerX >= (x * WALL_SPACING) && playerX <= (x * WALL_SPACING) + wallSprite->size.w ) {
+            std::cout << "COLLIDE" << std::endl;
+        }
+
+
     }
     
     // move player
     playerX += speed * core->deltaTime;
     score += 1;
 
-    // draw score
+    // update score text
     if (core->getTicks() - lastScoreTextUpdate > REDRAW_SCORE_RATE) {
-        char scoreTextStr[24];
-        sprintf(scoreTextStr, "SCORE: %d", score);
-        scoreText->setText(scoreTextStr);
+        updateScore();
         lastScoreTextUpdate = core->getTicks();
     }
-    rect.x = .01;
+    rect.x = windowSize.w - scoreText->size.w - .01;
     rect.y = .01;
     rect.w = scoreText->size.w;
     rect.h = scoreText->size.h;
@@ -141,7 +146,8 @@ void ChompyStatePlay::startRound()
             speed = MAX_SPEED;
         }
     }
-    playerX = -2;
+    ChompGfxSize windowSize = core->gfx.getWindowSize();
+    playerX = -windowSize.w * 1.5;
     walls.clear();
     for (uint16_t i = 0; i < WALLS_PER_ROUND; i++) {
         generateWall();
@@ -161,4 +167,12 @@ void ChompyStatePlay::generateWall()
         }
     }
     walls.push_back(wall);
+}
+
+void ChompyStatePlay::updateScore()
+{
+    return;
+    char scoreTextStr[24];
+    sprintf(scoreTextStr, "%d", score);
+    scoreText->setText(scoreTextStr, TEXT_RIGHT);
 }

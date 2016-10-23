@@ -55,6 +55,7 @@ protected:
 
     void startRound();
     void generateWall();
+    void updateScore();
 
 };
 

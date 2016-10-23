@@ -52,7 +52,7 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
     SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
     // no need to proceed if text was not provided
-    if (!text) {
+    if (!text || strlen(text) == 0) {
         return;
     }
 
