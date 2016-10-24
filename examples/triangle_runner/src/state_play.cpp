@@ -124,19 +124,32 @@ void ChompyStatePlay::update()
         }
 
         // pass wall
-        ChompGfxRect wallAreaRect;
-        wallAreaRect.x = ((float) x * WALL_SPACING);
-        wallAreaRect.y = 0;
-        wallAreaRect.w = wallSprite->size.h;
-        wallAreaRect.h = GAME_AREA_H;
-
+        ChompGfxRect wallRect;
+        wallRect.x = ((float) x * WALL_SPACING);
+        wallRect.y = 0;
+        wallRect.w = wallSprite->size.h;
+        wallRect.h = GAME_AREA_H;
         if (
             playerSprite->hasCollision(
                 &playerPos,
-                &wallAreaRect
+                &wallRect
             )
         ) {
-            std::cout << "COLLIDE" << std::endl;
+            wallRect.h = wallSprite->size.h;
+            for (uint16_t y = 0; y < walls[x].size(); y++) {
+                if (!walls[x][y]) {
+                    continue;
+                }
+                wallRect.y = y * wallSprite->size.h;
+                if (
+                    playerSprite->hasCollision(
+                        &playerPos,
+                        &wallRect
+                    )
+                ) {
+                    std::cout << "COLLIDE" << std::endl;    
+                }                
+            }
         }
 
     }
