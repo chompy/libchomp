@@ -59,15 +59,10 @@ bool ChompInputMouse::pressed(uint8_t button)
 
 bool ChompInputMouse::in(int32_t pixelX, int32_t pixelY, int32_t pixelW, int32_t pixelH)
 {
-    SDL_Rect rect;
-    rect.x = pixelX;
-    rect.y = pixelY;
-    rect.w = pixelW;
-    rect.h = pixelH;
-    SDL_Point point;
-    point.x = x;
-    point.y = y;
-    return SDL_PointInRect(&point, &rect);
+    return (
+        x >= pixelX && x <= pixelX + pixelW &&
+        y >= pixelY && y <= pixelY + pixelH
+    );
 }
 
 /*bool ChompInputMouse::in(ChompGfxRect* rect)
