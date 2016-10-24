@@ -8,8 +8,8 @@ void ChompyStatePlay::enter()
     core->gfx.setCursorVisibility(false);
     // game layer
     ChompGfxSize size;
-    size.w = 1;
-    size.h = 1;
+    size.w = GAME_AREA_W;
+    size.h = GAME_AREA_H;
     gameLayer = core->gfx.newLayer(1024, 1024, &size);
 
     // load player sprite
@@ -65,7 +65,7 @@ void ChompyStatePlay::update()
 
     // clear game layer
     ChompGfxColor color;
-    color.r = 255;
+    color.r = 0;
     color.g = 0;
     color.b = 0;
     color.a = 255;
@@ -86,49 +86,49 @@ void ChompyStatePlay::update()
     }
     if (playerPos.y < 0) {
         playerPos.y = 0;
-    } else if (playerPos.y > 1 - playerSprite->size.h) {
-        playerPos.y = 1 - playerSprite->size.h;
+    } else if (playerPos.y > GAME_AREA_H - playerSprite->size.h) {
+        playerPos.y = GAME_AREA_H - playerSprite->size.h;
     }
     ChompGfxSize mouse = core->gfx.fromPixelSize(
         core->input.mouse.x,
         core->input.mouse.y
     );
-    //mouse.h -= ((windowSize.h / 2) - .5);
-    //playerYTo = mouse.h - vOffset;
-    if (playerPos.y > 1) {
-        playerPos.y = 1;
+    mouse.h -= ((windowSize.h / 2) - .5);
+    playerYTo = mouse.h;
+    if (playerPos.y > GAME_AREA_H - playerSprite->size.h) {
+        playerPos.y = GAME_AREA_H - playerSprite->size.h;
     }
 
     // draw player
     ChompGfxRect rect;
-    rect.x = playerSprite->size.w / 2;
+    rect.x = 0;
     rect.y = playerPos.y;
     rect.w = playerSprite->size.w;
     rect.h = playerSprite->size.h;
-    //gameLayer->drawLayer(playerSprite, NULL, &rect);
+    gameLayer->drawLayer(playerSprite, NULL, &rect);
 
     // draw walls
     rect.w = wallSprite->size.w;
     rect.h = wallSprite->size.h;
     for (uint16_t x = 0; x < walls.size(); x++) {
-        /*if (x * WALL_SPACING < playerPos.x) {
+        if (playerPos.x > x * WALL_SPACING) {
             continue;
-        }*/
+        }
         for (uint16_t y = 0; y < walls[x].size(); y++) {
             if (!walls[x][y]) {
                 continue;
             }
-            rect.x = ((x + 2) * WALL_SPACING) - playerPos.x;
+            rect.x = (x * WALL_SPACING) - playerPos.x;
             rect.y = y * wallSprite->size.h;
-            //gameLayer->drawLayer(wallSprite, NULL, &rect);
+            gameLayer->drawLayer(wallSprite, NULL, &rect);
         }
 
         // pass wall
         ChompGfxRect wallAreaRect;
-        wallAreaRect.x = (x * WALL_SPACING);
+        wallAreaRect.x = ((float) x * WALL_SPACING);
         wallAreaRect.y = 0;
         wallAreaRect.w = wallSprite->size.h;
-        wallAreaRect.h = 1;
+        wallAreaRect.h = GAME_AREA_H;
 
         if (
             playerSprite->hasCollision(
@@ -139,17 +139,8 @@ void ChompyStatePlay::update()
             std::cout << "COLLIDE" << std::endl;
         }
 
-        // pass wall
-        /*if (
-            playerX >= (x * WALL_SPACING) - (windowSize.w / 2) && 
-            playerX <= (x * WALL_SPACING) - (windowSize.w / 2) + (wallSprite->size.w)
-        ) {
-            std::cout << "COLLIDE" << std::endl;
-        }*/
-
-
     }
-    
+
     // move player
     playerPos.x += speed * core->deltaTime;
     score += 1;
@@ -167,11 +158,11 @@ void ChompyStatePlay::update()
     */
 
     // draw game layer
-    rect.x = 0;
-    rect.y = 0;
-    rect.w = 1;
-    rect.h = 1;
-    core->gfx.addLayerToRenderer(gameLayer, &rect, &rect);
+    rect.x = (windowSize.w / 2) - (GAME_AREA_W / 2);
+    rect.y = (windowSize.h / 2) - (GAME_AREA_H / 2);
+    rect.w = GAME_AREA_W;
+    rect.h = GAME_AREA_H;
+    core->gfx.addLayerToRenderer(gameLayer, NULL, &rect);
 
     // next round
     if (playerPos.x > (WALL_SPACING * WALLS_PER_ROUND) + 3) {

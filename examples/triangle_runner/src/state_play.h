@@ -16,6 +16,8 @@
 #define MAX_SPEED .03
 #define SPEED_UP_RATE 5
 #define REDRAW_SCORE_RATE 1000
+#define GAME_AREA_W 1.0
+#define GAME_AREA_H 1.0
 
 class ChompyStatePlay : public ChompState
 {
