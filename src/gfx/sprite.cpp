@@ -24,10 +24,10 @@ bool ChompGfxSprite::setAnimation(const char* name)
     if (currentAnimation && currentAnimation->name == nameString) {
         return true;
     }
+    currentAnimation = NULL;
     for (uint16_t i = 0; i < animationData.size(); i++) {
-        ChompGfxSpriteAnimationData animation = animationData[i];
-        if (animation.name == nameString) {
-            currentAnimation = &animation;
+        if (animationData[i].name == nameString) {
+            currentAnimation = &animationData[i];
             lastAnimationTick = SDL_GetTicks();
             animationIndex = 0;
             setFrame( currentAnimation->frames[ animationIndex ] );
@@ -72,17 +72,16 @@ void ChompGfxSprite::setTextures(uint8_t* bitmap)
 
 void ChompGfxSprite::getAnimationData(uint8_t* bitmap)
 {
+    currentAnimation = NULL;
     uint8_t* data = ChompBitmap::getAnimationData(bitmap);
     uint8_t animationCount = data[0];
     animationFramerate = 1000 / (uint16_t) data[1];
     uint32_t pos = 2;
     uint8_t animationNameLength;
-    uint8_t animationFrames;
+    uint16_t animationFrames;
 
     for (uint8_t i = 0; i < animationCount; i++) {
-
         ChompGfxSpriteAnimationData animation;
-
         animationNameLength = data[pos];
         char animationName[animationNameLength + 1];
         memcpy(
@@ -92,14 +91,15 @@ void ChompGfxSprite::getAnimationData(uint8_t* bitmap)
         );
         animationName[animationNameLength] = '\0';
         animation.name = std::string(animationName, animationNameLength);
-
-        animationFrames = data[pos + 1 + animationNameLength];
-        for (uint8_t j = 0; j < animationFrames; j++) {
-            animation.frames.push_back(data[pos + 2 + animationNameLength + j]);
+        memcpy(&animationFrames, &data[pos + 1 + animationNameLength], 2);
+        animation.frames.clear();
+        for (uint16_t j = 0; j < animationFrames; j++) {
+            uint16_t animationFrame;
+            memcpy(&animationFrame, &data[pos + 3 + animationNameLength + (j * 2)], 2);
+            animation.frames.push_back(animationFrame);
         }
         animationData.push_back(animation);
-        pos += 2 + animationNameLength + animationFrames;
-
+        pos += 3 + animationNameLength + (animationFrames * 2);
     }
 
 }

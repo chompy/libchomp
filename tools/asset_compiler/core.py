@@ -122,9 +122,9 @@ class AssetCompilerCore:
                             
                 animationDataStr += struct.pack("<B", len(animationName))
                 animationDataStr += str(animationName)
-                animationDataStr += struct.pack("<B", len(animationFrames))
+                animationDataStr += struct.pack("<H", len(animationFrames))
                 for animationFrame in animationFrames:
-                    animationDataStr += struct.pack("<B", int(animationFrame))            
+                    animationDataStr += struct.pack("<H", int(animationFrame))            
 
         outputBuffer += struct.pack("<B", count)
 

@@ -9,7 +9,6 @@ public:
 
     static const char CHOMPY_ASSET[];
     static const char CHOMPY_ANIM[];
-    static const char MUSIC_FILE[];
 
     ChompyExampleState(ChompCore* _core) : ChompState(_core)
     {

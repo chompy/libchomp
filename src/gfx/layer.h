@@ -8,6 +8,7 @@
 #endif
 
 #include "structs.h"
+#include <iostream>
 
 class ChompGfxLayer
 {
@@ -34,6 +35,11 @@ public:
     uint16_t getPixelHeight() { return pixelHeight; }
     uint16_t getPixelUnitWidth() { return pixelUnitWidth; }
     uint16_t getPixelUnitHeight() { return pixelUnitHeight; }
+
+    // collisions
+    static bool hasCollision(ChompGfxRect* rect1, ChompGfxRect* rect2);
+    bool hasCollision(ChompGfxPosition* pos1, ChompGfxRect* rect2);
+    bool hasCollision(ChompGfxPosition* pos1, ChompGfxLayer* layer2, ChompGfxPosition* pos2);
 
     // general draw
     void fill();

@@ -23,12 +23,13 @@ public:
 
     ChompyStatePlay(ChompCore* _core) : ChompState(_core)
     {
+        gameLayer = NULL;
         playerSprite = NULL;
         wallSprite = NULL;
         scoreText = NULL;
+        playerPos.x = 0;
+        playerPos.y = 0;
         playerYTo = 0;
-        playerYAt = 0;
-        playerX = 0;
         speed = 0;
         round = 0;
         lastScoreTextUpdate = 0;
@@ -43,10 +44,11 @@ protected:
     uint32_t score;
     uint16_t round;
 
-    float playerX;
+    ChompGfxPosition playerPos;
     float playerYTo;
-    float playerYAt;
     float speed;
+
+    ChompGfxLayer* gameLayer;
     ChompGfxSprite* playerSprite;
     ChompGfxSprite* wallSprite;
     std::vector<std::vector<bool>> walls;

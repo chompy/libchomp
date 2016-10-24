@@ -56,6 +56,52 @@ ChompGfxPosition ChompGfxLayer::getPixelPosition(const uint16_t x, const uint16_
     return pos;
 }
 
+bool ChompGfxLayer::hasCollision(ChompGfxRect* rect1, ChompGfxRect* rect2)
+{
+    if (!rect1 || !rect2) {
+        return false;
+    }
+    return (rect1->x < (rect2->x + rect2->w) && (rect1->x + rect1->w) > rect2->x &&
+    rect1->y < (rect2->y + rect2->h) && (rect1->y + rect1->h) > rect2->y);
+}
+
+bool ChompGfxLayer::hasCollision(ChompGfxPosition* pos1, ChompGfxRect* rect2)
+{
+    if (!pos1 || !rect2) {
+        return false;
+    }
+    ChompGfxRect rect1;
+    rect1.x = pos1->x;
+    rect1.y = pos1->y;
+    rect1.w = size.w;
+    rect1.h = size.h;
+    return hasCollision(
+        &rect1,
+        rect2
+    );
+}
+
+bool ChompGfxLayer::hasCollision(ChompGfxPosition* pos1, ChompGfxLayer* layer2, ChompGfxPosition* pos2)
+{
+    if (!pos1 || !layer2 || !pos2) {
+        return false;
+    }
+    ChompGfxRect rect1;
+    rect1.x = pos1->x;
+    rect1.y = pos1->y;
+    rect1.w = size.w;
+    rect1.w = size.h;
+    ChompGfxRect rect2;
+    rect2.x = pos2->x;
+    rect2.y = pos2->y;
+    rect2.w = layer2->size.w;
+    rect2.w = layer2->size.h;
+    return hasCollision(
+        &rect1,
+        &rect2
+    );
+}
+
 void ChompGfxLayer::fill()
 {
     SDL_SetRenderTarget(renderer, texture);
@@ -95,6 +141,9 @@ void ChompGfxLayer::drawRect(ChompGfxRect* rect)
 
 void ChompGfxLayer::drawFillRect(ChompGfxRect* rect)
 {
+    if (!rect) {
+        return fill();
+    }
     uint16_t x, y, w, h;
     SDL_Rect sdlRect;
     toPixels(rect, &x, &y, &w, &h);

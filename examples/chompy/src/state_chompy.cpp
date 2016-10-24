@@ -2,18 +2,9 @@
 
 const char ChompyExampleState::CHOMPY_ASSET[] = "chompy";
 const char ChompyExampleState::CHOMPY_ANIM[] = "walk";
-const char ChompyExampleState::MUSIC_FILE[] = "test";
 
 void ChompyExampleState::enter()
 {
-
-    core->sfx.loadMusic(
-        (char*) ChompyExampleState::MUSIC_FILE,
-        MUSIC_FADEIN,
-        -1,
-        5000
-    );
-
     if (!layer) {
 
         ChompGfxColor color;

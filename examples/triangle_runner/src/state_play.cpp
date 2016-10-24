@@ -6,8 +6,13 @@ void ChompyStatePlay::enter()
     srand (time(NULL));
     // hide cursor
     core->gfx.setCursorVisibility(false);
-    // load player sprite
+    // game layer
     ChompGfxSize size;
+    size.w = 1;
+    size.h = 1;
+    gameLayer = core->gfx.newLayer(1024, 1024, &size);
+
+    // load player sprite
     size.w = .125;
     size.h = .125;
     playerSprite = core->gfx.newSprite(
@@ -27,8 +32,8 @@ void ChompyStatePlay::enter()
     // center player
     ChompGfxSize windowSize = core->gfx.getWindowSize();
     playerYTo = (windowSize.h - playerSprite->size.h) / 2;
-    playerYAt = playerYTo;
-    playerX = 0;
+    playerPos.x = 0;
+    playerPos.y = playerYTo;
     speed = START_SPEED;
     lastScoreTextUpdate = 0;
 
@@ -40,6 +45,9 @@ void ChompyStatePlay::enter()
 
 void ChompyStatePlay::exit()
 {
+    if (gameLayer) {
+        delete gameLayer;
+    }
     if (playerSprite) {
         delete playerSprite;
     }
@@ -54,74 +62,100 @@ void ChompyStatePlay::exit()
 
 void ChompyStatePlay::update()
 {
+
+    // clear game layer
+    ChompGfxColor color;
+    color.r = 255;
+    color.g = 0;
+    color.b = 0;
+    color.a = 255;
+    core->gfx.setDrawColor(&color);
+    gameLayer->fill();
+
     // current window size
     ChompGfxSize windowSize = core->gfx.getWindowSize();
 
-    // vertical offset
-    float vOffset = ((windowSize.h / 2) - .5);
-
     // player movement
-    if (playerYAt > playerYTo) {
-        playerYAt -= (PLAYER_MOVE_INC * core->deltaTime);
-    } else if (playerYAt < playerYTo) {
-        playerYAt += (PLAYER_MOVE_INC * core->deltaTime);
+    if (playerPos.y > playerYTo) {
+        playerPos.y -= (PLAYER_MOVE_INC * core->deltaTime);
+    } else if (playerPos.y < playerYTo) {
+        playerPos.y += (PLAYER_MOVE_INC * core->deltaTime);
     }
-    if (fabs(playerYAt - playerYTo) < PLAYER_MOVE_INC * 1.5) {
-        playerYAt = playerYTo;
+    if (fabs(playerPos.y - playerYTo) < PLAYER_MOVE_INC * 1.5) {
+        playerPos.y = playerYTo;
     }
-    if (playerYAt < 0) {
-        playerYAt = 0;
-    } else if (playerYAt > windowSize.h - playerSprite->size.h) {
-        playerYAt = windowSize.h - playerSprite->size.h;
+    if (playerPos.y < 0) {
+        playerPos.y = 0;
+    } else if (playerPos.y > 1 - playerSprite->size.h) {
+        playerPos.y = 1 - playerSprite->size.h;
     }
     ChompGfxSize mouse = core->gfx.fromPixelSize(
         core->input.mouse.x,
         core->input.mouse.y
     );
-    mouse.h -= ((windowSize.h / 2) - .5);
-    playerYTo = mouse.h - vOffset;
-    if (playerYAt > 1) {
-        playerYAt = 1;
+    //mouse.h -= ((windowSize.h / 2) - .5);
+    //playerYTo = mouse.h - vOffset;
+    if (playerPos.y > 1) {
+        playerPos.y = 1;
     }
 
     // draw player
     ChompGfxRect rect;
-    rect.x = (windowSize.w - playerSprite->size.w) / 2;
-    rect.y = vOffset + playerYAt;
+    rect.x = playerSprite->size.w / 2;
+    rect.y = playerPos.y;
     rect.w = playerSprite->size.w;
     rect.h = playerSprite->size.h;
-    core->gfx.addLayerToRenderer(playerSprite, NULL, &rect);
+    //gameLayer->drawLayer(playerSprite, NULL, &rect);
 
     // draw walls
     rect.w = wallSprite->size.w;
     rect.h = wallSprite->size.h;
     for (uint16_t x = 0; x < walls.size(); x++) {
-        /*if (x * WALL_SPACING < playerX) {
+        /*if (x * WALL_SPACING < playerPos.x) {
             continue;
         }*/
         for (uint16_t y = 0; y < walls[x].size(); y++) {
             if (!walls[x][y]) {
                 continue;
             }
-            rect.x = (x * WALL_SPACING) - playerX - (windowSize.w / 2);
-            rect.y = vOffset + (y * wallSprite->size.h);
-            core->gfx.addLayerToRenderer(wallSprite, NULL, &rect);
+            rect.x = ((x + 2) * WALL_SPACING) - playerPos.x;
+            rect.y = y * wallSprite->size.h;
+            //gameLayer->drawLayer(wallSprite, NULL, &rect);
         }
 
-        // collision
-        if (playerX >= (x * WALL_SPACING) && playerX <= (x * WALL_SPACING) + wallSprite->size.w ) {
+        // pass wall
+        ChompGfxRect wallAreaRect;
+        wallAreaRect.x = (x * WALL_SPACING);
+        wallAreaRect.y = 0;
+        wallAreaRect.w = wallSprite->size.h;
+        wallAreaRect.h = 1;
+
+        if (
+            playerSprite->hasCollision(
+                &playerPos,
+                &wallAreaRect
+            )
+        ) {
             std::cout << "COLLIDE" << std::endl;
         }
+
+        // pass wall
+        /*if (
+            playerX >= (x * WALL_SPACING) - (windowSize.w / 2) && 
+            playerX <= (x * WALL_SPACING) - (windowSize.w / 2) + (wallSprite->size.w)
+        ) {
+            std::cout << "COLLIDE" << std::endl;
+        }*/
 
 
     }
     
     // move player
-    playerX += speed * core->deltaTime;
+    playerPos.x += speed * core->deltaTime;
     score += 1;
 
     // update score text
-    if (core->getTicks() - lastScoreTextUpdate > REDRAW_SCORE_RATE) {
+    /*if (core->getTicks() - lastScoreTextUpdate > REDRAW_SCORE_RATE) {
         updateScore();
         lastScoreTextUpdate = core->getTicks();
     }
@@ -130,9 +164,17 @@ void ChompyStatePlay::update()
     rect.w = scoreText->size.w;
     rect.h = scoreText->size.h;
     core->gfx.addLayerToRenderer(scoreText, NULL, &rect);
+    */
+
+    // draw game layer
+    rect.x = 0;
+    rect.y = 0;
+    rect.w = 1;
+    rect.h = 1;
+    core->gfx.addLayerToRenderer(gameLayer, &rect, &rect);
 
     // next round
-    if (playerX > (WALL_SPACING * WALLS_PER_ROUND) + 3) {
+    if (playerPos.x > (WALL_SPACING * WALLS_PER_ROUND) + 3) {
         startRound();
     }
 }
@@ -147,7 +189,7 @@ void ChompyStatePlay::startRound()
         }
     }
     ChompGfxSize windowSize = core->gfx.getWindowSize();
-    playerX = -windowSize.w * 1.5;
+    playerPos.x = -windowSize.w * 1.5;
     walls.clear();
     for (uint16_t i = 0; i < WALLS_PER_ROUND; i++) {
         generateWall();
