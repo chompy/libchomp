@@ -16,11 +16,12 @@ void ChompGfxText::setFont(uint8_t* fontData, const uint32_t fontDataSize, const
     if (!fontDataRW) {
         throw ChompSdlException();
     }
-    //font = TTF_OpenFont("assets/font/impact.ttf", fontPtSize);
-    font = TTF_OpenFontRW(fontDataRW, 1, fontPtSize);
+    //font = TTF_OpenFont("assets/font/tahoma.ttf", fontPtSize);
+    font = TTF_OpenFontRW(fontDataRW, 0, fontPtSize);
     if (!font) {
         throw ChompSdlTtfException();
     }
+    SDL_RWclose(fontDataRW);
     #endif
 }
 

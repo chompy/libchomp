@@ -1,5 +1,9 @@
 #include "state_play.h"
 
+const char* ChompyStatePlay::PLAYER_ANIM_STOP = "stop";
+const char* ChompyStatePlay::PLAYER_ANIM_MOVE = "move";
+const char* ChompyStatePlay::PLAYER_ANIM_DIE = "die";
+
 void ChompyStatePlay::enter()
 {
     // seed random
@@ -35,9 +39,9 @@ void ChompyStatePlay::enter()
     playerPos.x = 0;
     playerPos.y = playerYTo;
     speed = START_SPEED;
-    lastScoreTextUpdate = 0;
 
     // start first round
+    lives = START_LIVES;
     score = 0;
     round = 0;
     startRound();
@@ -62,7 +66,6 @@ void ChompyStatePlay::exit()
 
 void ChompyStatePlay::update()
 {
-
     // clear game layer
     ChompGfxColor color;
     color.r = 0;
@@ -75,7 +78,20 @@ void ChompyStatePlay::update()
     // current window size
     ChompGfxSize windowSize = core->gfx.getWindowSize();
 
-    // player movement
+    // speed accel
+    speed += SPEED_ACCEL * core->deltaTime;
+    if (speed > maxSpeed) {
+        speed = maxSpeed;
+    }
+
+    // animation
+    if (speed <= 0) {
+        playerSprite->setAnimation(ChompyStatePlay::PLAYER_ANIM_STOP);
+    } else {
+        playerSprite->setAnimation(ChompyStatePlay::PLAYER_ANIM_MOVE);
+    }
+
+    // movement
     if (playerPos.y > playerYTo) {
         playerPos.y -= (PLAYER_MOVE_INC * core->deltaTime);
     } else if (playerPos.y < playerYTo) {
@@ -98,6 +114,7 @@ void ChompyStatePlay::update()
     if (playerPos.y > GAME_AREA_H - playerSprite->size.h) {
         playerPos.y = GAME_AREA_H - playerSprite->size.h;
     }
+    playerPos.x += speed * core->deltaTime;
 
     // draw player
     ChompGfxRect rect;
@@ -122,8 +139,10 @@ void ChompyStatePlay::update()
             rect.y = y * wallSprite->size.h;
             gameLayer->drawLayer(wallSprite, NULL, &rect);
         }
-
-        // pass wall
+        // wall collisions
+        if (lastScoreX >= x + 1) {
+            continue;
+        }
         ChompGfxRect wallRect;
         wallRect.x = ((float) x * WALL_SPACING);
         wallRect.y = 0;
@@ -147,28 +166,27 @@ void ChompyStatePlay::update()
                         &wallRect
                     )
                 ) {
-                    std::cout << "COLLIDE" << std::endl;    
+                    speed = -START_SPEED;
+                    lastScoreX = x + 1;
+                    break;
                 }                
             }
+            // didn't get hit, increase score
+            if (lastScoreX < x + 1) {
+                lastScoreX = x + 1;
+                score += SCORE_PER_WALL;
+                updateScore();
+            }
+            
         }
-
     }
 
-    // move player
-    playerPos.x += speed * core->deltaTime;
-    score += 1;
-
-    // update score text
-    /*if (core->getTicks() - lastScoreTextUpdate > REDRAW_SCORE_RATE) {
-        updateScore();
-        lastScoreTextUpdate = core->getTicks();
-    }
+    // draw score text
     rect.x = windowSize.w - scoreText->size.w - .01;
     rect.y = .01;
     rect.w = scoreText->size.w;
     rect.h = scoreText->size.h;
     core->gfx.addLayerToRenderer(scoreText, NULL, &rect);
-    */
 
     // draw game layer
     rect.x = (windowSize.w / 2) - (GAME_AREA_W / 2);
@@ -185,12 +203,11 @@ void ChompyStatePlay::update()
 
 void ChompyStatePlay::startRound()
 {
+    lastScoreX = 0;
     round += 1;
-    if (round % SPEED_UP_RATE == 0) {
-        speed = speed * ROUND_SPEED_MOD;
-        if (speed > MAX_SPEED) {
-            speed = MAX_SPEED;
-        }
+    maxSpeed = START_SPEED + (START_SPEED * (round * ROUND_SPEED_MOD) / SPEED_UP_RATE);
+    if (maxSpeed > MAX_SPEED) {
+        maxSpeed = MAX_SPEED;
     }
     ChompGfxSize windowSize = core->gfx.getWindowSize();
     playerPos.x = -windowSize.w * 1.5;
@@ -217,7 +234,12 @@ void ChompyStatePlay::generateWall()
 
 void ChompyStatePlay::updateScore()
 {
-    return;
+    ChompGfxColor color;
+    color.r = 255;
+    color.g = 255;
+    color.b = 255;
+    color.a = 255;
+    core->gfx.setDrawColor(&color);
     char scoreTextStr[24];
     sprintf(scoreTextStr, "%d", score);
     scoreText->setText(scoreTextStr, TEXT_RIGHT);
