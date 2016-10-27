@@ -37,15 +37,17 @@ public:
 
     ChompGfxText(
         SDL_Renderer* _renderer,
-        uint8_t* fontData, 
+        uint8_t* _fontData,
         const uint32_t fontDataSize,
         const uint16_t fontPtSize,
         SDL_Texture* _texture,
         ChompGfxSize* _size
     ) : ChompGfxLayer(_renderer, _texture, _size)
     {
+        fontData = NULL;
+        fontDataRW = NULL;
         font = NULL;
-        setFont(fontData, fontDataSize, fontPtSize);
+        setFont(_fontData, fontDataSize, fontPtSize);
     }
     ~ChompGfxText();
 
@@ -55,13 +57,16 @@ public:
 
 protected:
 
+    uint8_t* fontData;
+    SDL_RWops* fontDataRW;
+
     #ifndef WITHOUT_SDL_TTF
     TTF_Font* font;
     #else
     void* font;
     #endif
 
-    void setFont(uint8_t* fontData, const uint32_t fontDataSize, const uint16_t fontPtSize);
+    void setFont(uint8_t* _fontData, const uint32_t fontDataSize, const uint16_t fontPtSize);
 
 };
 

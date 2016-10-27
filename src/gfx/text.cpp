@@ -7,12 +7,29 @@ ChompGfxText::~ChompGfxText()
     if (font) {
         TTF_CloseFont(font);
     }
+    if (fontDataRW) {
+        SDL_RWclose(fontDataRW);
+    }
+    if (fontData) {
+        delete fontData;
+    }
 }
 
-void ChompGfxText::setFont(uint8_t* fontData, const uint32_t fontDataSize, const uint16_t fontPtSize)
+void ChompGfxText::setFont(uint8_t* _fontData, const uint32_t fontDataSize, const uint16_t fontPtSize)
 {
     #ifndef WITHOUT_SDL_TTF
-    SDL_RWops* fontDataRW = SDL_RWFromMem(&fontData[0], fontDataSize);
+    if (font) {
+        TTF_CloseFont(font);
+    }
+    if (fontDataRW) {
+        SDL_RWclose(fontDataRW);
+    }
+    if (fontData) {
+        delete fontData;
+    }
+    fontData = new uint8_t[fontDataSize];
+    memcpy(fontData, _fontData, fontDataSize);
+    fontDataRW = SDL_RWFromMem(&fontData[0], fontDataSize);
     if (!fontDataRW) {
         throw ChompSdlException();
     }
@@ -21,7 +38,7 @@ void ChompGfxText::setFont(uint8_t* fontData, const uint32_t fontDataSize, const
     if (!font) {
         throw ChompSdlTtfException();
     }
-    SDL_RWclose(fontDataRW);
+    setText("");
     #endif
 }
 
