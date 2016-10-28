@@ -1,12 +1,6 @@
 #ifndef CHOMP_GFX_SPRITE_H
 #define CHOMP_GFX_SPRITE_H
 
-#ifndef ANDROID
-#include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
-
 #include <vector>
 #include <string>
 #include "layer.h"

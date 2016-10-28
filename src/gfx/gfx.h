@@ -1,24 +1,11 @@
 #ifndef CHOMP_GFX_H
 #define CHOMP_GFX_H
 
-#ifndef ANDROID
-#include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
-
-#ifndef WITHOUT_SDL_TTF
-#ifndef ANDROID
-#include <SDL2/SDL_ttf.h>
-#else
-#include <SDL_ttf.h>
-#endif
-#endif
-
 #include <vector>
 #include <algorithm>
 #include <stdint.h>
 #include <string>
+#include "../sdl_includes.h"
 #include "../asset/asset.h"
 #include "../asset/bitmap.h"
 #include "structs.h"

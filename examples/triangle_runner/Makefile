@@ -24,7 +24,7 @@ emscripten:
 	cd src; make COMPILETO="emscripten"
 	$(CXX) $(LDFLAGS) $(TGT)/emscripten/*.o \
 		-s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2 -s USE_SDL_MIXER=2 -s SDL2_IMAGE_FORMATS='["png"]' \
-		-DSDL2=1 ../../build/emscripten/chomp_engine.bc \
+		-DSDL2=1 ../../build/emscripten/libchomp.bc \
 		--preload-file assets.dat \
 		-O2 -o $(TGT)/emscripten/output.html
 

@@ -6,6 +6,7 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #define PLAYER_MOVE_INC .03
 #define WALL_SPACING 1

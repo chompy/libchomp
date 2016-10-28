@@ -1,14 +1,8 @@
 #ifndef CHOMP_GFX_LAYER_H
 #define CHOMP_GFX_LAYER_H
 
-#ifndef ANDROID
-#include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
-
+#include "../sdl_includes.h"
 #include "structs.h"
-#include <iostream>
 
 class ChompGfxLayer
 {

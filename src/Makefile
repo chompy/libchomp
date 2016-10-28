@@ -6,12 +6,12 @@ LDFLAGS = -Wall -std=c++11 -g
 OBJS = $(addprefix $(TGT)/, $(notdir $(SRC:.cpp=.o)))
 
 $(TGT)/%.o: %.cpp
-	$(CXX) $(OPTS) $(CXXFLAGS) -c -fPIC $< -o $@
+	$(CXX) $(OPTS) $(CXXFLAGS) $(LIBS) -c -fPIC $< -o $@
 
 all: $(OBJS)
-	cd asset; make OPTS="$(OPTS)"
-	cd gfx; make OPTS="$(OPTS)"
-	cd sfx; make OPTS="$(OPTS)"
-	cd input; make OPTS="$(OPTS)"
-	cd exception; make OPTS="$(OPTS)"
+	cd asset; make OPTS="$(OPTS)" LIBS="$(LIBS)"
+	cd gfx; make OPTS="$(OPTS)" LIBS="$(LIBS)"
+	cd sfx; make OPTS="$(OPTS)" LIBS="$(LIBS)"
+	cd input; make OPTS="$(OPTS)" LIBS="$(LIBS)"
+	cd exception; make OPTS="$(OPTS)" LIBS="$(LIBS)"
 	echo "$^"

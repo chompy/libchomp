@@ -1,14 +1,7 @@
 #ifndef CHOMP_EXCEPTION_SDL_TTF
 #define CHOMP_EXCEPTION_SDL_TTF
 
-#ifndef ANDROID
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-#else
-#include <SDL.h>
-#include <SDL_ttf.h>
-#endif
-
+#include "../sdl_includes.h"
 #include "exception.h"
 
 class ChompSdlTtfException : public ChompException

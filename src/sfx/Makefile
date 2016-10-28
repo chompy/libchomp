@@ -6,7 +6,7 @@ LDFLAGS = -Wall -std=c++11 -g
 OBJS = $(addprefix $(TGT)/, $(notdir $(SRC:.cpp=.o)))
 
 $(TGT)/%.o: %.cpp
-	$(CXX) $(OPTS) $(CXXFLAGS) -c -fPIC $< -o $@
+	$(CXX) $(OPTS) $(CXXFLAGS) $(LIBS) -c -fPIC $< -o $@
 
 all: $(OBJS)
 	echo "$^"

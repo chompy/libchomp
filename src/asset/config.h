@@ -1,13 +1,9 @@
 #ifndef CHOMP_ASSET_CONFIG_H
 #define CHOMP_ASSET_CONFIG_H
 
-#ifndef ANDROID
-#include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
 #include <vector>
 #include <string>
+#include "../sdl_includes.h"
 #include "asset.h"
 
 #define CONFIG_TYPE_STRING 0

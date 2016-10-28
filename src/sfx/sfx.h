@@ -3,25 +3,8 @@
 
 #include <string>
 #include <vector>
-
-#ifndef ANDROID
-#include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
-
-#ifndef WITHOUT_SDL_MIXER
-#ifndef ANDROID
-#include <SDL2/SDL_mixer.h>
-#else
-#include <SDL_mixer.h>
-#endif
-#include "../exception/sdl_mixer_exception.h"
-#endif
-
+#include "../sdl_includes.h"
 #include "../asset/asset.h"
-
-#include <iostream>
 
 #define MUSIC_STOP 0
 #define MUSIC_PLAY 1

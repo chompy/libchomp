@@ -1,12 +1,7 @@
 #ifndef CHOMP_INPUT_H
 #define CHOMP_INPUT_H
 
-#ifndef ANDROID
-#include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
-
+#include "../sdl_includes.h"
 #include "../exception/sdl_exception.h"
 #include "mouse.h"
 

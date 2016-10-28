@@ -1,22 +1,9 @@
 #ifndef CHOMP_ASSET_BITMAP_H
 #define CHOMP_ASSET_BITMAP_H
 
-#ifndef ANDROID
-#include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
-
-#ifndef WITHOUT_SDL_IMAGE
-#ifndef ANDROID
-#include <SDL2/SDL_image.h>
-#else
-#include <SDL_image.h>
-#endif
-#endif
-
 #include <stdint.h>
 #include <string>
+#include "../sdl_includes.h"
 #include "../exception/sdl_exception.h"
 
 #define BITMAP_SIZE_W_POS 0
