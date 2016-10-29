@@ -23,16 +23,17 @@ void ChompyStatePlay::enter()
         "player",
         &size
     );
+    playerSprite->zIndex = 2;
     // load wall sprite
     size.w = 0.04167;
     wallSprite = core->gfx.newSprite(
         "wall",
         &size
     );
+    wallSprite->zIndex = 1;
     // load score text
     size.w = .4;
     scoreText = core->gfx.newTextLayer("tahoma", 24, &size);
-    //scoreText->setText("SCORE: 0");
     // center player
     ChompGfxSize windowSize = core->gfx.getWindowSize();
     playerYTo = (windowSize.h - playerSprite->size.h) / 2;
@@ -44,6 +45,7 @@ void ChompyStatePlay::enter()
     lives = START_LIVES;
     score = 0;
     round = 0;
+    updateScore();
     startRound();
 }
 
@@ -116,15 +118,8 @@ void ChompyStatePlay::update()
     }
     playerPos.x += speed * core->deltaTime;
 
-    // draw player
-    ChompGfxRect rect;
-    rect.x = 0;
-    rect.y = playerPos.y;
-    rect.w = playerSprite->size.w;
-    rect.h = playerSprite->size.h;
-    gameLayer->drawLayer(playerSprite, NULL, &rect);
-
     // draw walls
+    ChompGfxRect rect;
     rect.w = wallSprite->size.w;
     rect.h = wallSprite->size.h;
     for (uint16_t x = 0; x < walls.size(); x++) {
@@ -177,9 +172,15 @@ void ChompyStatePlay::update()
                 score += SCORE_PER_WALL;
                 updateScore();
             }
-            
         }
     }
+
+    // draw player
+    rect.x = 0;
+    rect.y = playerPos.y;
+    rect.w = playerSprite->size.w;
+    rect.h = playerSprite->size.h;
+    gameLayer->drawLayer(playerSprite, NULL, &rect);
 
     // draw score text
     rect.x = windowSize.w - scoreText->size.w - .01;
