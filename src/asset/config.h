@@ -29,8 +29,11 @@ public:
 
     bool hasKey(std::string key);
     std::string getString(std::string key);
+    std::string getString(std::string key, std::string defaultValue);
     int32_t getInt(std::string key);
+    int32_t getInt(std::string key, int32_t defaultValue);
     float getFloat(std::string key);
+    float getFloat(std::string key, float defaultValue);
 
 protected:
 

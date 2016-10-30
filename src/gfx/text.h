@@ -51,6 +51,7 @@ protected:
     #endif
 
     void setFont(uint8_t* _fontData, const uint32_t fontDataSize, const uint16_t fontPtSize);
+    std::vector<std::string> getLines(const char* text);
 
 };
 

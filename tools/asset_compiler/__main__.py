@@ -8,11 +8,6 @@ COMPILERS = {
         "prefix" : "spr_",
         "method" : "compile_sprite"
     },
-    "languages" : {
-        "filepath" : "assets/lang",
-        "prefix" : "lang_",
-        "method" : "compile_language"
-    },
     "fonts" : {
         "filepath" : "assets/font",
         "prefix" : "font_",

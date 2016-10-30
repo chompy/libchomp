@@ -9,7 +9,8 @@
 int main(int argc, char **argv) {
     Chomp chomp;
     ChompyStatePlay playState(&chomp.core);
+    ChompyStateMain mainState(&chomp.core, &playState);
     chomp.core.gfx.setWindowTitle("Triangle Runner -- LibChomp Example");
-    chomp.start(&playState);
+    chomp.start(&mainState);
     return 1;
 }

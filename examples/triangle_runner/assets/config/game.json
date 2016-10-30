@@ -1,0 +1,15 @@
+{
+    "default_lang" : "en",
+    "wall" : {
+        "spacing" : 1.25,
+        "gap" : 3,
+        "round_count" : 10
+    },
+    "player" : {
+        "v_speed" : 0.02,
+        "h_max_speed" : 0.03,
+        "h_accel_rate" : 0.0005,
+        "h_bounce" : 0.01,
+        "lives" : 3
+    }
+}

@@ -82,6 +82,11 @@ bool ChompConfig::hasKey(std::string key)
 
 std::string ChompConfig::getString(std::string key)
 {
+    return getString(key, "");
+}
+
+std::string ChompConfig::getString(std::string key, std::string defaultValue)
+{
     for (uint32_t i = 0; i < values.size(); i++) {
         if (values[i].key.compare(key) == 0) {
             if (values[i].type != CONFIG_TYPE_STRING) {
@@ -90,10 +95,15 @@ std::string ChompConfig::getString(std::string key)
             return std::string((const char*) values[i].data.data(), values[i].data.size());
         }
     }
-    return std::string();
+    return defaultValue;
 }
 
 int32_t ChompConfig::getInt(std::string key)
+{
+    return getInt(key, 0);
+}
+
+int32_t ChompConfig::getInt(std::string key, int32_t defaultValue)
 {
     for (uint32_t i = 0; i < values.size(); i++) {
         if (values[i].key.compare(key) == 0) {
@@ -105,10 +115,15 @@ int32_t ChompConfig::getInt(std::string key)
             return value;
         }
     }
-    return 0;
+    return defaultValue;
 }
 
 float ChompConfig::getFloat(std::string key)
+{
+    return getFloat(key, 0);
+}
+
+float ChompConfig::getFloat(std::string key, float defaultValue)
 {
     for (uint32_t i = 0; i < values.size(); i++) {
         if (values[i].key.compare(key) == 0) {
@@ -120,5 +135,5 @@ float ChompConfig::getFloat(std::string key)
             return value;
         }
     }
-    return 0;
+    return defaultValue;
 }

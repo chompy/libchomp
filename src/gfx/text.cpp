@@ -42,6 +42,36 @@ void ChompGfxText::setFont(uint8_t* _fontData, const uint32_t fontDataSize, cons
     #endif
 }
 
+std::vector<std::string> ChompGfxText::getLines(const char* text)
+{
+    std::vector<std::string> lines;
+    if (!text || !font) {
+        return lines;
+    }
+    std::string line;
+    int w;
+    for(uint16_t i = 0; i < strlen(text); i++) {
+        // null terminator
+        if (text[i] == '\0') {
+            break;
+        }
+        // get current line size
+        TTF_SizeText(font, line.c_str(), &w, NULL);
+        // new line
+        if (text[i] == '\n' || w > getPixelWidth()) {
+            lines.push_back(line);
+            line.clear();
+            continue;
+        }
+        // add char to line
+        line.push_back(text[i]);
+    }
+    if (!line.empty()) {
+        lines.push_back(line);
+    }
+    return lines;
+}
+
 void ChompGfxText::setText(const char* text)
 {
     setText(text, TEXT_LEFT, TEXT_TOP);
@@ -74,68 +104,79 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
         return;
     }
 
-    #ifndef WITHOUT_SDL_TTF 
-    // create texture surface
-    // @TODO option to use other render methods
-    SDL_Surface* textSurface = TTF_RenderUTF8_Blended(
-        font,
-        text,
-        color
-    );
-    if (!textSurface) {
-        throw ChompSdlTtfException();
-    }
+    #ifndef WITHOUT_SDL_TTF
+    // get lines
+    std::vector<std::string> lines = getLines(text);
+    uint16_t lineY = 0;
 
-    // convert to texture
-    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(
-        renderer,
-        textSurface
-    );
-    if (!textTexture) {
-        throw ChompSdlException();
-    }
-    SDL_Rect destRect = {0, 0, textSurface->w, textSurface->h}; 
-    SDL_FreeSurface(textSurface);
+    // iterate lines
+    for (uint16_t i = 0; i < lines.size(); i++) {
+        std::string line = lines[i];
 
-    // alignment
-    switch (hAlign) {
-        case TEXT_CENTER:
-        {
-            destRect.x = (getPixelWidth() / 2) - (textSurface->w / 2);
-            break;
+        // create texture surface
+        // @TODO option to use other render methods
+        SDL_Surface* textSurface = TTF_RenderText_Blended(
+            font,
+            line.c_str(),
+            color
+        );
+        if (!textSurface) {
+            throw ChompSdlTtfException();
         }
-        case TEXT_RIGHT:
-        {
-            destRect.x = getPixelWidth() - textSurface->w;
-            break;
-        }
-    }
-    switch (vAlign) {
-        case TEXT_MIDDLE:
-        {
-            destRect.y = (getPixelHeight() / 2) - (textSurface->h / 2);
-            break;
-        }
-        case TEXT_BOTTOM:
-        {
-            destRect.y = getPixelHeight() - textSurface->h;
-            break;
-        }
-    }
 
-    // draw to layer
-    if (
-        SDL_RenderCopy(
+        // convert to texture
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(
             renderer,
-            textTexture,
-            NULL,
-            &destRect
-        ) != 0
-    ) {
-        throw ChompSdlException();
+            textSurface
+        );
+        if (!textTexture) {
+            throw ChompSdlException();
+        }
+        SDL_Rect destRect = {0, lineY, textSurface->w, textSurface->h}; 
+        SDL_FreeSurface(textSurface);
+
+        // alignment
+        switch (hAlign) {
+            case TEXT_CENTER:
+            {
+                destRect.x = (getPixelWidth() / 2) - (textSurface->w / 2);
+                break;
+            }
+            case TEXT_RIGHT:
+            {
+                destRect.x = getPixelWidth() - textSurface->w;
+                break;
+            }
+        }
+        switch (vAlign) {
+            case TEXT_MIDDLE:
+            {
+                destRect.y = (getPixelHeight() / 2) - (textSurface->h / 2);
+                break;
+            }
+            case TEXT_BOTTOM:
+            {
+                destRect.y = getPixelHeight() - textSurface->h;
+                break;
+            }
+        }
+
+        // draw to layer
+        if (
+            SDL_RenderCopy(
+                renderer,
+                textTexture,
+                NULL,
+                &destRect
+            ) != 0
+        ) {
+            throw ChompSdlException();
+        }
+        SDL_DestroyTexture(textTexture);
+
+        // next line
+        lineY += destRect.h;
     }
-    
-    SDL_DestroyTexture(textTexture);
     #endif
 
 }

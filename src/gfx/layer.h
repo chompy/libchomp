@@ -1,6 +1,7 @@
 #ifndef CHOMP_GFX_LAYER_H
 #define CHOMP_GFX_LAYER_H
 
+#include <iostream>
 #include "../sdl_includes.h"
 #include "structs.h"
 
