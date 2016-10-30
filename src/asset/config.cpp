@@ -92,7 +92,7 @@ std::string ChompConfig::getString(std::string key, std::string defaultValue)
             if (values[i].type != CONFIG_TYPE_STRING) {
                 break;
             }
-            return std::string((const char*) values[i].data.data(), values[i].data.size());
+            return std::string((const char*) &values[i].data[0], values[i].data.size());
         }
     }
     return defaultValue;

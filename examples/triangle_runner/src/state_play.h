@@ -65,7 +65,7 @@ protected:
     ChompGfxPosition playerPos;
     float playerYTo;
     float speed;
-    std::vector<std::vector<bool>> walls;
+    std::vector<std::vector<bool> > walls;
 
     // gfx layers
     ChompGfxLayer* gameLayer;
