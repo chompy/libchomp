@@ -11,23 +11,72 @@
 #define MOUSE_BUTTON_X1 SDL_BUTTON_X1
 #define MOUSE_BUTTON_X2 SDL_BUTTON_X2
 
+/**
+ * Mouse input class.
+ */
 class ChompInputMouse
 {
 public:
 
+    /**
+     * Constructor.
+     */
     ChompInputMouse();
+
+    /**
+     * Destructor.
+     */
     ~ChompInputMouse();
 
-    int32_t x, y, xrel, yrel;
+    /**
+     * Pixel x position of mouse.
+     */
+    int32_t x;
 
+    /**
+     * Pixel y position of mouse.
+     */
+    int32_t y;
+
+    /**
+     * Mouse relative x motion.
+     */
+    int32_t xrel;
+
+    /**
+     * Mouse relative y motion.
+     */
+    int32_t yrel;
+
+    /**
+     * Check pressed state of given button.
+     * @param button Button
+     * @return True if button pressed
+     */
     bool pressed(uint8_t button);
-    bool in(int32_t pixelX, int32_t pixelY, int32_t pixelW, int32_t pixelH);
-    //bool in(ChompGfxRect* rect);
 
+    /**
+     * Check if mouse pointer is in a given boundary.
+     * @param pixelX Pixel x
+     * @param pixelY Pixel y
+     * @param pixelW Pixel width
+     * @param pixelH Pixel height
+     * Return True if mouse is in boundary
+     */
+    bool in(int32_t pixelX, int32_t pixelY, int32_t pixelW, int32_t pixelH);
+
+    /**
+     * Register mouse input event.
+     * @param event SDL Event
+     */
     void event(SDL_Event* event);
 
 private:
 
+    /**
+     * Vector containing all currently pressed
+     * buttons.
+     */
     std::vector<uint8_t> buttons;
 
 };

@@ -6,14 +6,32 @@
 #include "mouse.h"
 
 
+/**
+ * Base class for handling inputs.
+ */
 class ChompInput
 {
 public:
+
+    /**
+     * Handles mouse inputs.
+     */
     ChompInputMouse mouse;
 
+    /**
+     * Constructor.
+     */
     ChompInput();
+
+    /**
+     * Destructor.
+     */
     ~ChompInput();
 
+    /**
+     * Register input event.
+     * @param event SDL Event
+     */
     void event(SDL_Event* event);
 
 };
