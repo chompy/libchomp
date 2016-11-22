@@ -3,27 +3,60 @@
 
 #include "core.h"
 
+/**
+ * Libchomp State
+ */
 class ChompState
 {
 public:
 
+    /**
+     * Constructor.
+     * @param _core Core object
+     */
     ChompState(ChompCore* _core);
+
+    /**
+     * Destructor.
+     */
     virtual ~ChompState();
 
+    /**
+     * Change active state.
+     * @param s_currentState State to change to
+     */
     static void changeState(ChompState* s_currentState);
+
+    /**
+     * Call update method of current active state.
+     */
     static void updateState();
 
-    // fires upon starting a new state
+    /**
+     * Called when state is made active.
+     */
     virtual void enter();
 
-    // fires when state is finished
+    /**
+     * Called when state is made inactive.
+     */
     virtual void exit();
 
-    // fire every frame while state is active
+    /**
+     * Called every frame state is active.
+     */
     virtual void update();
 
 protected:
+
+    /**
+     * Current active state.
+     */
     static ChompState* s_currentState;
+
+    /**
+     * Core object.
+     */
     ChompCore* core;
 
 };

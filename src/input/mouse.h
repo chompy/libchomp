@@ -50,7 +50,7 @@ public:
 
     /**
      * Check pressed state of given button.
-     * @param button Button
+     * @param button Button (MOUSE_BUTTON_LEFT|MOUSE_BUTTON_MIDDLE|MOUSE_BUTTON_RIGHT|MOUSE_BUTTON_X1|MOUSE_BUTTON_X2)
      * @return True if button pressed
      */
     bool pressed(uint8_t button);

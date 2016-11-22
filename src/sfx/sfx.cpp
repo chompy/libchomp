@@ -108,7 +108,7 @@ void ChompSfx::unloadMusic()
     #endif
 }
 
-void ChompSfx::checkMusicQueue()
+bool ChompSfx::checkMusicQueue()
 {
     #ifndef WITHOUT_SDL_MIXER
     if (!queuedMusic.empty() && Mix_FadingMusic() != MIX_FADING_OUT && !Mix_PlayingMusic()) {
@@ -117,8 +117,10 @@ void ChompSfx::checkMusicQueue()
         queuedMusicOperation = 0;
         queuedMusicLoops = 0;
         queuedMusicFadeDuration = 0;
+        return true;
     }
     #endif
+    return false;
 }
 
 void ChompSfx::setMusic(uint8_t operation)
