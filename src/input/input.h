@@ -19,6 +19,13 @@ public:
     ChompInputMouse mouse;
 
     /**
+     * @TODO Add Joystick Here
+     */
+    /**
+     * @TODO Add Keyboard Here
+     */
+
+    /**
      * Constructor.
      */
     ChompInput();
