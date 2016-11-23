@@ -28,12 +28,22 @@
 #define GAMEPAD_INPUT_AXIS_RTRIGGER 19
 
 /**
+ * Struct for storing details about a
+ * specific device.
+ */
+struct ChompInputGamepadDevice
+{
+    uint32_t id; /**< Device id >*/
+    SDL_GameController* gamepad; /**< Gamepad device >*/
+};
+
+/**
  * Struct for storing the value of a single
  * input. (Button, axis, etc?)
  */
 struct ChompInputGamepadInputData
 {
-    SDL_GameController* gamepad; /**< Gamepad device >*/
+    uint32_t deviceId; /**< Device id >*/
     uint8_t input; /**< Input type >*/
     int16_t value; /**< Input value >*/
 };
@@ -55,9 +65,73 @@ public:
      */
     ~ChompInputGamepad();
 
+    /**
+     * Get device info from id.
+     * @param id Device id
+     * @return Device info
+     */
+    ChompInputGamepadDevice deviceFromId(uint32_t id);
 
-    //int16_t getInput(uint)
+    /**
+     * Get device info from input data.
+     * @param input Input struct
+     * @return Device info
+     */
+    ChompInputGamepadDevice deviceFromInput(ChompInputGamepadInputData input);
 
+    /**
+     * Get device info from index.
+     * @param index Device index
+     * @return Device info
+     */
+    ChompInputGamepadDevice deviceFromIndex(uint32_t index);
+
+    /**
+     * Get device info from SDL GameController.
+     * @param gamepad SDL GameController
+     * @return Device info
+     */
+    ChompInputGamepadDevice deviceFromSdlGameController(SDL_GameController* gamepad);
+
+    /**
+     * Get number of active devices.
+     * @return Number of devices
+     */
+    uint32_t activeDeviceCount() { return devices.size(); }
+
+    /**
+     * Check if given input is active on given device. (value != 0)
+     * @param device Gamepad device
+     * @param input Input id
+     * @return True if input is active
+     */
+    bool hasInput(ChompInputGamepadDevice device, uint8_t input);
+
+    /**
+     * Check if given input is active on a device at the
+     * given index.
+     * @param index Device index
+     * @param input Input id
+     * @return True if input is active
+     */
+    bool hasInput(uint32_t index, uint8_t input);
+
+    /**
+     * Get value of input for given device.
+     * @return device Gamepad device
+     * @param input Input id
+     * @return Value of input
+     */
+    int16_t getInputValue(ChompInputGamepadDevice device, uint8_t input);
+
+    /**
+     * Get value of input on a device at the given
+     * index.
+     * @param index Device index
+     * @param input Input id
+     * @return Value of input
+     */
+    int16_t getInputValue(uint32_t index, uint8_t input);
 
     /**
      * Register gamepad input event.
@@ -68,9 +142,9 @@ public:
 private:
 
     /**
-     * Vector containing pointers to SDL Game Controllers
+     * Vector containing gamepad device info.
      */
-    std::vector<SDL_GameController*> gamepads;
+    std::vector<ChompInputGamepadDevice> devices;
 
     /**
      * Vector containing current active inputs.
@@ -78,14 +152,21 @@ private:
     std::vector<ChompInputGamepadInputData> inputs;
 
     /**
-     * Closes all open gamepads.
+     * Counter to increment with each new device so
+     * that every device is ensured to have a unique
+     * id.
      */
-    void closeAllGamepads();
+    static uint32_t deviceIdCounter;
+
+    /**
+     * Closes all open gamepads devices.
+     */
+    void closeAllDevices();
 
     /**
      * Fetch all compatible and connected gamepads.
      */
-    void fetchGamepads();
+    void fetchDevices();
 
     /**
      * Convert SDL controller button to libchomp controller

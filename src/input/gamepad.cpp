@@ -1,4 +1,5 @@
 #include "gamepad.h"
+uint32_t ChompInputGamepad::deviceIdCounter = 0;
 
 ChompInputGamepad::ChompInputGamepad()
 {
@@ -10,39 +11,129 @@ ChompInputGamepad::ChompInputGamepad()
         }
     }
     // fetch gamepads
-    gamepads.clear();
+    devices.clear();
     inputs.clear();
-    fetchGamepads();
+    fetchDevices();
 }
 
 ChompInputGamepad::~ChompInputGamepad()
 {
-    closeAllGamepads();
+    closeAllDevices();
     inputs.clear();
 }
 
-void ChompInputGamepad::closeAllGamepads()
+void ChompInputGamepad::closeAllDevices()
 {
-    for (uint16_t i = 0; i < gamepads.size(); i++) {
-        if (gamepads[i]) {
-            SDL_GameControllerClose(gamepads[i]);
+    for (uint16_t i = 0; i < devices.size(); i++) {
+        if (devices[i].gamepad) {
+            SDL_GameControllerClose(devices[i].gamepad);
         }
     }
-    gamepads.clear();    
+    devices.clear();    
 }
 
-void ChompInputGamepad::fetchGamepads()
+void ChompInputGamepad::fetchDevices()
 {
-    closeAllGamepads();
+    closeAllDevices();
     for (uint16_t i = 0; i < SDL_NumJoysticks(); i++) {
         if (SDL_IsGameController(i)) {
             SDL_GameController* gamepad = SDL_GameControllerOpen(i);
             if (!gamepad) {
                 throw ChompSdlException();
             }
-            gamepads.push_back(gamepad);
+            ChompInputGamepad::deviceIdCounter += 1;
+            ChompInputGamepadDevice device;
+            device.gamepad = gamepad;
+            device.id = ChompInputGamepad::deviceIdCounter;
+            devices.push_back(device);
         }
     }
+}
+
+ChompInputGamepadDevice ChompInputGamepad::deviceFromId(uint32_t id)
+{
+    for (uint32_t i = 0; i < devices.size(); i++) {
+        if (devices[i].id == id) {
+            return devices[i];
+        }
+    }
+    // empty device
+    ChompInputGamepadDevice device;
+    device.id = 0;
+    device.gamepad = NULL;
+    return device;
+}
+
+ChompInputGamepadDevice ChompInputGamepad::deviceFromInput(ChompInputGamepadInputData input)
+{
+    return deviceFromId(input.deviceId);
+}
+
+ChompInputGamepadDevice ChompInputGamepad::deviceFromIndex(uint32_t index)
+{
+    for (uint32_t i = 0; i < devices.size(); i++) {
+        if (i == index) {
+            return devices[i];
+        }
+    }
+    // empty device
+    ChompInputGamepadDevice device;
+    device.id = 0;
+    device.gamepad = NULL;
+    return device;
+}
+
+ChompInputGamepadDevice ChompInputGamepad::deviceFromSdlGameController(SDL_GameController* gamepad)
+{
+    for (uint32_t i = 0; i < devices.size(); i++) {
+        if (devices[i].gamepad == gamepad) {
+            return devices[i];
+        }
+    }
+    // empty device
+    ChompInputGamepadDevice device;
+    device.id = 0;
+    device.gamepad = NULL;
+    return device;
+}
+
+bool ChompInputGamepad::hasInput(ChompInputGamepadDevice device, uint8_t input)
+{
+    for (uint32_t i = 0; i < inputs.size(); i++) {
+        if (inputs[i].deviceId != device.id || inputs[i].input != input) {
+            continue;
+        }
+        return inputs[i].value != 0;
+    }
+    return false;
+}
+
+bool ChompInputGamepad::hasInput(uint32_t index, uint8_t input)
+{
+    return hasInput(
+        deviceFromIndex(index),
+        input
+    );
+}
+
+
+int16_t ChompInputGamepad::getInputValue(ChompInputGamepadDevice device, uint8_t input)
+{
+    for (uint32_t i = 0; i < inputs.size(); i++) {
+        if (inputs[i].deviceId != device.id || inputs[i].input != input) {
+            continue;
+        }
+        return inputs[i].value;
+    }
+    return 0;
+}
+
+int16_t ChompInputGamepad::getInputValue(uint32_t index, uint8_t input)
+{
+    return getInputValue(
+        deviceFromIndex(index),
+        input
+    );
 }
 
 void ChompInputGamepad::event(SDL_Event* event)
@@ -56,11 +147,16 @@ void ChompInputGamepad::event(SDL_Event* event)
         case SDL_CONTROLLERBUTTONDOWN:
         {
             // collect input data
-            SDL_GameController* gamepad = SDL_GameControllerFromInstanceID(event->cbutton.which);
+            ChompInputGamepadDevice device = deviceFromSdlGameController(
+                SDL_GameControllerFromInstanceID(event->cbutton.which)
+            );
+            if (!device.gamepad) {
+                return;
+            }
             uint8_t button = convertSdlButton(event->cbutton.button);
             // find existing input
             for (uint32_t i = 0; i < inputs.size(); i++) {
-                if (inputs[i].gamepad != gamepad || inputs[i].input != button) {
+                if (inputs[i].deviceId != device.id || inputs[i].input != button) {
                     continue;
                 }
                 inputs[i].value = 1;
@@ -68,7 +164,7 @@ void ChompInputGamepad::event(SDL_Event* event)
             }
             // new input
             ChompInputGamepadInputData inputData;
-            inputData.gamepad = gamepad;
+            inputData.deviceId = device.id;
             inputData.input = button; 
             inputData.value = 1;
             inputs.push_back(inputData);
@@ -77,11 +173,16 @@ void ChompInputGamepad::event(SDL_Event* event)
         case SDL_CONTROLLERBUTTONUP:
         {
             // collect input data
-            SDL_GameController* gamepad = SDL_GameControllerFromInstanceID(event->cbutton.which);
+            ChompInputGamepadDevice device = deviceFromSdlGameController(
+                SDL_GameControllerFromInstanceID(event->cbutton.which)
+            );
+            if (!device.gamepad) {
+                return;
+            }
             uint8_t button = convertSdlButton(event->cbutton.button);
             // find existing input
             for (uint32_t i = 0; i < inputs.size(); i++) {
-                if (inputs[i].gamepad != gamepad || inputs[i].input != button) {
+                if (inputs[i].deviceId != device.id || inputs[i].input != button) {
                     continue;
                 }
                 inputs[i].value = 0;
@@ -91,24 +192,28 @@ void ChompInputGamepad::event(SDL_Event* event)
         }
         case SDL_CONTROLLERDEVICEADDED:
         {
-            SDL_GameController* controller = SDL_GameControllerOpen(event->cdevice.which);   
-            if (!controller) {
+            SDL_GameController* gamepad = SDL_GameControllerOpen(event->cdevice.which);   
+            if (!gamepad) {
                 throw ChompSdlException();
             }
-            gamepads.push_back(controller);
+            ChompInputGamepad::deviceIdCounter += 1;
+            ChompInputGamepadDevice device;
+            device.id = ChompInputGamepad::deviceIdCounter;
+            device.gamepad = gamepad;
+            devices.push_back(device);
             break;
         }
         case SDL_CONTROLLERDEVICEREMOVED:
         {
-            SDL_GameController* controller = SDL_GameControllerFromInstanceID(event->cdevice.which);
-            for (uint16_t i = 0; i < gamepads.size(); i++) {
-                if (gamepads[i] == controller) {
-                    gamepads.erase(gamepads.begin() + i);
+            SDL_GameController* gamepad = SDL_GameControllerFromInstanceID(event->cdevice.which);
+            for (uint16_t i = 0; i < devices.size(); i++) {
+                if (devices[i].gamepad == gamepad) {
+                    devices.erase(devices.begin() + i);
                     break;
                 }
             }
-            SDL_GameControllerClose(controller);
-            controller = NULL;
+            SDL_GameControllerClose(gamepad);
+            gamepad = NULL;
             break;
         }
     }
