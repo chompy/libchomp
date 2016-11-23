@@ -4,6 +4,7 @@
 #include <vector>
 #include "../sdl_includes.h"
 #include "../exception/sdl_exception.h"
+#include "../asset/asset.h"
 
 #define GAMEPAD_INPUT_INVALID 99
 #define GAMEPAD_INPUT_BTN_A 0
@@ -56,6 +57,11 @@ class ChompInputGamepad
 public:
 
     /**
+     * Name of asset containing game controller database.
+     */
+    static const char* GAME_CONTROLLER_DATABASE_ASSET;
+
+    /**
      * Constructor.
      */
     ChompInputGamepad();
@@ -98,6 +104,14 @@ public:
      * @return Number of devices
      */
     uint32_t activeDeviceCount() { return devices.size(); }
+
+    /**
+     * Retrieve list of devices that have given
+     * active input.
+     * @param input Input id
+     * @return Vector with device info
+     */
+    std::vector<ChompInputGamepadDevice> getDevicesWithInput(uint8_t input);
 
     /**
      * Check if given input is active on given device. (value != 0)
@@ -170,11 +184,19 @@ private:
 
     /**
      * Convert SDL controller button to libchomp controller
-     * button input.
+     * input.
      * @param sdlButton SDL button
      * @return Libchomp button
      */
     uint8_t convertSdlButton(uint8_t sdlButton);
+
+    /**
+     * Convert SDL controller axis to libchomp controller
+     * input.
+     * @param sdlAxis SDL axis
+     * @return Libchomp button
+     */
+    uint8_t convertSdlAxis(uint8_t sdlAxis);
 
 };
 

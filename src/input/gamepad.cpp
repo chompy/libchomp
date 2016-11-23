@@ -1,15 +1,31 @@
 #include "gamepad.h"
+const char* ChompInputGamepad::GAME_CONTROLLER_DATABASE_ASSET = "_gcdb";
 uint32_t ChompInputGamepad::deviceIdCounter = 0;
 
 ChompInputGamepad::ChompInputGamepad()
 {
-    // init joystick
-    if (SDL_WasInit(SDL_INIT_JOYSTICK) == 0) {
-        if (SDL_Init(SDL_INIT_JOYSTICK) != 0) {
+    // init controller
+    if (SDL_WasInit(SDL_INIT_GAMECONTROLLER) == 0) {
+        if (SDL_Init(SDL_INIT_GAMECONTROLLER) != 0) {
             throw ChompSdlException();
             return;
         }
     }
+
+    // load database
+    if (ChompAsset::assetExists(ChompInputGamepad::GAME_CONTROLLER_DATABASE_ASSET)) {
+        uint32_t dbSize = ChompAsset::getAssetSize(ChompInputGamepad::GAME_CONTROLLER_DATABASE_ASSET);
+        uint8_t dbBuffer[dbSize];
+        ChompAsset::readFile(
+            ChompInputGamepad::GAME_CONTROLLER_DATABASE_ASSET,
+            0,
+            dbBuffer,
+            dbSize
+        );
+        SDL_RWops* dbRW = SDL_RWFromMem(&dbBuffer, dbSize);
+        SDL_GameControllerAddMappingsFromRW(dbRW, 1);
+    }
+
     // fetch gamepads
     devices.clear();
     inputs.clear();
@@ -18,7 +34,7 @@ ChompInputGamepad::ChompInputGamepad()
 
 ChompInputGamepad::~ChompInputGamepad()
 {
-    closeAllDevices();
+    //closeAllDevices();
     inputs.clear();
 }
 
@@ -97,6 +113,20 @@ ChompInputGamepadDevice ChompInputGamepad::deviceFromSdlGameController(SDL_GameC
     return device;
 }
 
+std::vector<ChompInputGamepadDevice> ChompInputGamepad::getDevicesWithInput(uint8_t input)
+{
+    std::vector<ChompInputGamepadDevice> deviceInputList;
+    deviceInputList.clear();
+    for (uint32_t i = 0; i < inputs.size(); i++) {
+        if (inputs[i].input == input) {
+            deviceInputList.push_back(
+                deviceFromInput(inputs[i])
+            );
+        }
+    }
+    return deviceInputList;
+}
+
 bool ChompInputGamepad::hasInput(ChompInputGamepadDevice device, uint8_t input)
 {
     for (uint32_t i = 0; i < inputs.size(); i++) {
@@ -141,7 +171,28 @@ void ChompInputGamepad::event(SDL_Event* event)
     switch(event->type) {
         case SDL_CONTROLLERAXISMOTION:
         {
-            // @TODO
+            // collect input data
+            ChompInputGamepadDevice device = deviceFromSdlGameController(
+                SDL_GameControllerFromInstanceID(event->caxis.which)
+            );
+            if (!device.gamepad) {
+                return;
+            }
+            uint8_t axis = convertSdlAxis(event->caxis.axis);
+            // find existing input
+            for (uint32_t i = 0; i < inputs.size(); i++) {
+                if (inputs[i].deviceId != device.id || inputs[i].input != axis) {
+                    continue;
+                }
+                inputs[i].value = event->caxis.value;
+                return;
+            }
+            // new input
+            ChompInputGamepadInputData inputData;
+            inputData.deviceId = device.id;
+            inputData.input = axis; 
+            inputData.value = event->caxis.value;
+            inputs.push_back(inputData);
             break;
         }
         case SDL_CONTROLLERBUTTONDOWN:
@@ -291,6 +342,44 @@ uint8_t ChompInputGamepad::convertSdlButton(uint8_t sdlButton)
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
         {
             return GAMEPAD_INPUT_DPAD_R;
+            break;
+        }
+    }
+    return GAMEPAD_INPUT_INVALID;
+}
+
+uint8_t ChompInputGamepad::convertSdlAxis(uint8_t sdlAxis)
+{
+    switch (sdlAxis)
+    {
+        case SDL_CONTROLLER_AXIS_LEFTX:
+        {
+            return GAMEPAD_INPUT_AXIS_LX;
+            break;
+        }
+        case SDL_CONTROLLER_AXIS_LEFTY:
+        {
+            return GAMEPAD_INPUT_AXIS_LY;
+            break;
+        }
+        case SDL_CONTROLLER_AXIS_RIGHTX:
+        {
+            return GAMEPAD_INPUT_AXIS_RX;
+            break;
+        }
+        case SDL_CONTROLLER_AXIS_RIGHTY:
+        {
+            return GAMEPAD_INPUT_AXIS_RY;
+            break;
+        }
+        case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+        {
+            return GAMEPAD_INPUT_AXIS_LTRIGGER;
+            break;
+        }
+        case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+        {
+            return GAMEPAD_INPUT_AXIS_RTRIGGER;
             break;
         }
     }

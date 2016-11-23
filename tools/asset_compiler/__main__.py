@@ -1,8 +1,14 @@
 import sys
 import loader
+import os
 
 # list of compilers and their configurations
 COMPILERS = {
+    "game controller database" : {
+        "filepath" : "assets/game_controller_db.txt",
+        "filename" : "_gcdb",
+        "method" : "compile_game_controller_db"
+    },
     "sprites" : {
         "filepath" : "assets/gfx",
         "prefix" : "spr_",
@@ -27,7 +33,7 @@ COMPILERS = {
         "filepath" : "assets/music",
         "prefix" : "mus_",
         "method" : "compile_music"
-    },
+    }
 }
 
 # default platform

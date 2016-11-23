@@ -3,8 +3,14 @@
 
 Packs all Libchomp application files in to a single file.
 
-# Dependencies
+## Dependencies
 
-* Python 2.7
-    * Pillow
-    * pydub - https://github.com/jiaaro/pydub#installation
+Requires Python 2.7.
+To install Python dependencies use Pip.
+
+    pip install -r requirements.txt
+
+Or manual install...
+
+    pip install Pillow
+    pip install pydub

@@ -22,6 +22,16 @@ class AssetCompilerCore:
     CONFIG_TYPE_INT = 1
     CONFIG_TYPE_FLOAT = 2
 
+    def compile_game_controller_db(self, filePath):
+
+        # open controller db and dump to output
+        outputBuffer = ""
+        with open(filePath, "rb") as f:
+            outputBuffer += f.read()
+
+        print "done"
+        return outputBuffer
+
     def compile_sprite_frames(self, imagePath, frameSize):
 
         # image does not exist
@@ -280,7 +290,7 @@ class AssetCompilerCore:
         # determine filename of audio clip
         if not "source" in config or not self.PLATFORM_NAME in config["source"]:
             print "skipped"
-            print "\t----> audio '%s' not provided" % os.path.splitext(filename)[0]
+            print "\t----> audio '%s' not provided" % os.path.splitext(filepath)[0]
             return None
         audioFilename = config["source"][self.PLATFORM_NAME]
         audioExt = os.path.splitext(audioFilename)[1].replace(".", "")

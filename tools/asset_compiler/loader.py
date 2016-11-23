@@ -33,11 +33,20 @@ def run(compilerConfig, compiler):
         if "prefix" in config:
             prefix = config["prefix"]
 
+        # resolve filepath
+        filepath = config["filepath"]
+        if not os.path.exists(filepath):
+            filepath = os.path.join( os.path.join( os.path.dirname(__file__), "../../" ), filepath )
+            if not os.path.exists(filepath):
+                print "error"
+                print "---> file path '%s' was not found" % config["filepath"]
+                continue
+
         # single file
-        if os.path.isfile(config["filepath"]):
-            data = getattr(compiler, config["method"])(config["filepath"])           
+        if os.path.isfile(filepath):
+            data = getattr(compiler, config["method"])(filepath)           
             if data is None: continue
-            filename = "%s%s" % (prefix, os.path.splitext(os.path.basename(config["filepath"]))[0].strip().replace(" ", "_"))
+            filename = "%s%s" % (prefix, os.path.splitext(os.path.basename(filepath))[0].strip().replace(" ", "_"))
             if "filename" in config:
                 filename = config["filename"]
             dataBuffer.append({
@@ -46,21 +55,15 @@ def run(compilerConfig, compiler):
             })
 
         # multi file
-        elif os.path.isdir(config["filepath"]):
+        elif os.path.isdir(filepath):
             print
-            for filename in os.listdir(config["filepath"]):
-                data = getattr(compiler, config["method"])(os.path.join(config["filepath"], filename))
+            for filename in os.listdir(filepath):
+                data = getattr(compiler, config["method"])(os.path.join(filepath, filename))
                 if data is None: continue
                 dataBuffer.append({
                     "name" : "%s%s" % (prefix, os.path.splitext(filename)[0].strip().replace(" ", "_")),
                     "data" : data
                 })
-
-        # no file
-        else:
-            print "error"
-            print "---> file path '%s' was not found" % config["filepath"]
-            continue
 
     # open output file
     output = open(compiler.OUTPUT_PATH, "wb")
