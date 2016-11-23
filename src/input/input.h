@@ -4,7 +4,7 @@
 #include "../sdl_includes.h"
 #include "../exception/sdl_exception.h"
 #include "mouse.h"
-
+#include "gamepad.h"
 
 /**
  * Base class for handling inputs.
@@ -19,8 +19,10 @@ public:
     ChompInputMouse mouse;
 
     /**
-     * @TODO Add Joystick Here
+     * Handles gamepad inputs.
      */
+    ChompInputGamepad gamepad;
+
     /**
      * @TODO Add Keyboard Here
      */

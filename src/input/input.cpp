@@ -3,14 +3,6 @@
 ChompInput::ChompInput()
 {
 
-    // init joystic
-    if (SDL_WasInit(SDL_INIT_JOYSTICK) == 0) {
-        if (SDL_Init(SDL_INIT_JOYSTICK) != 0) {
-            throw ChompSdlException();
-            return;
-        }
-    }
-
 }
 
 ChompInput::~ChompInput()
@@ -27,6 +19,16 @@ void ChompInput::event(SDL_Event* event)
         case SDL_MOUSEBUTTONUP:
         {
             mouse.event(event);
+            break;
+        }
+
+        case SDL_CONTROLLERAXISMOTION:
+        case SDL_CONTROLLERBUTTONDOWN:
+        case SDL_CONTROLLERBUTTONUP:
+        case SDL_CONTROLLERDEVICEADDED:
+        case SDL_CONTROLLERDEVICEREMOVED:
+        {
+            gamepad.event(event);
             break;
         }
     }

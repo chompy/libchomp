@@ -98,12 +98,11 @@ bool Chomp::loop(ChompCore* core)
             }
 
             // input events
-            case SDL_JOYBUTTONDOWN:
-            case SDL_JOYBUTTONUP:
-            case SDL_JOYAXISMOTION:
-            case SDL_JOYHATMOTION:
-            case SDL_JOYDEVICEADDED:
-            case SDL_JOYDEVICEREMOVED:
+            case SDL_CONTROLLERAXISMOTION:
+            case SDL_CONTROLLERBUTTONDOWN:
+            case SDL_CONTROLLERBUTTONUP:
+            case SDL_CONTROLLERDEVICEADDED:
+            case SDL_CONTROLLERDEVICEREMOVED:
             case SDL_KEYDOWN:
             case SDL_KEYUP:
             case SDL_MOUSEBUTTONDOWN:

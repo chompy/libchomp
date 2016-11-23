@@ -215,7 +215,7 @@ protected:
     /**
      * Pixel width of layer.
      */
-    uint16_t pixelWidth
+    uint16_t pixelWidth;
 
     /**
      * Pixel height of layer.
