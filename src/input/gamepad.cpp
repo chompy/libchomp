@@ -4,7 +4,13 @@ uint32_t ChompInputGamepad::deviceIdCounter = 0;
 
 ChompInputGamepad::ChompInputGamepad()
 {
-    // init controller
+    // init joystick/controller
+    if (SDL_WasInit(SDL_INIT_JOYSTICK) == 0) {
+        if (SDL_Init(SDL_INIT_JOYSTICK) != 0) {
+            throw ChompSdlException();
+            return;
+        }
+    }
     if (SDL_WasInit(SDL_INIT_GAMECONTROLLER) == 0) {
         if (SDL_Init(SDL_INIT_GAMECONTROLLER) != 0) {
             throw ChompSdlException();
