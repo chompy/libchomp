@@ -31,5 +31,11 @@ void ChompInput::event(SDL_Event* event)
             gamepad.event(event);
             break;
         }
+        case SDL_KEYDOWN:
+        case SDL_KEYUP:
+        {
+            keyboard.event(event);
+            break;
+        }
     }
 }

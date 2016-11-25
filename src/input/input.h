@@ -5,6 +5,7 @@
 #include "../exception/sdl_exception.h"
 #include "mouse.h"
 #include "gamepad.h"
+#include "keyboard.h"
 
 /**
  * Base class for handling inputs.
@@ -24,8 +25,9 @@ public:
     ChompInputGamepad gamepad;
 
     /**
-     * @TODO Add Keyboard Here
+     * Handles keyboard inputs.
      */
+    ChompInputKeyboard keyboard;
 
     /**
      * Constructor.
