@@ -86,16 +86,16 @@ void ChompyStateMain::setActiveInputText()
     std::string inputString = "";
     uint16_t activeGamepadInputStringLen = strlen(ChompyStateMain::ACTIVE_GAMEPAD_INPUT_STRING);
     for (uint8_t i = 0; i < 32; i++) {
-        std::vector<ChompInputGamepadDevice> devices = core->input.gamepad.getDevicesWithInput(i);
+        std::vector<ChompInputGamepadDevice*> devices = core->input.gamepad.getDevicesWithInput(i);
         for (uint16_t j = 0; j < devices.size(); j++) {
-            if (devices[j].id == 0) {
+            if (!devices[j] || devices[j]->id == 0) {
                 continue;
             }
             char activeGamepadInputString[activeGamepadInputStringLen + 6];
             sprintf(
                 activeGamepadInputString,
                 ChompyStateMain::ACTIVE_GAMEPAD_INPUT_STRING,
-                devices[j].id,
+                devices[j]->id,
                 i,
                 core->input.gamepad.getInputValue(devices[j], i)
             );

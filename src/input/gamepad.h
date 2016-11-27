@@ -76,28 +76,28 @@ public:
      * @param id Device id
      * @return Device info
      */
-    ChompInputGamepadDevice deviceFromId(uint32_t id);
+    ChompInputGamepadDevice* deviceFromId(uint32_t id);
 
     /**
      * Get device info from input data.
      * @param input Input struct
      * @return Device info
      */
-    ChompInputGamepadDevice deviceFromInput(ChompInputGamepadInputData input);
+    ChompInputGamepadDevice* deviceFromInput(ChompInputGamepadInputData* input);
 
     /**
      * Get device info from index.
      * @param index Device index
      * @return Device info
      */
-    ChompInputGamepadDevice deviceFromIndex(uint32_t index);
+    ChompInputGamepadDevice* deviceFromIndex(uint32_t index);
 
     /**
      * Get device info from SDL GameController.
      * @param gamepad SDL GameController
      * @return Device info
      */
-    ChompInputGamepadDevice deviceFromSdlGameController(SDL_GameController* gamepad);
+    ChompInputGamepadDevice* deviceFromSdlGameController(SDL_GameController* gamepad);
 
     /**
      * Get number of active devices.
@@ -111,7 +111,7 @@ public:
      * @param input Input id
      * @return Vector with device info
      */
-    std::vector<ChompInputGamepadDevice> getDevicesWithInput(uint8_t input);
+    std::vector<ChompInputGamepadDevice*> getDevicesWithInput(uint8_t input);
 
     /**
      * Check if given input is active on given device. (value != 0)
@@ -119,7 +119,7 @@ public:
      * @param input Input id
      * @return True if input is active
      */
-    bool hasInput(ChompInputGamepadDevice device, uint8_t input);
+    bool hasInput(ChompInputGamepadDevice* device, uint8_t input);
 
     /**
      * Check if given input is active on a device at the
@@ -136,7 +136,7 @@ public:
      * @param input Input id
      * @return Value of input
      */
-    int16_t getInputValue(ChompInputGamepadDevice device, uint8_t input);
+    int16_t getInputValue(ChompInputGamepadDevice* device, uint8_t input);
 
     /**
      * Get value of input on a device at the given
