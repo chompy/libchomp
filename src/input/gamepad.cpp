@@ -31,11 +31,8 @@ ChompInputGamepad::ChompInputGamepad()
         SDL_RWops* dbRW = SDL_RWFromMem(&dbBuffer, dbSize);
         SDL_GameControllerAddMappingsFromRW(dbRW, 1);
     }
-
-    // fetch gamepads
     devices.clear();
     inputs.clear();
-    fetchDevices();
 }
 
 ChompInputGamepad::~ChompInputGamepad()
@@ -52,24 +49,6 @@ void ChompInputGamepad::closeAllDevices()
         }
     }
     devices.clear();    
-}
-
-void ChompInputGamepad::fetchDevices()
-{
-    closeAllDevices();
-    for (uint16_t i = 0; i < SDL_NumJoysticks(); i++) {
-        if (SDL_IsGameController(i)) {
-            SDL_GameController* gamepad = SDL_GameControllerOpen(i);
-            if (!gamepad) {
-                throw ChompSdlException();
-            }
-            ChompInputGamepad::deviceIdCounter += 1;
-            ChompInputGamepadDevice device;
-            device.gamepad = gamepad;
-            device.id = ChompInputGamepad::deviceIdCounter;
-            devices.push_back(device);
-        }
-    }
 }
 
 ChompInputGamepadDevice ChompInputGamepad::deviceFromId(uint32_t id)
@@ -124,7 +103,7 @@ std::vector<ChompInputGamepadDevice> ChompInputGamepad::getDevicesWithInput(uint
     std::vector<ChompInputGamepadDevice> deviceInputList;
     deviceInputList.clear();
     for (uint32_t i = 0; i < inputs.size(); i++) {
-        if (inputs[i].input == input) {
+        if (inputs[i].input == input && inputs[i].value != 0) {
             deviceInputList.push_back(
                 deviceFromInput(inputs[i])
             );

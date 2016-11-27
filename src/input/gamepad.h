@@ -178,11 +178,6 @@ private:
     void closeAllDevices();
 
     /**
-     * Fetch all compatible and connected gamepads.
-     */
-    void fetchDevices();
-
-    /**
      * Convert SDL controller button to libchomp controller
      * input.
      * @param sdlButton SDL button
