@@ -23,6 +23,10 @@
 #define SCORE_PER_WALL 1
 #define START_LIVES 3
 
+#define INPUT_MOUSE 0
+#define INPUT_KEYBOARD 1
+#define INPUT_GAMEPAD 2
+
 class ChompyStatePlay : public ChompState
 {
 public:
@@ -40,6 +44,7 @@ public:
         round = 0;
         lives = START_LIVES;
         lastScoreX = 0;
+        inputDevice = INPUT_MOUSE;
     }
 
     void enter();
@@ -58,6 +63,7 @@ protected:
     float playerBounce = .01;
 
     // state vars
+    uint8_t inputDevice;
     uint8_t lives;
     uint32_t score;
     uint16_t round;

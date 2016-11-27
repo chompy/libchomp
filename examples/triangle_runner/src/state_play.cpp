@@ -113,12 +113,37 @@ void ChompyStatePlay::update()
     } else if (playerPos.y > GAME_AREA_H - playerSprite->size.h) {
         playerPos.y = GAME_AREA_H - playerSprite->size.h;
     }
-    ChompGfxSize mouse = core->gfx.fromPixelSize(
-        core->input.mouse.x,
-        core->input.mouse.y
-    );
-    mouse.h -= ((windowSize.h / 2) - .5);
-    playerYTo = mouse.h;
+
+    if (core->input.mouse.pressed(MOUSE_BUTTON_LEFT)) {
+        inputDevice = INPUT_MOUSE;
+    }
+    if (core->input.keyboard.hasInput(SDL_SCANCODE_UP)) {
+        playerYTo -= VER_MOVE_INC;
+        inputDevice = INPUT_KEYBOARD;
+    } else if (core->input.keyboard.hasInput(SDL_SCANCODE_DOWN)) {
+        playerYTo += VER_MOVE_INC;
+        inputDevice = INPUT_KEYBOARD;
+    }
+    if (core->input.gamepad.getDevicesWithInput(GAMEPAD_INPUT_DPAD_U).size() > 0) {
+        playerYTo -= VER_MOVE_INC;
+        inputDevice = INPUT_GAMEPAD;
+    } else if (core->input.gamepad.getDevicesWithInput(GAMEPAD_INPUT_DPAD_D).size() > 0) {
+        playerYTo += VER_MOVE_INC;
+        inputDevice = INPUT_GAMEPAD;
+    }
+    if (inputDevice == INPUT_MOUSE) {
+        ChompGfxSize mouse = core->gfx.fromPixelSize(
+            core->input.mouse.x,
+            core->input.mouse.y
+        );
+        mouse.h -= ((windowSize.h / 2) - .5);
+        playerYTo = mouse.h;
+    }
+    if (playerYTo < 0) {
+        playerYTo = 0;
+    } else if (playerYTo > GAME_AREA_H - playerSprite->size.h) {
+        playerYTo = GAME_AREA_H - playerSprite->size.h;
+    }
     if (playerPos.y > GAME_AREA_H - playerSprite->size.h) {
         playerPos.y = GAME_AREA_H - playerSprite->size.h;
     }

@@ -40,7 +40,11 @@ void ChompyStateMain::update()
 {
 
     // mouse press
-    if (core->input.mouse.pressed(MOUSE_BUTTON_LEFT)) {
+    if (
+        core->input.mouse.pressed(MOUSE_BUTTON_LEFT) ||
+        core->input.keyboard.hasInput(SDL_SCANCODE_SPACE) ||
+        core->input.gamepad.getDevicesWithInput(GAMEPAD_INPUT_BTN_A).size() > 0
+    ) {
         ChompState::changeState(playState);
         return;
     }
