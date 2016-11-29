@@ -39,5 +39,5 @@ void ChompyStateMain::update()
     dstRect.y = (windowSize.h / 2) - (textLayer->size.h / 2);
     dstRect.w = textLayer->size.w;
     dstRect.h = textLayer->size.h;
-    core->gfx.addLayerToRenderer(textLayer, nullptr, &dstRect);
+    core->gfx.addLayerToRenderer(textLayer, NULL, &dstRect);
 }

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "chomp.h"
+#include "src/chomp.h"
 #include "state_chompy.h"
 
 int main(int argc, char **argv) {

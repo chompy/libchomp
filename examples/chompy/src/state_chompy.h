@@ -1,7 +1,7 @@
 #ifndef CHOMPY_ANI_STATE
 #define CHOMPY_ANI_STATE
 
-#include "state.h"
+#include "src/state.h"
 
 class ChompyExampleState : public ChompState
 {
@@ -12,8 +12,8 @@ public:
 
     ChompyExampleState(ChompCore* _core) : ChompState(_core)
     {
-        chompySprite = nullptr;
-        layer = nullptr;
+        chompySprite = NULL;
+        layer = NULL;
     }
 
     void enter();

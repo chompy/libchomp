@@ -1,7 +1,7 @@
 #ifndef CHOMPY_MAIN_STATE
 #define CHOMPY_MAIN_STATE
 
-#include "state.h"
+#include "src/state.h"
 
 class ChompyStateMain : public ChompState
 {

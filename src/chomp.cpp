@@ -13,7 +13,7 @@ Chomp::Chomp()
         throw ChompSdlException();
         return;
     }
-
+    core.deltaTime = 1;
 }
 
 Chomp::~Chomp()

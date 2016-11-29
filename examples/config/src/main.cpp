@@ -1,7 +1,7 @@
 #include "stdint.h"
 #include <stdlib.h>
 #include <iostream>
-#include "chomp.h"
+#include "src/chomp.h"
 
 int main(int argc, char **argv) {
     ChompConfig config("sample_config");

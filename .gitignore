@@ -30,3 +30,4 @@ itmain.sh
 Makefile
 Makefile.in
 missing
+example_*

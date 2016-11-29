@@ -50,11 +50,11 @@ void ChompyStateMain::update()
     dstRect.y = .1;
     dstRect.w = activeGamepadCountText->size.w;
     dstRect.h = activeGamepadCountText->size.h;
-    core->gfx.addLayerToRenderer(activeGamepadCountText, nullptr, &dstRect);
+    core->gfx.addLayerToRenderer(activeGamepadCountText, NULL, &dstRect);
     dstRect.y = .25;
     dstRect.w = activeInputText->size.w;
     dstRect.h = activeInputText->size.h;
-    core->gfx.addLayerToRenderer(activeInputText, nullptr, &dstRect);
+    core->gfx.addLayerToRenderer(activeInputText, NULL, &dstRect);
 }
 
 void ChompyStateMain::setActiveGamepadCountText()

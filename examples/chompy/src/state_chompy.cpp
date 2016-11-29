@@ -17,7 +17,7 @@ void ChompyExampleState::enter()
         layer = core->gfx.newLayer(
             1000,
             1000,
-            nullptr
+            NULL
         );
         layer->zIndex = 1;
         ChompGfxPosition pos1;
@@ -62,6 +62,6 @@ void ChompyExampleState::exit()
 void ChompyExampleState::update()
 {
     chompySprite->updateAnimationFrame();
-    core->gfx.addLayerToRenderer(chompySprite, nullptr, nullptr);
-    core->gfx.addLayerToRenderer(layer, nullptr, nullptr);
+    core->gfx.addLayerToRenderer(chompySprite, NULL, NULL);
+    core->gfx.addLayerToRenderer(layer, NULL, NULL);
 }

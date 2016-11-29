@@ -89,7 +89,7 @@ void ChompyStateMain::update()
     layer->drawFillRect(&rect);
 
 
-    core->gfx.addLayerToRenderer(layer, nullptr, &dstRect);
+    core->gfx.addLayerToRenderer(layer, NULL, &dstRect);
 }
 
 void ChompyStateMain::rectToPixelCoords(ChompGfxRect* rect, ChompGfxRect* offset, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h)

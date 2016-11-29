@@ -33,7 +33,7 @@ public:
     /**
      * Last frame delta time.
      */
-    float deltaTime = 1;
+    float deltaTime;
 
     /**
      * Get time since start of app.
