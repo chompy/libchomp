@@ -15,7 +15,7 @@ linux:
 
 win32:
 	mkdir -p $(TGT)/win32
-	cp ../../build/win32/*.dll .
+	cp ../../libchomp.a libchomp.dll
 	cd src; make COMPILETO="win32"
 	$(CXX) $(LDFLAGS) $(TGT)/win32/*.o -DSDL2 -o $(TGT)/win32/output.exe libchomp.dll -static-libgcc -static-libstdc++ -mconsole -mwindows -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
 

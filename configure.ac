@@ -1,5 +1,5 @@
 AC_INIT([libchomp], [0.0.1], [nathanogden@chompy.me])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 LT_INIT
 AC_PROG_CXX
 
