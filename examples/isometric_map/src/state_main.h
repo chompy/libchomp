@@ -1,7 +1,7 @@
 #ifndef CHOMPY_MAIN_STATE
 #define CHOMPY_MAIN_STATE
 
-#include "src/state.h"
+#include "state.h"
 #include <iostream>
 #include "component/map.h"
 
@@ -11,7 +11,7 @@ public:
 
     ChompyStateMain(ChompCore* _core) : ChompState(_core)
     {
-        map = nullptr;
+        map = NULL;
     }
 
     void enter();

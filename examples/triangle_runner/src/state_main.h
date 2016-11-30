@@ -2,7 +2,7 @@
 #define CHOMPY_MAIN_STATE
 
 #include <iostream>
-#include "src/state.h"
+#include "state.h"
 #include "state_play.h"
 
 class ChompyStateMain : public ChompState

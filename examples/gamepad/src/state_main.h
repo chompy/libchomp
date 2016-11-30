@@ -1,7 +1,7 @@
 #ifndef CHOMPY_MAIN_STATE
 #define CHOMPY_MAIN_STATE
 
-#include "src/state.h"
+#include "state.h"
 
 #define INPUT_UPDATE_RATE 250
 

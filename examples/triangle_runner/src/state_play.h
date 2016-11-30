@@ -1,7 +1,7 @@
 #ifndef CHOMPY_PLAY_STATE
 #define CHOMPY_PLAY_STATE
 
-#include "src/state.h"
+#include "state.h"
 
 #include <string>
 #include <stdlib.h>
