@@ -1,5 +1,3 @@
-- Namespacing Chomp::?
-- Gamepad/Joystick input
-- Keyboard input
 - Play sound effects
-- Requirements.txt for asset compiler
+- Input mapper?
+- Particle engine?
