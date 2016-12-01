@@ -12,20 +12,20 @@ def run(compilerConfig, compiler):
     # iterate compiler conf
     for compileType in compilerConfig:
         
-        print "* Compile %s..." % compileType,
+        print("* Compile %s..." % compileType, end="")
 
         config = compilerConfig[compileType]
 
         # must include filepath
         if "filepath" not in config:
-            print "error"
-            print "---> 'filepath' not configured"
+            print("error")
+            print("---> 'filepath' not configured")
             continue
 
         # must include method
         if "method" not in config:
-            print "error"
-            print "---> 'method' not configured"
+            print("error")
+            print("---> 'method' not configured")
             continue
 
         # get asset name prefix
@@ -38,8 +38,8 @@ def run(compilerConfig, compiler):
         if not os.path.exists(filepath):
             filepath = os.path.join( os.path.join( os.path.dirname(__file__), "../../" ), filepath )
             if not os.path.exists(filepath):
-                print "error"
-                print "---> file path '%s' was not found" % config["filepath"]
+                print("error")
+                print("---> file path '%s' was not found" % config["filepath"])
                 continue
 
         # single file
@@ -56,7 +56,7 @@ def run(compilerConfig, compiler):
 
         # multi file
         elif os.path.isdir(filepath):
-            print
+            print("")
             for filename in os.listdir(filepath):
                 data = getattr(compiler, config["method"])(os.path.join(filepath, filename))
                 if data is None: continue
@@ -69,10 +69,10 @@ def run(compilerConfig, compiler):
     output = open(compiler.OUTPUT_PATH, "wb")
 
     # build index
-    print "* Build index...",
+    print("* Build index...", end="")
 
     # output
-    outputBuffer = ""
+    outputBuffer = b""
 
     # write number of assets
     outputBuffer += struct.pack("<H", len(dataBuffer))
@@ -88,7 +88,7 @@ def run(compilerConfig, compiler):
         
         # write asset name
         outputBuffer += struct.pack("<B", len(item["name"]))
-        outputBuffer += item["name"]
+        outputBuffer += bytes(item["name"], "ascii")
 
         # write data pos and size
         outputBuffer += struct.pack("<L", pos)
@@ -98,13 +98,13 @@ def run(compilerConfig, compiler):
         pos += len(item["data"])
 
     # done index
-    print "done"
+    print("done")
 
     # iterate assets to write data
-    print "* Write asset data to buffer...",
+    print("* Write asset data to buffer...", end="")
     for item in dataBuffer:
-        outputBuffer += str( item["data"] )
-    print "done"
+        outputBuffer += item["data"]
+    print("done")
 
     # compiler output method
     try:
@@ -113,9 +113,10 @@ def run(compilerConfig, compiler):
         pass
 
     # write to file
-    print "* Writing output file...",
+    print("* Writing output file...", end="")
+
     output.write( outputBuffer )
-    print "done"
+    print("done")
 
     # close output
     output.close()

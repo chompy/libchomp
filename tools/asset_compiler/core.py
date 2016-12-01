@@ -4,7 +4,10 @@ import json
 import struct
 from PIL import Image, ImageFont
 from pydub import AudioSegment
-import StringIO
+try:
+    from StringIO import StringIO as BytesIO
+except ImportError:
+    from io import BytesIO
 
 # parse json array
 def parse_json(fullpath):
@@ -25,55 +28,55 @@ class AssetCompilerCore:
     def compile_game_controller_db(self, filePath):
 
         # open controller db and dump to output
-        outputBuffer = ""
+        outputBuffer = b""
         with open(filePath, "rb") as f:
             outputBuffer += f.read()
 
-        print "done"
+        print("done")
         return outputBuffer
 
     def compile_sprite_frames(self, imagePath, frameSize):
 
         # image does not exist
         if not os.path.exists( imagePath ):
-            print "error"
-            print "\t----> sprite '%s' not found" % spriteFilename
+            print("error")
+            print("\t----> sprite '%s' not found" % spriteFilename)
             return None
 
         # attempt to open sprite
         try:
             sprite = Image.open( imagePath )
         except IOError as detail:
-            print "error"
-            print "  - ----> %s" % detail
+            print("error")
+            print("  - ----> %s" % detail)
             return None
 
         # invalid mode
         if sprite.mode not in ["LA", "RGBA", "RGB"]:
-            print "error"
-            print "\t----> sprite uses incompatible color mode"
+            print("error")
+            print("\t----> sprite uses incompatible color mode")
             return None
 
         # output buffer
-        outputBuffer = ""
+        outputBuffer = b""
 
         # get size of frames
-        frameSize = map(int, frameSize)
+        frameSize = list(map(int, frameSize))
         for i in frameSize:
             outputBuffer += struct.pack("<H", int(i))
 
         # write frame count
-        outputBuffer += struct.pack("<H", (sprite.size[1] / frameSize[1]) * (sprite.size[0] / frameSize[0]))
+        outputBuffer += struct.pack("<H", int((sprite.size[1] / frameSize[1]) * (sprite.size[0] / frameSize[0])))
 
         # compile tile data
-        for y in range( sprite.size[1] / frameSize[1] ):
+        for y in range( int(sprite.size[1] / frameSize[1]) ):
             if sprite.size[1] - (y * frameSize[1]) < frameSize[1]: break
-            for x in range( sprite.size[0] / frameSize[0] ):
+            for x in range( int(sprite.size[0] / frameSize[0]) ):
                 if sprite.size[0] - (x * frameSize[0]) < frameSize[0]: continue
 
                 tile = sprite.copy().crop(( x * frameSize[0], y * frameSize[1], (x + 1) * frameSize[0], (y + 1) * frameSize[1] ))
 
-                tileData = StringIO.StringIO()
+                tileData = BytesIO()
                 tile.convert("RGBA").save(tileData, "PNG")
                 outputBuffer += struct.pack("<L", len(tileData.getvalue()) )
                 outputBuffer += tileData.getvalue()
@@ -89,15 +92,15 @@ class AssetCompilerCore:
             return None
 
         # debug
-        print "  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0],
+        print("  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0], end="")
 
         # convert json to array
         config = parse_json(filepath)
 
         # determine filename of sprite
         if not "source" in config or not self.PLATFORM_NAME in config["source"]:
-            print "skipped"
-            print "\t----> sprite '%s' not provided" % os.path.splitext(filename)[0]
+            print("skipped")
+            print("\t----> sprite '%s' not provided" % os.path.splitext(filename)[0])
             return None
         spriteFilename = config["source"][self.PLATFORM_NAME]
 
@@ -114,7 +117,7 @@ class AssetCompilerCore:
 
         # compile animation data
         count = 0
-        animationDataStr = ""
+        animationDataStr = b""
 
         if "animation" in config:
             for animationName in config["animation"]:
@@ -123,7 +126,7 @@ class AssetCompilerCore:
                 for animationFrame in config["animation"][animationName]:
                     if type(animationFrame) == int:
                         animationFrames.append(animationFrame)
-                    elif type(animationFrame) == unicode or type(animationFrame) == str:
+                    elif type(animationFrame) == str:
                         animationFrame = str(animationFrame).split("-")
                         if len(animationFrame) != 2:
                             continue
@@ -131,7 +134,7 @@ class AssetCompilerCore:
                             animationFrames.append(i)
                             
                 animationDataStr += struct.pack("<B", len(animationName))
-                animationDataStr += str(animationName)
+                animationDataStr += bytes(animationName, "ascii")
                 animationDataStr += struct.pack("<H", len(animationFrames))
                 for animationFrame in animationFrames:
                     animationDataStr += struct.pack("<H", int(animationFrame))            
@@ -146,7 +149,7 @@ class AssetCompilerCore:
         outputBuffer += animationDataStr
 
         # done
-        print "done"
+        print("done")
         return outputBuffer
 
     # compile font
@@ -157,7 +160,7 @@ class AssetCompilerCore:
             return None
 
         # debug
-        print "  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0],
+        print("  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0], end="")
 
         # parse json
         config = parse_json(filepath)
@@ -167,22 +170,22 @@ class AssetCompilerCore:
         if "font_file" in config and config["font_file"]:
             fontFilename = config["font_file"]
         else:
-            print "error"
-            print "\t----> font filename was not provided"
+            print("error")
+            print("\t----> font filename was not provided")
             return
 
         # check if font exists
         fontFullPath = os.path.join(os.path.dirname(filepath), fontFilename)
         if not os.path.exists(fontFullPath):
-            print "error"
-            print "\t----> font '%s' was not found" % fontFilename
+            print("error")
+            print("\t----> font '%s' was not found" % fontFilename)
 
         # open font and dump to output
-        outputBuffer = ""
+        outputBuffer = b""
         with open(fontFullPath, "rb") as f:
             outputBuffer += f.read()
 
-        print "done"
+        print("done")
         return outputBuffer
 
     # compile config
@@ -193,12 +196,12 @@ class AssetCompilerCore:
             return None
 
         # debug
-        print "  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0], 
+        print("  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0], end="")
 
         # config file not found
         if not os.path.exists(filepath):
-            print "error"
-            print "\t----> config file (%s) does not exist." % os.path.basename(filepath)
+            print("error")
+            print("\t----> config file (%s) does not exist." % os.path.basename(filepath))
             return None
 
         # parse json
@@ -207,7 +210,7 @@ class AssetCompilerCore:
         # function to recursively iterate over config
         def iterateConfig(value, keys = []):
             
-            outputBuffer = ""
+            outputBuffer = b""
             configKey = ""
             if (keys):
                 configKey = '.'.join(keys)
@@ -238,7 +241,7 @@ class AssetCompilerCore:
 
             # key
             outputBuffer += struct.pack("<H", len(configKey))
-            outputBuffer += str(configKey)
+            outputBuffer += bytes(configKey, "ascii")
 
             # integer
             if type(value) is int:
@@ -254,20 +257,20 @@ class AssetCompilerCore:
             else:
                 outputBuffer += struct.pack("<B", self.CONFIG_TYPE_STRING)
                 outputBuffer += struct.pack("<H", len(value))
-                outputBuffer += str(value)
+                outputBuffer += bytes(value, "ascii")
 
             return outputBuffer
 
         # config must be a dict
         if type(config) is not dict:
-            print "error"
-            print "\t----> config should be in dict format ({ 'key' : 'value' })."
+            print("error")
+            print("\t----> config should be in dict format ({ 'key' : 'value' }).")
 
         # recursively process
         outputBuffer = iterateConfig(config)
 
         # done
-        print "done"
+        print("done")
         return outputBuffer
 
     # compile music
@@ -282,15 +285,15 @@ class AssetCompilerCore:
             return None
 
         # debug
-        print "  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0],
+        print("  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0], end="")
 
         # convert json to array
         config = parse_json(filepath)
 
         # determine filename of audio clip
         if not "source" in config or not self.PLATFORM_NAME in config["source"]:
-            print "skipped"
-            print "\t----> audio '%s' not provided" % os.path.splitext(filepath)[0]
+            print("skipped")
+            print("\t----> audio '%s' not provided" % os.path.splitext(filepath)[0])
             return None
         audioFilename = config["source"][self.PLATFORM_NAME]
         audioExt = os.path.splitext(audioFilename)[1].replace(".", "")
@@ -299,7 +302,7 @@ class AssetCompilerCore:
         audioName = os.path.splitext(os.path.basename(filepath))[0].strip().replace(" ", "_").lower()[:255]
 
         # prepare output
-        outputBuffer = ""
+        outputBuffer = b""
 
         # open with pydub
         outputBitrate = "192k"
@@ -310,11 +313,11 @@ class AssetCompilerCore:
         pyDubAudio.export(audioData, format=output, bitrate=outputBitrate)
 
         # add to output
-        outputBuffer = str( audioData.read() )
+        outputBuffer = audioData.read()
         audioData.close()
 
         # done
-        print "done"
+        print("done")
         return outputBuffer
 
     # modify final output
