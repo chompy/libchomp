@@ -5,7 +5,7 @@ Packs all Libchomp application files in to a single file.
 
 ## Dependencies
 
-Requires Python 2.7.
+Requires Python 3.
 To install Python dependencies use Pip.
 
     pip install -r requirements.txt
