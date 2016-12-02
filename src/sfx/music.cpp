@@ -1,5 +1,7 @@
 #include "music.h"
 
+char ChompSfxMusic::MUSIC_ASSET_PREFIX[] = "mus_";
+
 ChompSfxMusic::ChompSfxMusic()
 {
     music = NULL;

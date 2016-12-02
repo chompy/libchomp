@@ -6,10 +6,14 @@
 #include "../sdl_includes.h"
 #include "../asset/asset.h"
 
-#define SFX_STOP 0
-#define SFX_PLAY 1
-#define SFX_FADEIN 2
-#define SFX_FADEOUT 3
+#define SFX_LOAD_FAILED 200
+#define SFX_NO_SDL_MIXER 201
+#define SFX_PLAYBACK_ERROR 202
+#define SFX_READY 0
+#define SFX_STOP 1
+#define SFX_PLAY 2
+#define SFX_FADEIN 3
+#define SFX_FADEOUT 4
 
 #define SFX_DEFAULT_FADEIN 0
 #define SFX_DEFAULT_FADEOUT 0
@@ -23,16 +27,48 @@ class ChompSfxSample {
 public:
 
     /**
-     * Constructor.
-     * @param chunk SDL2 mixer chunk
+     * Sample asset prefix.
      */
-    ChompSfxSample(Mix_Chunk* chunk);
+    static char SAMPLE_ASSET_PREFIX[];
+
+    #ifndef WITHOUT_SDL_MIXER
+    
+    /**
+     * SDL Mix Chunk
+     */
+    Mix_Chunk* chunk;
+    
+    #else
+
+    /**
+     * Null chunk Pointer (if SDL Mixer not loaded)
+     */
+    void* chunk;
+
+    #endif
+
+    /**
+     * Constructor.
+     * @param name Name of asset
+     */
+    ChompSfxSample(char* name);
+
+    /**
+     * Destructor.
+     */
+    ~ChompSfxSample();
 
     /**
      * Get channel this sample will play on.
      * @return Channel number
      */
     uint8_t getChannel() { return channel; }
+
+    /**
+     * Get status of sample.
+     * @return Status code (SFX_LOAD_FAILED|SFX_READY|SFX_STOP|SFX_PLAY|..etc)
+     */
+    uint8_t getStatus() { return status; }
 
     void setSample(uint8_t operation);
     void setSample(uint8_t operation, int16_t loops);
@@ -62,9 +98,19 @@ public:
 protected:
 
     /**
+     * Vector containing raw sample data
+     */
+    std::vector<uint8_t> sampleData;
+
+    /**
+     * Current status
+     */
+    uint8_t status;
+
+    /**
      * Channel sample is to be played on.
      */
-    uint16_t channel;
+    int16_t channel;
 
 };
 

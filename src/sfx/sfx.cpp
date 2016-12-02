@@ -1,7 +1,5 @@
 #include "sfx.h"
 
-char ChompSfx::MUSIC_ASSET_PREFIX[] = "mus_";
-
 ChompSfx::ChompSfx()
 {
     #ifndef WITHOUT_SDL_MIXER
