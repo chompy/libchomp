@@ -6,7 +6,9 @@ const char ChompyStateMain::SAMPLE_MUSIC[] = "organfinale";
 
 void ChompyStateMain::enter()
 {
+    core->sfx.music.setVolume(25); // volume to 25%
     core->sfx.music.loadMusic(ChompyStateMain::SAMPLE_MUSIC, MUSIC_PLAY, 1);
+
     if (!sample) {
         sample = core->sfx.loadSample(ChompyStateMain::SAMPLE_ASSET);
     }

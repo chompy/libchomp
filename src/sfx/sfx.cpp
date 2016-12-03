@@ -22,8 +22,9 @@ ChompSfx::ChompSfx()
 
 ChompSfx::~ChompSfx()
 {
-    samples.clear();
+    unloadAllSamples();
     #ifndef WITHOUT_SDL_MIXER
+    music.unloadMusic();
     Mix_Quit();
     #endif
 }

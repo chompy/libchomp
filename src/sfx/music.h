@@ -15,6 +15,9 @@
 #define MUSIC_LOAD_COMPLETE 1
 #define MUSIC_LOAD_QUEUED 2
 
+#define MUSIC_DEFAULT_FADE 0
+#define MUSIC_DEFAULT_LOOPS -1
+
 /**
  * Music player class.
  */
@@ -119,6 +122,44 @@ public:
      * @param fadeDuration Time in milliseconds for fade in/out
      */    
     void setMusic(uint8_t operation, int16_t loops, int32_t fadeDuration);
+
+    /**
+     * Convienence function that calls setMusic
+     * with parameters to play loaded music.
+     */
+    void play() { setMusic(MUSIC_PLAY); }
+
+    /**
+     * Convienence function that calls setMusic
+     * with parameters to stop playback of music.
+     */
+    void stop() { setMusic(MUSIC_STOP); }
+
+    /**
+     * Convienence function that calls setMusic
+     * with parameters to fade in loaded music.
+     * @param duration Time in ms for fade
+     */
+    void fadeIn(int32_t duration) { setMusic(MUSIC_FADEIN, MUSIC_DEFAULT_LOOPS, duration); }
+
+    /**
+     * Convienence function that calls setMusic
+     * with parameters to fade out music.
+     * @param duration Time in ms for fade
+     */
+    void fadeOut(int32_t duration) { setMusic(MUSIC_FADEOUT, MUSIC_DEFAULT_LOOPS, duration); }
+
+    /**
+     * Set volume to play music at.
+     * @param volume Volume as a percentage (0=mute,100=max)
+     */
+    void setVolume(uint8_t volume);
+
+    /**
+     * Get volume music will play at.
+     * @return Volume as a percentage (0=mute, 100=max)
+     */
+    uint8_t getVolume();
 
 protected:
 

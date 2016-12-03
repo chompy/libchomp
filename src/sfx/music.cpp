@@ -80,12 +80,10 @@ uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation, int16_t lo
 void ChompSfxMusic::unloadMusic()
 {
     #ifndef WITHOUT_SDL_MIXER
-    Mix_HaltMusic();
     if (music) {
-        // causes segfault??
-        //Mix_FreeMusic(music);
-        //music = NULL;
-        //musicData.clear();
+        Mix_FreeMusic(music);
+        music = NULL;
+        musicData.clear();
     }
     #endif
 }
@@ -107,12 +105,12 @@ bool ChompSfxMusic::checkMusicQueue()
 
 void ChompSfxMusic::setMusic(uint8_t operation)
 {
-    setMusic(operation, -1, 0);
+    setMusic(operation, MUSIC_DEFAULT_LOOPS, MUSIC_DEFAULT_FADE);
 }
 
 void ChompSfxMusic::setMusic(uint8_t operation, int16_t loops)
 {
-    setMusic(operation, loops, 0);
+    setMusic(operation, loops, MUSIC_DEFAULT_FADE);
 }
 
 void ChompSfxMusic::setMusic(uint8_t operation, int16_t loops, int32_t fadeDuration)
@@ -147,4 +145,16 @@ void ChompSfxMusic::setMusic(uint8_t operation, int16_t loops, int32_t fadeDurat
         }
     }
     #endif
+}
+
+void ChompSfxMusic::setVolume(uint8_t volume)
+{
+    Mix_VolumeMusic(
+        volume * (MIX_MAX_VOLUME / 100)
+    );
+}
+
+uint8_t ChompSfxMusic::getVolume()
+{
+    return Mix_VolumeMusic(-1) * (100 / MIX_MAX_VOLUME);
 }
