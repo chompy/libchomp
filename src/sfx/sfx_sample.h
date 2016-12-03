@@ -6,17 +6,13 @@
 #include "../sdl_includes.h"
 #include "../asset/asset.h"
 
-#define SFX_LOAD_FAILED 200
-#define SFX_NO_SDL_MIXER 201
-#define SFX_PLAYBACK_ERROR 202
-#define SFX_READY 0
-#define SFX_STOP 1
-#define SFX_PLAY 2
-#define SFX_FADEIN 3
-#define SFX_FADEOUT 4
+#define SFX_FAILED 200
+#define SFX_STOP 0
+#define SFX_PLAY 1
+#define SFX_FADEIN 2
+#define SFX_FADEOUT 3
 
-#define SFX_DEFAULT_FADEIN 0
-#define SFX_DEFAULT_FADEOUT 0
+#define SFX_DEFAULT_FADE 0
 #define SFX_DEFAULT_TICKS -1
 
 /**
@@ -66,12 +62,29 @@ public:
 
     /**
      * Get status of sample.
-     * @return Status code (SFX_LOAD_FAILED|SFX_READY|SFX_STOP|SFX_PLAY|..etc)
+     * @return Status code (SFX_FAILED|SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
      */
-    uint8_t getStatus() { return status; }
+    uint8_t getStatus();
 
+    /**
+     * Change status of sample.
+     * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
+     */
     void setSample(uint8_t operation);
+
+    /**
+     * Change status of sample.
+     * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
+     * @param loops Number of times to loop sample (-1 for unlimited)
+     */
     void setSample(uint8_t operation, int16_t loops);
+
+    /**
+     * Change status of sample.
+     * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
+     * @param loops Number of times to loop sample (-1 for unlimited)
+     * @param fadeDuration Time in ms to fade for
+     */
     void setSample(uint8_t operation, int16_t loops, int32_t fadeDuration);
 
     /**
@@ -101,11 +114,6 @@ protected:
      * Vector containing raw sample data
      */
     std::vector<uint8_t> sampleData;
-
-    /**
-     * Current status
-     */
-    uint8_t status;
 
     /**
      * Channel sample is to be played on.

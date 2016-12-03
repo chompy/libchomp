@@ -9,8 +9,6 @@
 #include "sfx_sample.h"
 
 #define SFX_CHANNELS 64
-#define SFX_LOAD_FAILED 0
-#define SFX_LOAD_COMPLETE 1
 
 /**
  * Sound effect class.
