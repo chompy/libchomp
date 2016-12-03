@@ -2,6 +2,7 @@
 
 ChompSfx::ChompSfx()
 {
+    samples.clear();
     #ifndef WITHOUT_SDL_MIXER
     int flags = MIX_INIT_OGG;
     int initted = Mix_Init(MIX_INIT_OGG);
@@ -12,7 +13,7 @@ ChompSfx::ChompSfx()
         }
         throw ChompSdlMixerException(exceptionMsg);
     }
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096)==-1) {
         throw ChompSdlMixerException(Mix_GetError());   
     }
     Mix_AllocateChannels(SFX_CHANNELS);
@@ -21,7 +22,22 @@ ChompSfx::ChompSfx()
 
 ChompSfx::~ChompSfx()
 {
+    samples.clear();
     #ifndef WITHOUT_SDL_MIXER
     Mix_Quit();
     #endif
+}
+
+ChompSfxSample* ChompSfx::loadSample(const char* name)
+{
+    samples.push_back( ChompSfxSample(name) );
+    return &samples[samples.size() - 1];
+}
+
+void ChompSfx::unloadAllSamples()
+{
+    #ifndef WITHOUT_SDL_MIXER
+    Mix_HaltChannel(-1);
+    #endif
+    samples.clear();
 }

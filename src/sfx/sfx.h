@@ -37,11 +37,19 @@ public:
      * @param name Name of asset.
      * @return Sample playback object
      */
-    ChompSfxSample loadSample(char* name);
+    ChompSfxSample* loadSample(const char* name);
+
+    /**
+     * Stop and unload all samples.
+     */
+    void unloadAllSamples();
 
 protected:
 
-
+    /**
+     * Vector containing all loaded samples.
+     */
+    std::vector<ChompSfxSample> samples;
 
 };
 

@@ -44,11 +44,21 @@ public:
     #endif
 
     /**
+     * Constructor.
+     */
+    ChompSfxMusic();
+
+    /**
+     * Destructor.
+     */
+    ~ChompSfxMusic();
+
+    /**
      * Load music file.
      * @param name Char array containing music filename
      * @return Status (MUSIC_LOAD_FAILED|MUSIC_LOAD_COMPLETE|MUSIC_LOAD_QUEUED)
      */
-    uint8_t loadMusic(char* name);
+    uint8_t loadMusic(const char* name);
 
     /**
      * Load music file and perform operation.
@@ -56,7 +66,7 @@ public:
      * @param operation Operation to perform (MUSIC_STOP|MUSIC_PLAY|MUSIC_FADEIN|MUSIC_FADEOUT)
      * @return Status (MUSIC_LOAD_FAILED|MUSIC_LOAD_COMPLETE|MUSIC_LOAD_QUEUED)
      */
-    uint8_t loadMusic(char* name, uint8_t operation);
+    uint8_t loadMusic(const char* name, uint8_t operation);
 
     /**
      * Load music file and perform operation.
@@ -65,7 +75,7 @@ public:
      * @param loops Number of times to loop music, -1 for infinite
      * @return Status (MUSIC_LOAD_FAILED|MUSIC_LOAD_COMPLETE|MUSIC_LOAD_QUEUED)
      */    
-    uint8_t loadMusic(char* name, uint8_t operation, int16_t loops);
+    uint8_t loadMusic(const char* name, uint8_t operation, int16_t loops);
 
     /**
      * Load music file and perform operation.
@@ -75,7 +85,7 @@ public:
      * @param fadeDuration Time in milliseconds for fade in/out
      * @return Status (MUSIC_LOAD_FAILED|MUSIC_LOAD_COMPLETE|MUSIC_LOAD_QUEUED)
      */        
-    uint8_t loadMusic(char* name, uint8_t operation, int16_t loops, int16_t fadeDuration);
+    uint8_t loadMusic(const char* name, uint8_t operation, int16_t loops, int16_t fadeDuration);
 
     /**
      * Unload current music.

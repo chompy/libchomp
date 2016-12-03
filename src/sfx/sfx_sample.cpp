@@ -2,10 +2,9 @@
 
 char ChompSfxSample::SAMPLE_ASSET_PREFIX[] = "sfx_";
 
-ChompSfxSample::ChompSfxSample(char* name)
+ChompSfxSample::ChompSfxSample(const char* name)
 {
     channel = -1;
-    chunk = NULL;
 
     #ifndef WITHOUT_SDL_MIXER
     // build asset name string
@@ -16,7 +15,6 @@ ChompSfxSample::ChompSfxSample(char* name)
     assetName[assetPrefixLen + strlen(name)] = '\0';
     // load asset
     if (!ChompAsset::assetExists(assetName)) {
-        status = SFX_LOAD_FAILED;
         return;
     }
 
@@ -26,24 +24,32 @@ ChompSfxSample::ChompSfxSample(char* name)
     // get data
     sampleData.resize(fileSize);
     ChompAsset::readFile(assetName, 0, &sampleData[0], fileSize);
-    SDL_RWops* sampleDataRW = SDL_RWFromMem(&sampleData[0], fileSize);
-    chunk = Mix_LoadWAV_RW(sampleDataRW, 1);
+
     #endif
 }
 
 ChompSfxSample::~ChompSfxSample()
 {
+    freeChunk();
+    sampleData.clear();
+}
+
+void ChompSfxSample::freeChunk()
+{
     #ifndef WITHOUT_SDL_MIXER
-    if (chunk) {
-        Mix_FreeChunk(chunk)
+    if (channel >= 0) {
+        Mix_HaltChannel(channel);
+        Mix_Chunk* chunk = Mix_GetChunk(channel);
+        if (chunk) {
+            Mix_FreeChunk(chunk);
+        }
     }
     #endif
-    sampleData.clear();
 }
 
 uint8_t ChompSfxSample::getStatus()
 {
-    if (!chunk) {
+    if (sampleData.size() == 0) {
         return SFX_FAILED;
     }
     if (channel < 0 || !Mix_Playing(channel)) {
@@ -65,25 +71,26 @@ uint8_t ChompSfxSample::getStatus()
     return SFX_PLAY;
 }
 
-void ChompSfxSample::setSample(uint8_t operation)
+void ChompSfxSample::setMode(uint8_t operation)
 {
-    setSample(operation, 0, SFX_DEFAULT_FADEIN, SFX_DEFAULT_TICKS);
+    setMode(operation, 1, SFX_DEFAULT_FADE, SFX_DEFAULT_TICKS);
 }
 
-void ChompSfxSample::setSample(uint8_t operation, int16_t loops)
+void ChompSfxSample::setMode(uint8_t operation, int16_t loops)
 {
-    setSample(operation, loops, SFX_DEFAULT_FADE, SFX_DEFAULT_TICKS);
+    setMode(operation, loops, SFX_DEFAULT_FADE, SFX_DEFAULT_TICKS);
 }
 
-void ChompSfxSample::setSample(uint8_t operation, int16_t loops, int32_t fadeDuration)
+void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDuration)
 {
-    setSample(operation, loops, fadeDuration, SFX_DEFAULT_TICKS);
+    setMode(operation, loops, fadeDuration, SFX_DEFAULT_TICKS);
 }
 
-void ChompSfxSample::setSample(uint8_t operation, int16_t loops, int32_t fadeDuration, int32_t ticks)
+void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDuration, int32_t ticks)
 {
-    // make sure chunk is available
-    if (!chunk) {
+    #ifndef WITHOUT_SDL_MIXER
+    // make sure asset is available
+    if (sampleData.size() == 0) {
         return;
     }
 
@@ -92,19 +99,18 @@ void ChompSfxSample::setSample(uint8_t operation, int16_t loops, int32_t fadeDur
 
         case SFX_PLAY:
         {
+            freeChunk();
             if (loops == 0) {
                 return;
             }
-            if (channel >= 0) {
-                Mix_HaltChannel(channel);
-                channel = -1;
-            }
+            SDL_RWops* sampleDataRW = SDL_RWFromMem(&sampleData[0], sampleData.size());
+            Mix_Chunk* chunk = Mix_LoadWAV_RW(sampleDataRW, 1);
             channel = Mix_PlayChannelTimed(
-                -1
+                channel,
                 chunk,
                 loops - 1, // loops+1 times, which is different from Mix_PlayMusic, normalize by subtracting 1
                 ticks
-            )
+            );
             break;
         }
 
@@ -113,24 +119,22 @@ void ChompSfxSample::setSample(uint8_t operation, int16_t loops, int32_t fadeDur
             if (channel < 0) {
                 break;
             }
-            Mix_HaltChannel(channel);
-            channel = -1;
+            freeChunk();
             break;
         }
 
         case SFX_FADEIN:
         {
+            freeChunk();
             if (loops == 0) {
                 return;
             }
-            if (channel >= 0) {
-                Mix_HaltChannel(channel);
-                channel = -1;
-            }
+            SDL_RWops* sampleDataRW = SDL_RWFromMem(&sampleData[0], sampleData.size());
+            Mix_Chunk* chunk = Mix_LoadWAV_RW(sampleDataRW, 1);
             channel = Mix_FadeInChannelTimed(
-                -1,
+                channel,
                 chunk,
-                loops - 1,
+                loops - 1, // loops+1 times, which is different from Mix_PlayMusic, normalize by subtracting 1
                 fadeDuration,
                 ticks
             );
@@ -150,24 +154,24 @@ void ChompSfxSample::setSample(uint8_t operation, int16_t loops, int32_t fadeDur
         }
 
     }
-
+    #endif
 }
 
-void ChompSfxSample::setSampleVolume(uint8_t volume)
+void ChompSfxSample::setVolume(uint8_t volume)
 {
-    if (!chunk) {
+    if (channel < 0) {
         return;
     }
-    Mix_VolumeChunk(
-        chunk,
+    Mix_Volume(
+        channel,
         volume * (MIX_MAX_VOLUME / 100)
     );
 }
 
-uint8_t ChompSfxSample::getSampleVolume()
+uint8_t ChompSfxSample::getVolume()
 {
-    if (!chunk) {
+    if (!channel) {
         return 0;
     }
-    return Mix_VolumeChunk(chunk, -1) * (100 / MIX_MAX_VOLUME);
+    return Mix_Volume(channel, -1) * (100 / MIX_MAX_VOLUME);
 }

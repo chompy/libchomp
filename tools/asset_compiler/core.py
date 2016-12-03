@@ -308,11 +308,13 @@ class AssetCompilerCore:
         outputBitrate = "192k"
         if "bitrate" in config and config["bitrate"]:
             outputBitrate = config["bitrate"]
+
         pyDubAudio = AudioSegment.from_file( os.path.join( os.path.dirname(filepath), audioFilename ) )
-        audioData = StringIO.StringIO()
+        audioData = BytesIO()
         pyDubAudio.export(audioData, format=output, bitrate=outputBitrate)
 
         # add to output
+        audioData.seek(0)
         outputBuffer = audioData.read()
         audioData.close()
 

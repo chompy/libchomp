@@ -47,7 +47,7 @@ public:
      * Constructor.
      * @param name Name of asset
      */
-    ChompSfxSample(char* name);
+    ChompSfxSample(const char* name);
 
     /**
      * Destructor.
@@ -70,14 +70,14 @@ public:
      * Change status of sample.
      * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
      */
-    void setSample(uint8_t operation);
+    void setMode(uint8_t operation);
 
     /**
      * Change status of sample.
      * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
      * @param loops Number of times to loop sample (-1 for unlimited)
      */
-    void setSample(uint8_t operation, int16_t loops);
+    void setMode(uint8_t operation, int16_t loops);
 
     /**
      * Change status of sample.
@@ -85,7 +85,7 @@ public:
      * @param loops Number of times to loop sample (-1 for unlimited)
      * @param fadeDuration Time in ms to fade for
      */
-    void setSample(uint8_t operation, int16_t loops, int32_t fadeDuration);
+    void setMode(uint8_t operation, int16_t loops, int32_t fadeDuration);
 
     /**
      * Change status of sample.
@@ -94,19 +94,46 @@ public:
      * @param fadeDuration Time in ms to fade for
      * @param ticks Max play length of sample
      */    
-    void setSample(uint8_t operation, int16_t loops, int32_t fadeDuration, int32_t ticks);
+    void setMode(uint8_t operation, int16_t loops, int32_t fadeDuration, int32_t ticks);
+
+    /**
+     * Convienence function that calls setMode
+     * with parameters to play sample.
+     */
+    void play() { setMode(SFX_PLAY); }
+
+    /**
+     * Convienence function that calls setMode
+     * with parameters to stop sample.
+     */
+    void stop() { setMode(SFX_STOP); }
+
+    /**
+     * Convienence function that calls setMode
+     * with parameters to fade in sample.
+     * @param duration Time in ms to fade for
+     */
+    void fadeIn(int32_t duration) { setMode(SFX_FADEIN, 1, duration); }
+
+    /**
+     * Convienence function that calls setMode
+     * with parameters to fade out sample.
+     * @param duration Time in ms to fade for
+     */
+    void fadeOut(int32_t duration) { setMode(SFX_FADEOUT, 1, duration); }
+
 
     /**
      * Set volume to play sample at.
      * @param volume Volume as a percentage (0=mute,100=max)
      */
-    void setSampleVolume(uint8_t volume);
+    void setVolume(uint8_t volume);
 
     /**
      * Get volume sample will play at.
      * @return Volume as a percentage (0=mute, 100=max)
      */
-    uint8_t getSampleVolume();
+    uint8_t getVolume();
 
 protected:
 
@@ -119,6 +146,11 @@ protected:
      * Channel sample is to be played on.
      */
     int16_t channel;
+
+    /**
+     * Free currently loaded SDL chunk and stop playback.
+     */
+    void freeChunk();
 
 };
 

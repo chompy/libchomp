@@ -17,22 +17,22 @@ ChompSfxMusic::~ChompSfxMusic()
     unloadMusic();
 }
 
-uint8_t ChompSfxMusic::loadMusic(char* name)
+uint8_t ChompSfxMusic::loadMusic(const char* name)
 {
     return loadMusic(name, MUSIC_STOP, 0, 0);
 }
 
-uint8_t ChompSfxMusic::loadMusic(char* name, uint8_t operation)
+uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation)
 {
     return loadMusic(name, operation, -1, 0);
 }
 
-uint8_t ChompSfxMusic::loadMusic(char* name, uint8_t operation, int16_t loops)
+uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation, int16_t loops)
 {
     return loadMusic(name, operation, loops, 0);
 }
 
-uint8_t ChompSfxMusic::loadMusic(char* name, uint8_t operation, int16_t loops, int16_t fadeDuration)
+uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation, int16_t loops, int16_t fadeDuration)
 {
     #ifndef WITHOUT_SDL_MIXER
     if (!name || operation == MUSIC_FADEOUT) {
@@ -82,9 +82,10 @@ void ChompSfxMusic::unloadMusic()
     #ifndef WITHOUT_SDL_MIXER
     Mix_HaltMusic();
     if (music) {
-        Mix_FreeMusic(music);
-        music = NULL;
-        musicData.clear();
+        // causes segfault??
+        //Mix_FreeMusic(music);
+        //music = NULL;
+        //musicData.clear();
     }
     #endif
 }
