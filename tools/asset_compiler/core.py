@@ -85,33 +85,33 @@ class AssetCompilerCore:
         return outputBuffer
 
     # compile sprite
-    def compile_sprite(self, filepath):
+    def compile_sprite(self, filePath):
 
         # must be JSON file
-        if os.path.splitext(filepath)[1] != ".json":
+        if os.path.splitext(filePath)[1] != ".json":
             return None
 
         # debug
-        print("  - Processing '%s'..." % os.path.splitext(os.path.basename(filepath))[0], end="")
+        print("  - Processing '%s'..." % os.path.splitext(os.path.basename(filePath))[0], end="")
 
         # convert json to array
-        config = parse_json(filepath)
+        config = parse_json(filePath)
 
         # determine filename of sprite
         if not "source" in config or not self.PLATFORM_NAME in config["source"]:
             print("skipped")
-            print("\t----> sprite '%s' not provided" % os.path.splitext(filename)[0])
+            print("\t----> sprite '%s' not provided" % os.path.splitext(filePath)[0])
             return None
         spriteFilename = config["source"][self.PLATFORM_NAME]
 
         # name of sprite
-        spriteName = os.path.splitext(os.path.basename(filepath))[0].strip().replace(" ", "_").lower()[:255]
+        spriteName = os.path.splitext(os.path.basename(filePath))[0].strip().replace(" ", "_").lower()[:255]
 
         # get size of frames
         frameSize = map(int, config["frame_size"])
 
         # compile frames
-        outputBuffer = self.compile_sprite_frames(os.path.join(os.path.dirname(filepath), spriteFilename), frameSize)
+        outputBuffer = self.compile_sprite_frames(os.path.join(os.path.dirname(filePath), spriteFilename), frameSize)
         if not outputBuffer:
             return None
 
