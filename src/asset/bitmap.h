@@ -45,7 +45,7 @@ public:
      * @param frame Frame number
      * @return Pointer to frame
      */
-    static uint8_t* getFrame(uint8_t* bitmap, const uint8_t frame);
+    static uint8_t* getFrame(uint8_t* bitmap, const uint16_t frame);
 
     /**
      * Get FPS to play animatino back at.

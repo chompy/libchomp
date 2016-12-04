@@ -30,7 +30,7 @@ uint16_t ChompBitmap::getFrameCount(uint8_t* bitmap)
     return bitmapFrameCount;
 }
 
-uint8_t* ChompBitmap::getFrame(uint8_t* bitmap, const uint8_t frame)
+uint8_t* ChompBitmap::getFrame(uint8_t* bitmap, const uint16_t frame)
 {
     if (!bitmap) {
         return 0;
