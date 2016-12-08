@@ -49,22 +49,18 @@ uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation, int16_t lo
     }
 
     // build asset name string
-    uint8_t assetPrefixLen = strlen(ChompSfxMusic::MUSIC_ASSET_PREFIX);
-    char assetName[assetPrefixLen + strlen(name) + 1];
-    memcpy(assetName, ChompSfxMusic::MUSIC_ASSET_PREFIX, assetPrefixLen);
-    memcpy(&assetName[assetPrefixLen], name, strlen(name));
-    assetName[assetPrefixLen + strlen(name)] = '\0';
+    std::string assetName = std::string(ChompSfxMusic::MUSIC_ASSET_PREFIX) + std::string(name);
     // load asset
-    if (!ChompAsset::assetExists(assetName)) {
+    if (!ChompAsset::assetExists(assetName.c_str())) {
         return MUSIC_LOAD_FAILED;
     }
 
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName);
+    uint32_t fileSize = ChompAsset::getAssetSize(assetName.c_str());
 
     // get data
     musicData.resize(fileSize);
-    ChompAsset::readFile(assetName, 0, &musicData[0], fileSize);
+    ChompAsset::readFile(assetName.c_str(), 0, &musicData[0], fileSize);
     SDL_RWops* musicDataRW = SDL_RWFromMem(&musicData[0], fileSize);
 
     // load music

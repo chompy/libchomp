@@ -8,22 +8,18 @@ ChompSfxSample::ChompSfxSample(const char* name)
 
     #ifndef WITHOUT_SDL_MIXER
     // build asset name string
-    uint8_t assetPrefixLen = strlen(ChompSfxSample::SAMPLE_ASSET_PREFIX);
-    char assetName[assetPrefixLen + strlen(name) + 1];
-    memcpy(assetName, ChompSfxSample::SAMPLE_ASSET_PREFIX, assetPrefixLen);
-    memcpy(&assetName[assetPrefixLen], name, strlen(name));
-    assetName[assetPrefixLen + strlen(name)] = '\0';
+    std::string assetName = std::string(ChompSfxSample::SAMPLE_ASSET_PREFIX) + std::string(name);
     // load asset
-    if (!ChompAsset::assetExists(assetName)) {
+    if (!ChompAsset::assetExists(assetName.c_str())) {
         return;
     }
 
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName);
+    uint32_t fileSize = ChompAsset::getAssetSize(assetName.c_str());
 
     // get data
     sampleData.resize(fileSize);
-    ChompAsset::readFile(assetName, 0, &sampleData[0], fileSize);
+    ChompAsset::readFile(assetName.c_str(), 0, &sampleData[0], fileSize);
 
     #endif
 }

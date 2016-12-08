@@ -191,20 +191,16 @@ ChompGfxSprite* ChompGfx::newSprite(const char* spriteName, ChompGfxSize* size)
         return NULL;
     }
     // build asset name string
-    uint8_t assetPrefixLen = strlen(ChompGfxSprite::SPRITE_ASSET_PREFIX);
-    char assetName[assetPrefixLen + strlen(spriteName) + 1];
-    memcpy(assetName, ChompGfxSprite::SPRITE_ASSET_PREFIX, assetPrefixLen);
-    memcpy(&assetName[assetPrefixLen], spriteName, strlen(spriteName));
-    assetName[assetPrefixLen + strlen(spriteName)] = '\0';
+    std::string assetName = std::string(ChompGfxSprite::SPRITE_ASSET_PREFIX) + std::string(spriteName);
     // load asset
-    if (!ChompAsset::assetExists(assetName)) {
+    if (!ChompAsset::assetExists(assetName.c_str())) {
         return NULL;
     }
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName);
+    uint32_t fileSize = ChompAsset::getAssetSize(assetName.c_str());
     // make bitmap
     std::vector<uint8_t> bitmap(fileSize, 0);
-    ChompAsset::readFile(assetName, 0, &bitmap[0], fileSize);
+    ChompAsset::readFile(assetName.c_str(), 0, &bitmap[0], fileSize);
     // new sprite layer
     return new ChompGfxSprite(
         renderer,
@@ -230,16 +226,12 @@ ChompGfxText* ChompGfx::newTextLayer(const char* fontName, const uint16_t ptSize
         return NULL;
     }
     // build asset name string
-    uint8_t assetPrefixLen = strlen(ChompGfxText::FONT_ASSET_PREFIX);
-    char assetName[assetPrefixLen + strlen(fontName) + 1];
-    memcpy(assetName, ChompGfxText::FONT_ASSET_PREFIX, assetPrefixLen);
-    memcpy(&assetName[assetPrefixLen], fontName, strlen(fontName));
-    assetName[assetPrefixLen + strlen(fontName)] = '\0';
+    std::string assetName = std::string(ChompGfxText::FONT_ASSET_PREFIX) + std::string(fontName);
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName);
+    uint32_t fileSize = ChompAsset::getAssetSize(assetName.c_str());
     // get font data
     std::vector<uint8_t> fontData(fileSize, 0);
-    ChompAsset::readFile(assetName, 0, &fontData[0], fileSize);
+    ChompAsset::readFile(assetName.c_str(), 0, &fontData[0], fileSize);
     // new texture
     SDL_Texture* texture = SDL_CreateTexture(
         renderer,
