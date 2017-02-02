@@ -9,7 +9,9 @@ ChompState::ChompState(ChompCore* _core)
 
 ChompState::~ChompState()
 {
-
+    if (ChompState::s_currentState) {
+        ChompState::s_currentState->exit();
+    }
 }
 
 void ChompState::changeState(ChompState* s_currentState)
