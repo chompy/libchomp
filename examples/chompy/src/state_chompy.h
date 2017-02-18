@@ -3,14 +3,14 @@
 
 #include "state.h"
 
-class ChompyExampleState : public ChompState
+class ChompyExampleState : public Chomp::State
 {
 public:
 
     static const char CHOMPY_ASSET[];
     static const char CHOMPY_ANIM[];
 
-    ChompyExampleState(ChompCore* _core) : ChompState(_core)
+    ChompyExampleState(Chomp::Core* _core) : Chomp::State(_core)
     {
         chompySprite = NULL;
         layer = NULL;
@@ -22,8 +22,8 @@ public:
 
 protected:
 
-    ChompGfxLayer* layer;
-    ChompGfxSprite* chompySprite;
+    Chomp::GfxLayer* layer;
+    Chomp::GfxSprite* chompySprite;
 
 
 };

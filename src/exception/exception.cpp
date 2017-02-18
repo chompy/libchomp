@@ -1,6 +1,6 @@
 #include "exception.h"
 
-ChompException::ChompException(const std::string& _msg):exception() 
+Chomp::Exception::Exception(const std::string& _msg):exception() 
 {
     msg = _msg;
     if (_msg.empty()) {
@@ -8,12 +8,12 @@ ChompException::ChompException(const std::string& _msg):exception()
     }
 }
 
-ChompException::~ChompException() throw()
+Chomp::Exception::~Exception() throw()
 {
 
 }
 
-const char* ChompException::what() const throw()
+const char* Chomp::Exception::what() const throw()
 {
     return msg.c_str();
 }

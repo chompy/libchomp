@@ -4,7 +4,7 @@ void ChompyStatePlay::enter()
 {
 
     // config
-    ChompConfig config("game");
+    Chomp::Config config("game");
     wallSpacing = config.getFloat("wall.spacing", WALL_SPACING);
     wallGap = config.getInt("wall.gap", WALL_V_GAP);
     wallsPerRound = config.getInt("wall.round_count", WALLS_PER_ROUND);
@@ -18,7 +18,7 @@ void ChompyStatePlay::enter()
     // hide cursor
     core->gfx.setCursorVisibility(false);
     // game layer
-    ChompGfxSize size;
+    Chomp::GfxSize size;
     size.w = GAME_AREA_W;
     size.h = GAME_AREA_H;
     gameLayer = core->gfx.newLayer(GAME_AREA_W * 1024, GAME_AREA_H * 1024, &size);
@@ -40,7 +40,7 @@ void ChompyStatePlay::enter()
     size.w = .4;
     scoreText = core->gfx.newTextLayer("normal", 24, &size);
     // center player
-    ChompGfxSize windowSize = core->gfx.getWindowSize();
+    Chomp::GfxSize windowSize = core->gfx.getWindowSize();
     playerYTo = (windowSize.h - playerSprite->size.h) / 2;
     playerPos.x = 0;
     playerPos.y = playerYTo;
@@ -75,7 +75,7 @@ void ChompyStatePlay::update()
 {
 
     // clear game layer
-    ChompGfxColor color;
+    Chomp::GfxColor color;
     color.r = 0;
     color.g = 0;
     color.b = 0;
@@ -84,7 +84,7 @@ void ChompyStatePlay::update()
     gameLayer->fill();
 
     // current window size
-    ChompGfxSize windowSize = core->gfx.getWindowSize();
+    Chomp::GfxSize windowSize = core->gfx.getWindowSize();
 
     // speed accel
     speed += playerAccelRate * core->deltaTime;
@@ -114,7 +114,7 @@ void ChompyStatePlay::update()
         playerPos.y = GAME_AREA_H - playerSprite->size.h;
     }
 
-    if (core->input.mouse.pressed(MOUSE_BUTTON_LEFT)) {
+    if (core->input.mouse.pressed(CHOMP_INPUT_MOUSE_BUTTON_LEFT)) {
         inputDevice = INPUT_MOUSE;
     }
     if (core->input.keyboard.hasInput(SDL_SCANCODE_UP)) {
@@ -124,15 +124,15 @@ void ChompyStatePlay::update()
         playerYTo += VER_MOVE_INC;
         inputDevice = INPUT_KEYBOARD;
     }
-    if (core->input.gamepad.getDevicesWithInput(GAMEPAD_INPUT_DPAD_U).size() > 0) {
+    if (core->input.gamepad.getDevicesWithInput(CHOMP_INPUT_GAMEPAD_DPAD_U).size() > 0) {
         playerYTo -= VER_MOVE_INC;
         inputDevice = INPUT_GAMEPAD;
-    } else if (core->input.gamepad.getDevicesWithInput(GAMEPAD_INPUT_DPAD_D).size() > 0) {
+    } else if (core->input.gamepad.getDevicesWithInput(CHOMP_INPUT_GAMEPAD_DPAD_D).size() > 0) {
         playerYTo += VER_MOVE_INC;
         inputDevice = INPUT_GAMEPAD;
     }
     if (inputDevice == INPUT_MOUSE) {
-        ChompGfxSize mouse = core->gfx.fromPixelSize(
+        Chomp::GfxSize mouse = core->gfx.fromPixelSize(
             core->input.mouse.x,
             core->input.mouse.y
         );
@@ -150,7 +150,7 @@ void ChompyStatePlay::update()
     playerPos.x += speed * core->deltaTime;
 
     // draw walls
-    ChompGfxRect rect;
+    Chomp::GfxRect rect;
     rect.w = wallSprite->size.w;
     rect.h = wallSprite->size.h;
     for (uint16_t x = 0; x < walls.size(); x++) {
@@ -169,7 +169,7 @@ void ChompyStatePlay::update()
         if (lastScoreX >= x + 1) {
             continue;
         }
-        ChompGfxRect wallRect;
+        Chomp::GfxRect wallRect;
         wallRect.x = ((float) x * wallSpacing);
         wallRect.y = 0;
         wallRect.w = wallSprite->size.h;
@@ -237,7 +237,7 @@ void ChompyStatePlay::startRound()
 {
     lastScoreX = 0;
     round += 1;
-    ChompGfxSize windowSize = core->gfx.getWindowSize();
+    Chomp::GfxSize windowSize = core->gfx.getWindowSize();
     playerPos.x = -windowSize.w * 1.5;
     walls.clear();
     for (uint16_t i = 0; i < wallsPerRound; i++) {
@@ -262,7 +262,7 @@ void ChompyStatePlay::generateWall()
 
 void ChompyStatePlay::updateScore()
 {
-    ChompGfxColor color;
+    Chomp::GfxColor color;
     color.r = 255;
     color.g = 255;
     color.b = 255;
@@ -270,5 +270,5 @@ void ChompyStatePlay::updateScore()
     core->gfx.setDrawColor(&color);
     char scoreTextStr[24];
     sprintf(scoreTextStr, "%d", score);
-    scoreText->setText(scoreTextStr, TEXT_RIGHT);
+    scoreText->setText(scoreTextStr, CHOMP_GFX_TEXT_RIGHT);
 }

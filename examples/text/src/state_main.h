@@ -3,11 +3,11 @@
 
 #include "state.h"
 
-class ChompyStateMain : public ChompState
+class ChompyStateMain : public Chomp::State
 {
 public:
 
-    ChompyStateMain(ChompCore* _core) : ChompState(_core)
+    ChompyStateMain(Chomp::Core* _core) : Chomp::State(_core)
     {
         textLayer = NULL;
     }
@@ -18,7 +18,7 @@ public:
 
 protected:
 
-    ChompGfxText* textLayer;
+    Chomp::GfxText* textLayer;
 
 };
 

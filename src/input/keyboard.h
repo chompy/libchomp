@@ -6,45 +6,49 @@
 #include "../exception/sdl_exception.h"
 #include <iostream>
 
-/**
- * Keyboard input class.
- */
-class ChompInputKeyboard
+namespace Chomp
 {
-public:
 
     /**
-     * Constructor.
+     * Keyboard input class.
      */
-    ChompInputKeyboard();
+    class InputKeyboard
+    {
+    public:
 
-    /**
-     * Destructor.
-     */
-    ~ChompInputKeyboard();
+        /**
+         * Constructor.
+         */
+        InputKeyboard();
 
-    /**
-     * Check if key with given scancode is 
-     * pressed.
-     * @param scancode Key scancode
-     * @return True if pressed
-     * @see https://wiki.libsdl.org/SDLScancodeLookup
-     */
-    bool hasInput(uint16_t scancode);
+        /**
+         * Destructor.
+         */
+        ~InputKeyboard();
 
-    /**
-     * Register keyboard input event.
-     * @param event SDL Event
-     */
-    void event(SDL_Event* event);
+        /**
+         * Check if key with given scancode is 
+         * pressed.
+         * @param scancode Key scancode
+         * @return True if pressed
+         * @see https://wiki.libsdl.org/SDLScancodeLookup
+         */
+        bool hasInput(uint16_t scancode);
 
-protected:
+        /**
+         * Register keyboard input event.
+         * @param event SDL Event
+         */
+        void event(SDL_Event* event);
 
-    /**
-     * Vector containing currently active inputs.
-     */
-    std::vector<uint16_t> inputs;
+    protected:
 
+        /**
+         * Vector containing currently active inputs.
+         */
+        std::vector<uint16_t> inputs;
+
+    };
 };
 
 #endif

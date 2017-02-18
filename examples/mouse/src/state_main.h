@@ -3,11 +3,11 @@
 
 #include "state.h"
 
-class ChompyStateMain : public ChompState
+class ChompyStateMain : public Chomp::State
 {
 public:
 
-    ChompyStateMain(ChompCore* _core) : ChompState(_core)
+    ChompyStateMain(Chomp::Core* _core) : Chomp::State(_core)
     {
         layer = NULL;
     }
@@ -18,9 +18,9 @@ public:
 
 protected:
 
-    void rectToPixelCoords(ChompGfxRect* rect, ChompGfxRect* offset, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h);
+    void rectToPixelCoords(Chomp::GfxRect* rect, Chomp::GfxRect* offset, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h);
 
-    ChompGfxLayer* layer;
+    Chomp::GfxLayer* layer;
 
 };
 

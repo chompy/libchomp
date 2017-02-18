@@ -14,14 +14,14 @@ void ChompyStateMain::enter()
 
     // create active gamepad count text
     if (!activeGamepadCountText) {
-        ChompGfxSize textLayerSize;
+        Chomp::GfxSize textLayerSize;
         textLayerSize.w = .75;
         textLayerSize.h = .1;
         activeGamepadCountText = core->gfx.newTextLayer("ariali", 24, &textLayerSize);
     }
     // create active input text
     if (!activeInputText) {
-        ChompGfxSize textLayerSize;
+        Chomp::GfxSize textLayerSize;
         textLayerSize.w = 1.0;
         textLayerSize.h = .85;
         activeInputText = core->gfx.newTextLayer("ariali", 18, &textLayerSize);
@@ -45,7 +45,7 @@ void ChompyStateMain::update()
     setActiveGamepadCountText();
     setActiveInputText();
 
-    ChompGfxRect dstRect;
+    Chomp::GfxRect dstRect;
     dstRect.x = .1;
     dstRect.y = .1;
     dstRect.w = activeGamepadCountText->size.w;
@@ -72,8 +72,8 @@ void ChompyStateMain::setActiveGamepadCountText()
     );
     activeGamepadCountText->setText(
         activeGamepadCountString,
-        TEXT_LEFT,
-        TEXT_MIDDLE
+        CHOMP_GFX_TEXT_LEFT,
+        CHOMP_GFX_TEXT_MIDDLE
     );
 }
 
@@ -86,7 +86,7 @@ void ChompyStateMain::setActiveInputText()
     std::string inputString = "";
     uint16_t activeGamepadInputStringLen = strlen(ChompyStateMain::ACTIVE_GAMEPAD_INPUT_STRING);
     for (uint8_t i = 0; i < 32; i++) {
-        std::vector<ChompInputGamepadDevice*> devices = core->input.gamepad.getDevicesWithInput(i);
+        std::vector<Chomp::InputGamepadDevice*> devices = core->input.gamepad.getDevicesWithInput(i);
         for (uint16_t j = 0; j < devices.size(); j++) {
             if (!devices[j] || devices[j]->id == 0) {
                 continue;
@@ -107,8 +107,8 @@ void ChompyStateMain::setActiveInputText()
     }
     activeInputText->setText(
         inputString.c_str(),
-        TEXT_LEFT,
-        TEXT_TOP
+        CHOMP_GFX_TEXT_LEFT,
+        CHOMP_GFX_TEXT_TOP
     );
     lastInputUpdate = core->getTicks();
 }

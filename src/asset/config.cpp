@@ -1,39 +1,40 @@
 #include "config.h"
 
-char ChompConfig::CONFIG_ASSET_PREFIX[] = "conf_";
+char Chomp::Config::CONFIG_ASSET_PREFIX[] = "conf_";
 
-ChompConfig::ChompConfig(const char* configName)
+Chomp::Config::Config(const char* configName)
 {
     // build asset name string
-    uint8_t assetPrefixLen = strlen(ChompConfig::CONFIG_ASSET_PREFIX);
+    uint8_t assetPrefixLen = strlen(Chomp::Config::CONFIG_ASSET_PREFIX);
     char assetName[assetPrefixLen + strlen(configName) + 1];
-    memcpy(assetName, ChompConfig::CONFIG_ASSET_PREFIX, assetPrefixLen);
+    memcpy(assetName, Chomp::Config::CONFIG_ASSET_PREFIX, assetPrefixLen);
     memcpy(&assetName[assetPrefixLen], configName, strlen(configName));
     assetName[assetPrefixLen + strlen(configName)] = '\0';
+    Chomp::Asset asset;
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName);
+    uint32_t fileSize = asset.getAssetSize(assetName);
     // get data
     std::vector<uint8_t> configData(fileSize, 0);
-    ChompAsset::readFile(assetName, 0, &configData[0], fileSize);
+    asset.readFile(assetName, 0, &configData[0], fileSize);
     loadConfig(&configData[0], fileSize);
 }
 
-ChompConfig::ChompConfig(uint8_t* data, uint32_t size)
+Chomp::Config::Config(uint8_t* data, uint32_t size)
 {
     loadConfig(data, size);
 }
 
-ChompConfig::~ChompConfig()
+Chomp::Config::~Config()
 {
     values.clear();
 }
 
-void ChompConfig::loadConfig(uint8_t* data, uint32_t size)
+void Chomp::Config::loadConfig(uint8_t* data, uint32_t size)
 {
     values.clear();
     uint32_t position = 0;
     while (position < size) {
-        ChompConfigValue configValue;
+        Chomp::ConfigValue configValue;
         uint16_t keyLength = 0;
         memcpy(&keyLength, &data[position], 2);
         configValue.key.resize(keyLength, ' ');
@@ -70,7 +71,7 @@ void ChompConfig::loadConfig(uint8_t* data, uint32_t size)
     }
 }
 
-bool ChompConfig::hasKey(std::string key)
+bool Chomp::Config::hasKey(std::string key)
 {
     for (uint32_t i = 0; i < values.size(); i++) {
         if (values[i].key.compare(key) == 0) {
@@ -80,12 +81,12 @@ bool ChompConfig::hasKey(std::string key)
     return false;
 }
 
-std::string ChompConfig::getString(std::string key)
+std::string Chomp::Config::getString(std::string key)
 {
     return getString(key, "");
 }
 
-std::string ChompConfig::getString(std::string key, std::string defaultValue)
+std::string Chomp::Config::getString(std::string key, std::string defaultValue)
 {
     for (uint32_t i = 0; i < values.size(); i++) {
         if (values[i].key.compare(key) == 0) {
@@ -98,12 +99,12 @@ std::string ChompConfig::getString(std::string key, std::string defaultValue)
     return defaultValue;
 }
 
-int32_t ChompConfig::getInt(std::string key)
+int32_t Chomp::Config::getInt(std::string key)
 {
     return getInt(key, 0);
 }
 
-int32_t ChompConfig::getInt(std::string key, int32_t defaultValue)
+int32_t Chomp::Config::getInt(std::string key, int32_t defaultValue)
 {
     for (uint32_t i = 0; i < values.size(); i++) {
         if (values[i].key.compare(key) == 0) {
@@ -118,12 +119,12 @@ int32_t ChompConfig::getInt(std::string key, int32_t defaultValue)
     return defaultValue;
 }
 
-float ChompConfig::getFloat(std::string key)
+float Chomp::Config::getFloat(std::string key)
 {
     return getFloat(key, 0);
 }
 
-float ChompConfig::getFloat(std::string key, float defaultValue)
+float Chomp::Config::getFloat(std::string key, float defaultValue)
 {
     for (uint32_t i = 0; i < values.size(); i++) {
         if (values[i].key.compare(key) == 0) {

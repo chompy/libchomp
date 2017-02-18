@@ -1,26 +1,41 @@
 #include "asset.h"
 
-const char ChompAsset::ASSET_FILE[] = "assets.dat";
+const char Chomp::Asset::DEFAULT_ASSET_FILE[] = "assets.dat";
 
-uint8_t ChompAsset::readFileByte(const char* name, const uint32_t position)
+Chomp::Asset::Asset()
+{
+    assetFilename = std::string(Chomp::Asset::DEFAULT_ASSET_FILE);
+}
+
+Chomp::Asset::Asset(const char* _assetFilename)
+{
+    assetFilename = std::string(_assetFilename);
+}
+
+Chomp::Asset::~Asset()
+{
+    
+}
+
+uint8_t Chomp::Asset::readFileByte(const char* name, const uint32_t position)
 {
     // get position/size of asset
     uint32_t assetPosition, assetSize;
     uint8_t nameLength;
-    ChompAsset::getAssetData(name, &assetPosition, &assetSize, &nameLength);
+    getAssetData(name, &assetPosition, &assetSize, &nameLength);
 
     // does not exist
     if (assetSize == 0 || nameLength == 0) {
         std::string message = "Asset '" + std::string( name ) + "' does not exist.";
-        throw ChompAssetException(message.c_str());
+        throw Chomp::AssetException(message.c_str());
         return 0;
     }
 
     // open asset file
-    SDL_RWops* file = SDL_RWFromFile(ChompAsset::ASSET_FILE, "rb");
+    SDL_RWops* file = SDL_RWFromFile(assetFilename.c_str(), "rb");
     if (!file) {
-        std::string message = "Unable to open asset file. (" + std::string( ChompAsset::ASSET_FILE ) + ")";
-        throw ChompAssetException(message.c_str());
+        std::string message = "Unable to open asset file. (" + assetFilename + ")";
+        throw Chomp::AssetException(message.c_str());
         return 0;
     }    
 
@@ -38,26 +53,26 @@ uint8_t ChompAsset::readFileByte(const char* name, const uint32_t position)
     return output;
 }
 
-void ChompAsset::readFile(const char* name, const uint32_t position, void* buffer, const uint32_t length)
+void Chomp::Asset::readFile(const char* name, const uint32_t position, void* buffer, const uint32_t length)
 {
 
     // get position/size of asset
     uint32_t assetPosition, assetSize;
     uint8_t nameLength;
-    ChompAsset::getAssetData(name, &assetPosition, &assetSize, &nameLength);
+    getAssetData(name, &assetPosition, &assetSize, &nameLength);
 
     // does not exist
     if (assetSize == 0 || nameLength == 0) {
         std::string message = "Asset '" + std::string( name ) + "' does not exist.";
-        throw ChompAssetException(message.c_str());
+        throw Chomp::AssetException(message.c_str());
         return;
     }
 
     // open asset file
-    SDL_RWops* file = SDL_RWFromFile(ChompAsset::ASSET_FILE, "rb");
+    SDL_RWops* file = SDL_RWFromFile(assetFilename.c_str(), "rb");
     if (!file) {
-        std::string message = "Unable to open asset file. (" + std::string( ChompAsset::ASSET_FILE ) + ")";
-        throw ChompAssetException(message.c_str());
+        std::string message = "Unable to open asset file. (" + assetFilename + ")";
+        throw Chomp::AssetException(message.c_str());
         return;
     }    
 
@@ -69,29 +84,29 @@ void ChompAsset::readFile(const char* name, const uint32_t position, void* buffe
     SDL_RWclose(file);
 }
 
-bool ChompAsset::assetExists(const char* name)
+bool Chomp::Asset::assetExists(const char* name)
 {
     uint32_t size = 0;
     uint8_t nameLength = 0;    
-    ChompAsset::getAssetData(name, NULL, &size, &nameLength);
+    getAssetData(name, NULL, &size, &nameLength);
     return size > 0 && nameLength > 0;
 }
 
-uint32_t ChompAsset::getAssetSize(const char* name)
+uint32_t Chomp::Asset::getAssetSize(const char* name)
 {
     uint32_t size = 0;
-    ChompAsset::getAssetData(name, NULL, &size, NULL);
+    getAssetData(name, NULL, &size, NULL);
     return size;
 }
 
-void ChompAsset::getAssetData(const char* name, uint32_t* position, uint32_t* size, uint8_t* nameLength)
+void Chomp::Asset::getAssetData(const char* name, uint32_t* position, uint32_t* size, uint8_t* nameLength)
 {
 
     // open asset file
-    SDL_RWops* file = SDL_RWFromFile(ChompAsset::ASSET_FILE, "rb");
+    SDL_RWops* file = SDL_RWFromFile(assetFilename.c_str(), "rb");
     if (!file) {
-        std::string message = "Unable to open asset file. (" + std::string( ChompAsset::ASSET_FILE ) + ")";
-        throw ChompAssetException(message.c_str());
+        std::string message = "Unable to open asset file. (" + assetFilename + ")";
+        throw Chomp::AssetException(message.c_str());
         return;
     }
 

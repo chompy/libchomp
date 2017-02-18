@@ -5,65 +5,84 @@
 #include "../sdl_includes.h"
 #include "../exception/asset_exception.h"
 
-/**
- * Reads data from asset file.
- */
-class ChompAsset
+namespace Chomp
 {
-public:
 
     /**
-     * Name of file with asset data.
+     * Reads data from asset file.
      */
-    static const char ASSET_FILE[];
+    class Asset
+    {
+    public:
 
-    /**
-     * Reads a single byte from a file stored in
-     * the asset file.
-     * @param name Subfile name
-     * @param position Byte position to read from beginning of subfile
-     * @return Byte at given position
-     */
-    static uint8_t readFileByte(const char* name, const uint32_t position);
+        /**
+         * Name of default file with asset data.
+         */
+        static const char DEFAULT_ASSET_FILE[];
 
-    /**
-     * Load a section of a file stored in the
-     * asset file in to a buffer.
-     * @param name Subfile name
-     * @param position Byte position to start from
-     * @param buffer Buffer to write to
-     * @param length Number of bytes to read
-     */
-    static void readFile(const char* name, const uint32_t position, void* buffer, const uint32_t length);
+        /**
+         * Constructor.
+         */
+        Asset();
+        Asset(const char* _assetFilename);
 
-    /**
-     * Check if given file exists in the asset
-     * file.
-     * @param name Subfile name
-     * @return True if file exists 
-     */
-    static bool assetExists(const char* name);
-    
-    /**
-     * Get size of given file in the asset file.
-     * @param name Subfile name
-     * @return Size in bytes
-     */
-    static uint32_t getAssetSize(const char* name);
+        /**
+         * Destructor.
+         */
+        ~Asset();
 
-protected:
+        /**
+         * Reads a single byte from a file stored in
+         * the asset file.
+         * @param name Subfile name
+         * @param position Byte position to read from beginning of subfile
+         * @return Byte at given position
+         */
+        uint8_t readFileByte(const char* name, const uint32_t position);
 
-    /**
-     * Retreive details about a given file stored
-     * in the asset file.
-     * @param name Subfile name.
-     * @param position Filled with the byte position of the given file
-     * @param size Filled with the size of the given file
-     * @param nameLength Filled with the string length of the filename
-     */
-    static void getAssetData(const char* name, uint32_t* position, uint32_t* size, uint8_t* nameLength);
+        /**
+         * Load a section of a file stored in the
+         * asset file in to a buffer.
+         * @param name Subfile name
+         * @param position Byte position to start from
+         * @param buffer Buffer to write to
+         * @param length Number of bytes to read
+         */
+        void readFile(const char* name, const uint32_t position, void* buffer, const uint32_t length);
 
+        /**
+         * Check if given file exists in the asset
+         * file.
+         * @param name Subfile name
+         * @return True if file exists 
+         */
+        bool assetExists(const char* name);
+        
+        /**
+         * Get size of given file in the asset file.
+         * @param name Subfile name
+         * @return Size in bytes
+         */
+        uint32_t getAssetSize(const char* name);
 
+    protected:
+
+        /**
+         * Path to asset data file.
+         */
+        std::string assetFilename;
+
+        /**
+         * Retreive details about a given file stored
+         * in the asset file.
+         * @param name Subfile name.
+         * @param position Filled with the byte position of the given file
+         * @param size Filled with the size of the given file
+         * @param nameLength Filled with the string length of the filename
+         */
+        void getAssetData(const char* name, uint32_t* position, uint32_t* size, uint8_t* nameLength);
+
+    };
 };
 
 #endif 

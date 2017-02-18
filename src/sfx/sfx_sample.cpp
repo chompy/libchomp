@@ -1,36 +1,35 @@
 #include "sfx_sample.h"
 
-char ChompSfxSample::SAMPLE_ASSET_PREFIX[] = "sfx_";
+char Chomp::SfxSample::SAMPLE_ASSET_PREFIX[] = "sfx_";
 
-ChompSfxSample::ChompSfxSample(const char* name)
+Chomp::SfxSample::SfxSample(const char* name)
 {
     channel = -1;
 
     #ifndef WITHOUT_SDL_MIXER
     // build asset name string
-    std::string assetName = std::string(ChompSfxSample::SAMPLE_ASSET_PREFIX) + std::string(name);
+    std::string assetName = std::string(Chomp::SfxSample::SAMPLE_ASSET_PREFIX) + std::string(name);
+    // init asset handler
+    Chomp::Asset asset;
     // load asset
-    if (!ChompAsset::assetExists(assetName.c_str())) {
+    if (!asset.assetExists(assetName.c_str())) {
         return;
     }
-
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName.c_str());
-
+    uint32_t fileSize = asset.getAssetSize(assetName.c_str());
     // get data
     sampleData.resize(fileSize);
-    ChompAsset::readFile(assetName.c_str(), 0, &sampleData[0], fileSize);
-
+    asset.readFile(assetName.c_str(), 0, &sampleData[0], fileSize);
     #endif
 }
 
-ChompSfxSample::~ChompSfxSample()
+Chomp::SfxSample::~SfxSample()
 {
     freeChunk();
     sampleData.clear();
 }
 
-void ChompSfxSample::freeChunk()
+void Chomp::SfxSample::freeChunk()
 {
     #ifndef WITHOUT_SDL_MIXER
     if (channel >= 0) {
@@ -43,46 +42,46 @@ void ChompSfxSample::freeChunk()
     #endif
 }
 
-uint8_t ChompSfxSample::getStatus()
+uint8_t Chomp::SfxSample::getStatus()
 {
     if (sampleData.size() == 0) {
-        return SFX_FAILED;
+        return CHOMP_SFX_FAILED;
     }
     if (channel < 0 || !Mix_Playing(channel)) {
-        return SFX_STOP;
+        return CHOMP_SFX_STOP;
     }
     switch(Mix_FadingChannel(channel))
     {
         case MIX_FADING_IN:
         {
-            return SFX_FADEIN;
+            return CHOMP_SFX_FADEIN;
             break;
         }
         case MIX_FADING_OUT:
         {
-            return SFX_FADEOUT;
+            return CHOMP_SFX_FADEOUT;
             break;
         }
     }
-    return SFX_PLAY;
+    return CHOMP_SFX_PLAY;
 }
 
-void ChompSfxSample::setMode(uint8_t operation)
+void Chomp::SfxSample::setMode(uint8_t operation)
 {
-    setMode(operation, 1, SFX_DEFAULT_FADE, SFX_DEFAULT_TICKS);
+    setMode(operation, 1, CHOMP_SFX_DEFAULT_FADE, CHOMP_SFX_DEFAULT_TICKS);
 }
 
-void ChompSfxSample::setMode(uint8_t operation, int16_t loops)
+void Chomp::SfxSample::setMode(uint8_t operation, int16_t loops)
 {
-    setMode(operation, loops, SFX_DEFAULT_FADE, SFX_DEFAULT_TICKS);
+    setMode(operation, loops, CHOMP_SFX_DEFAULT_FADE, CHOMP_SFX_DEFAULT_TICKS);
 }
 
-void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDuration)
+void Chomp::SfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDuration)
 {
-    setMode(operation, loops, fadeDuration, SFX_DEFAULT_TICKS);
+    setMode(operation, loops, fadeDuration, CHOMP_SFX_DEFAULT_TICKS);
 }
 
-void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDuration, int32_t ticks)
+void Chomp::SfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDuration, int32_t ticks)
 {
     #ifndef WITHOUT_SDL_MIXER
     // make sure asset is available
@@ -93,7 +92,7 @@ void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDurat
     switch (operation)
     {
 
-        case SFX_PLAY:
+        case CHOMP_SFX_PLAY:
         {
             freeChunk();
             if (loops == 0) {
@@ -110,7 +109,7 @@ void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDurat
             break;
         }
 
-        case SFX_STOP:
+        case CHOMP_SFX_STOP:
         {
             if (channel < 0) {
                 break;
@@ -119,7 +118,7 @@ void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDurat
             break;
         }
 
-        case SFX_FADEIN:
+        case CHOMP_SFX_FADEIN:
         {
             freeChunk();
             if (loops == 0) {
@@ -137,7 +136,7 @@ void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDurat
             break;
         }
 
-        case SFX_FADEOUT:
+        case CHOMP_SFX_FADEOUT:
         {
             if (channel < 0) {
                 break;
@@ -153,7 +152,7 @@ void ChompSfxSample::setMode(uint8_t operation, int16_t loops, int32_t fadeDurat
     #endif
 }
 
-void ChompSfxSample::setVolume(uint8_t volume)
+void Chomp::SfxSample::setVolume(uint8_t volume)
 {
     if (channel < 0) {
         return;
@@ -164,7 +163,7 @@ void ChompSfxSample::setVolume(uint8_t volume)
     );
 }
 
-uint8_t ChompSfxSample::getVolume()
+uint8_t Chomp::SfxSample::getVolume()
 {
     if (!channel) {
         return 0;

@@ -1,48 +1,48 @@
 #include "state.h"
 
-ChompState* ChompState::s_currentState = 0;
+Chomp::State* Chomp::State::s_currentState = 0;
 
-ChompState::ChompState(ChompCore* _core)
+Chomp::State::State(Chomp::Core* _core)
 {
     core = _core;
 }
 
-ChompState::~ChompState()
+Chomp::State::~State()
 {
-    if (ChompState::s_currentState) {
-        ChompState::s_currentState->exit();
+    if (Chomp::State::s_currentState) {
+        Chomp::State::s_currentState->exit();
     }
 }
 
-void ChompState::changeState(ChompState* s_currentState)
+void Chomp::State::changeState(Chomp::State* s_currentState)
 {
-    if (ChompState::s_currentState) {
-        ChompState::s_currentState->exit();
+    if (Chomp::State::s_currentState) {
+        Chomp::State::s_currentState->exit();
     }
-    ChompState::s_currentState = s_currentState;
-    if (ChompState::s_currentState) {
-        ChompState::s_currentState->enter();
-    }
-}
-
-void ChompState::updateState()
-{
-    if (ChompState::s_currentState) {
-        ChompState::s_currentState->update();
+    Chomp::State::s_currentState = s_currentState;
+    if (Chomp::State::s_currentState) {
+        Chomp::State::s_currentState->enter();
     }
 }
 
-void ChompState::enter()
+void Chomp::State::updateState()
+{
+    if (Chomp::State::s_currentState) {
+        Chomp::State::s_currentState->update();
+    }
+}
+
+void Chomp::State::enter()
 {
 
 }
 
-void ChompState::exit()
+void Chomp::State::exit()
 {
 
 }
 
-void ChompState::update()
+void Chomp::State::update()
 {
     
 }

@@ -1,17 +1,17 @@
 #include "keyboard.h"
 
-ChompInputKeyboard::ChompInputKeyboard()
+Chomp::InputKeyboard::InputKeyboard()
 {
     inputs.clear();
 }
 
-ChompInputKeyboard::~ChompInputKeyboard()
+Chomp::InputKeyboard::~InputKeyboard()
 {
     inputs.clear();
 }
 
 
-bool ChompInputKeyboard::hasInput(uint16_t scancode)
+bool Chomp::InputKeyboard::hasInput(uint16_t scancode)
 {
     for (uint16_t i = 0; i < inputs.size(); i++) {
         if (inputs[i] == scancode) {
@@ -21,7 +21,7 @@ bool ChompInputKeyboard::hasInput(uint16_t scancode)
     return false;
 }
 
-void ChompInputKeyboard::event(SDL_Event* event)
+void Chomp::InputKeyboard::event(SDL_Event* event)
 {
     switch (event->type)
     {

@@ -7,7 +7,7 @@ void ChompyExampleState::enter()
 {
     if (!layer) {
 
-        ChompGfxColor color;
+        Chomp::GfxColor color;
         color.r = 255;
         color.g = 0;
         color.b = 0;
@@ -20,14 +20,14 @@ void ChompyExampleState::enter()
             NULL
         );
         layer->zIndex = 1;
-        ChompGfxPosition pos1;
+        Chomp::GfxPosition pos1;
         pos1.x = 0;
         pos1.y = .5;
-        ChompGfxPosition pos2;
+        Chomp::GfxPosition pos2;
         pos2.x = 1;
         pos2.y = .5;
         //layer->fill();
-        ChompGfxRect rect;
+        Chomp::GfxRect rect;
         rect.x = .1;
         rect.y = .1;
         rect.w = .8;
@@ -37,7 +37,7 @@ void ChompyExampleState::enter()
         layer->drawLine(&pos1, &pos2);
     }
     if (!chompySprite) {
-        ChompGfxSize spriteSize;
+        Chomp::GfxSize spriteSize;
         spriteSize.w = 1;
         spriteSize.h = 1;
         chompySprite = core->gfx.newSprite(

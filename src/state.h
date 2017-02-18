@@ -3,62 +3,66 @@
 
 #include "core.h"
 
-/**
- * Libchomp State
- */
-class ChompState
+namespace Chomp
 {
-public:
 
     /**
-     * Constructor.
-     * @param _core Core object
+     * Libchomp State
      */
-    ChompState(ChompCore* _core);
+    class State
+    {
+    public:
 
-    /**
-     * Destructor.
-     */
-    virtual ~ChompState();
+        /**
+         * Constructor.
+         * @param _core Core object
+         */
+        State(Chomp::Core* _core);
 
-    /**
-     * Change active state.
-     * @param s_currentState State to change to
-     */
-    static void changeState(ChompState* s_currentState);
+        /**
+         * Destructor.
+         */
+        virtual ~State();
 
-    /**
-     * Call update method of current active state.
-     */
-    static void updateState();
+        /**
+         * Change active state.
+         * @param s_currentState State to change to
+         */
+        static void changeState(State* s_currentState);
 
-    /**
-     * Called when state is made active.
-     */
-    virtual void enter();
+        /**
+         * Call update method of current active state.
+         */
+        static void updateState();
 
-    /**
-     * Called when state is made inactive.
-     */
-    virtual void exit();
+        /**
+         * Called when state is made active.
+         */
+        virtual void enter();
 
-    /**
-     * Called every frame state is active.
-     */
-    virtual void update();
+        /**
+         * Called when state is made inactive.
+         */
+        virtual void exit();
 
-protected:
+        /**
+         * Called every frame state is active.
+         */
+        virtual void update();
 
-    /**
-     * Current active state.
-     */
-    static ChompState* s_currentState;
+    protected:
 
-    /**
-     * Core object.
-     */
-    ChompCore* core;
+        /**
+         * Current active state.
+         */
+        static State* s_currentState;
 
+        /**
+         * Core object.
+         */
+        Chomp::Core* core;
+
+    };
 };
 
 #endif

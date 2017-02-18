@@ -4,19 +4,24 @@
 #include "../sdl_includes.h"
 #include "exception.h"
 
-/**
- * Exception that is thrown when asset
- * loading fails.
- */
-class ChompAssetException : public ChompException
+namespace Chomp
 {
-public:
 
     /**
-     * Constructor.
-     * _msg Exception message.
+     * Exception that is thrown when asset
+     * loading fails.
      */
-    ChompAssetException(const std::string& _msg) : ChompException(_msg) { }
+    class AssetException : public Chomp::Exception
+    {
+    public:
+
+        /**
+         * Constructor.
+         * _msg Exception message.
+         */
+        AssetException(const std::string& _msg) : Chomp::Exception(_msg) { }
+        
+    };
     
 };
 

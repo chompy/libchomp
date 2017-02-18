@@ -4,14 +4,14 @@
 #include "state.h"
 #include <iostream>
 
-class ChompyStateMain : public ChompState
+class ChompyStateMain : public Chomp::State
 {
 public:
 
     static const char SAMPLE_ASSET[];
     static const char SAMPLE_MUSIC[];
 
-    ChompyStateMain(ChompCore* _core) : ChompState(_core)
+    ChompyStateMain(Chomp::Core* _core) : Chomp::State(_core)
     {
         sample = NULL;
     }
@@ -22,7 +22,7 @@ public:
 
 protected:
 
-    ChompSfxSample* sample;
+    Chomp::SfxSample* sample;
 
 };
 

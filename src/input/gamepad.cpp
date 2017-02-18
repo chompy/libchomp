@@ -1,29 +1,30 @@
 #include "gamepad.h"
-const char* ChompInputGamepad::GAME_CONTROLLER_DATABASE_ASSET = "_gcdb";
-uint32_t ChompInputGamepad::deviceIdCounter = 0;
+const char* Chomp::InputGamepad::GAME_CONTROLLER_DATABASE_ASSET = "_gcdb";
+uint32_t Chomp::InputGamepad::deviceIdCounter = 0;
 
-ChompInputGamepad::ChompInputGamepad()
+Chomp::InputGamepad::InputGamepad()
 {
     // init joystick/controller
     if (SDL_WasInit(SDL_INIT_JOYSTICK) == 0) {
         if (SDL_Init(SDL_INIT_JOYSTICK) != 0) {
-            throw ChompSdlException();
+            throw Chomp::SdlException();
             return;
         }
     }
     if (SDL_WasInit(SDL_INIT_GAMECONTROLLER) == 0) {
         if (SDL_Init(SDL_INIT_GAMECONTROLLER) != 0) {
-            throw ChompSdlException();
+            throw Chomp::SdlException();
             return;
         }
     }
-
+    // init asset handler
+    Chomp::Asset asset;
     // load database
-    if (ChompAsset::assetExists(ChompInputGamepad::GAME_CONTROLLER_DATABASE_ASSET)) {
-        uint32_t dbSize = ChompAsset::getAssetSize(ChompInputGamepad::GAME_CONTROLLER_DATABASE_ASSET);
+    if (asset.assetExists(Chomp::InputGamepad::GAME_CONTROLLER_DATABASE_ASSET)) {
+        uint32_t dbSize = asset.getAssetSize(Chomp::InputGamepad::GAME_CONTROLLER_DATABASE_ASSET);
         uint8_t dbBuffer[dbSize];
-        ChompAsset::readFile(
-            ChompInputGamepad::GAME_CONTROLLER_DATABASE_ASSET,
+        asset.readFile(
+            Chomp::InputGamepad::GAME_CONTROLLER_DATABASE_ASSET,
             0,
             dbBuffer,
             dbSize
@@ -35,13 +36,13 @@ ChompInputGamepad::ChompInputGamepad()
     inputs.clear();
 }
 
-ChompInputGamepad::~ChompInputGamepad()
+Chomp::InputGamepad::~InputGamepad()
 {
     //closeAllDevices();
     inputs.clear();
 }
 
-void ChompInputGamepad::closeAllDevices()
+void Chomp::InputGamepad::closeAllDevices()
 {
     for (uint16_t i = 0; i < devices.size(); i++) {
         if (devices[i].gamepad) {
@@ -51,7 +52,7 @@ void ChompInputGamepad::closeAllDevices()
     devices.clear();    
 }
 
-ChompInputGamepadDevice* ChompInputGamepad::deviceFromId(uint32_t id)
+Chomp::InputGamepadDevice* Chomp::InputGamepad::deviceFromId(uint32_t id)
 {
     for (uint32_t i = 0; i < devices.size(); i++) {
         if (devices[i].id == id) {
@@ -61,7 +62,7 @@ ChompInputGamepadDevice* ChompInputGamepad::deviceFromId(uint32_t id)
     return NULL;
 }
 
-ChompInputGamepadDevice* ChompInputGamepad::deviceFromInput(ChompInputGamepadInputData* input)
+Chomp::InputGamepadDevice* Chomp::InputGamepad::deviceFromInput(Chomp::InputGamepadInputData* input)
 {
     if (!input) {
         return NULL;
@@ -69,7 +70,7 @@ ChompInputGamepadDevice* ChompInputGamepad::deviceFromInput(ChompInputGamepadInp
     return deviceFromId(input->deviceId);
 }
 
-ChompInputGamepadDevice* ChompInputGamepad::deviceFromIndex(uint32_t index)
+Chomp::InputGamepadDevice* Chomp::InputGamepad::deviceFromIndex(uint32_t index)
 {
     for (uint32_t i = 0; i < devices.size(); i++) {
         if (i == index) {
@@ -79,7 +80,7 @@ ChompInputGamepadDevice* ChompInputGamepad::deviceFromIndex(uint32_t index)
     return NULL;
 }
 
-ChompInputGamepadDevice* ChompInputGamepad::deviceFromSdlGameController(SDL_GameController* gamepad)
+Chomp::InputGamepadDevice* Chomp::InputGamepad::deviceFromSdlGameController(SDL_GameController* gamepad)
 {
     for (uint32_t i = 0; i < devices.size(); i++) {
         if (devices[i].gamepad == gamepad) {
@@ -89,9 +90,9 @@ ChompInputGamepadDevice* ChompInputGamepad::deviceFromSdlGameController(SDL_Game
     return NULL;
 }
 
-std::vector<ChompInputGamepadDevice*> ChompInputGamepad::getDevicesWithInput(uint8_t input)
+std::vector<Chomp::InputGamepadDevice*> Chomp::InputGamepad::getDevicesWithInput(uint8_t input)
 {
-    std::vector<ChompInputGamepadDevice*> deviceInputList;
+    std::vector<Chomp::InputGamepadDevice*> deviceInputList;
     deviceInputList.clear();
     for (uint32_t i = 0; i < inputs.size(); i++) {
         if (inputs[i].input == input && inputs[i].value != 0) {
@@ -103,7 +104,7 @@ std::vector<ChompInputGamepadDevice*> ChompInputGamepad::getDevicesWithInput(uin
     return deviceInputList;
 }
 
-bool ChompInputGamepad::hasInput(ChompInputGamepadDevice* device, uint8_t input)
+bool Chomp::InputGamepad::hasInput(Chomp::InputGamepadDevice* device, uint8_t input)
 {
     if (!device) {
         return false;
@@ -117,7 +118,7 @@ bool ChompInputGamepad::hasInput(ChompInputGamepadDevice* device, uint8_t input)
     return false;
 }
 
-bool ChompInputGamepad::hasInput(uint32_t index, uint8_t input)
+bool Chomp::InputGamepad::hasInput(uint32_t index, uint8_t input)
 {
     return hasInput(
         deviceFromIndex(index),
@@ -126,7 +127,7 @@ bool ChompInputGamepad::hasInput(uint32_t index, uint8_t input)
 }
 
 
-int16_t ChompInputGamepad::getInputValue(ChompInputGamepadDevice* device, uint8_t input)
+int16_t Chomp::InputGamepad::getInputValue(Chomp::InputGamepadDevice* device, uint8_t input)
 {
     if (!device) {
         return 0;
@@ -140,7 +141,7 @@ int16_t ChompInputGamepad::getInputValue(ChompInputGamepadDevice* device, uint8_
     return 0;
 }
 
-int16_t ChompInputGamepad::getInputValue(uint32_t index, uint8_t input)
+int16_t Chomp::InputGamepad::getInputValue(uint32_t index, uint8_t input)
 {
     return getInputValue(
         deviceFromIndex(index),
@@ -148,13 +149,13 @@ int16_t ChompInputGamepad::getInputValue(uint32_t index, uint8_t input)
     );
 }
 
-void ChompInputGamepad::event(SDL_Event* event)
+void Chomp::InputGamepad::event(SDL_Event* event)
 {
     switch(event->type) {
         case SDL_CONTROLLERAXISMOTION:
         {
             // collect input data
-            ChompInputGamepadDevice* device = deviceFromSdlGameController(
+            Chomp::InputGamepadDevice* device = deviceFromSdlGameController(
                 SDL_GameControllerFromInstanceID(event->caxis.which)
             );
             if (!device || !device->gamepad) {
@@ -170,7 +171,7 @@ void ChompInputGamepad::event(SDL_Event* event)
                 return;
             }
             // new input
-            ChompInputGamepadInputData inputData;
+            Chomp::InputGamepadInputData inputData;
             inputData.deviceId = device->id;
             inputData.input = axis; 
             inputData.value = event->caxis.value;
@@ -180,7 +181,7 @@ void ChompInputGamepad::event(SDL_Event* event)
         case SDL_CONTROLLERBUTTONDOWN:
         {
             // collect input data
-            ChompInputGamepadDevice* device = deviceFromSdlGameController(
+            Chomp::InputGamepadDevice* device = deviceFromSdlGameController(
                 SDL_GameControllerFromInstanceID(event->cbutton.which)
             );
             if (!device || !device->gamepad) {
@@ -196,7 +197,7 @@ void ChompInputGamepad::event(SDL_Event* event)
                 return;
             }
             // new input
-            ChompInputGamepadInputData inputData;
+            Chomp::InputGamepadInputData inputData;
             inputData.deviceId = device->id;
             inputData.input = button; 
             inputData.value = 1;
@@ -206,7 +207,7 @@ void ChompInputGamepad::event(SDL_Event* event)
         case SDL_CONTROLLERBUTTONUP:
         {
             // collect input data
-            ChompInputGamepadDevice* device = deviceFromSdlGameController(
+            Chomp::InputGamepadDevice* device = deviceFromSdlGameController(
                 SDL_GameControllerFromInstanceID(event->cbutton.which)
             );
             if (!device || !device->gamepad) {
@@ -227,11 +228,11 @@ void ChompInputGamepad::event(SDL_Event* event)
         {
             SDL_GameController* gamepad = SDL_GameControllerOpen(event->cdevice.which);   
             if (!gamepad) {
-                throw ChompSdlException();
+                throw Chomp::SdlException();
             }
-            ChompInputGamepad::deviceIdCounter += 1;
-            ChompInputGamepadDevice device;
-            device.id = ChompInputGamepad::deviceIdCounter;
+            Chomp::InputGamepad::deviceIdCounter += 1;
+            Chomp::InputGamepadDevice device;
+            device.id = Chomp::InputGamepad::deviceIdCounter;
             device.gamepad = gamepad;
             devices.push_back(device);
             break;
@@ -252,118 +253,118 @@ void ChompInputGamepad::event(SDL_Event* event)
     }
 }
 
-uint8_t ChompInputGamepad::convertSdlButton(uint8_t sdlButton)
+uint8_t Chomp::InputGamepad::convertSdlButton(uint8_t sdlButton)
 {
     switch (sdlButton)
     {
         case SDL_CONTROLLER_BUTTON_A:
         {
-            return GAMEPAD_INPUT_BTN_A;
+            return CHOMP_INPUT_GAMEPAD_BTN_A;
             break;
         }
         case SDL_CONTROLLER_BUTTON_B:
         {
-            return GAMEPAD_INPUT_BTN_B;
+            return CHOMP_INPUT_GAMEPAD_BTN_B;
             break;
         }
         case SDL_CONTROLLER_BUTTON_X:
         {
-            return GAMEPAD_INPUT_BTN_X;
+            return CHOMP_INPUT_GAMEPAD_BTN_X;
             break;
         }
         case SDL_CONTROLLER_BUTTON_Y:
         {
-            return GAMEPAD_INPUT_BTN_Y;
+            return CHOMP_INPUT_GAMEPAD_BTN_Y;
             break;
         }
         case SDL_CONTROLLER_BUTTON_BACK:
         {
-            return GAMEPAD_INPUT_BTN_BACK;
+            return CHOMP_INPUT_GAMEPAD_BTN_BACK;
             break;
         }
         case SDL_CONTROLLER_BUTTON_START:
         {
-            return GAMEPAD_INPUT_BTN_START;
+            return CHOMP_INPUT_GAMEPAD_BTN_START;
             break;
         }
         case SDL_CONTROLLER_BUTTON_LEFTSTICK:
         {
-            return GAMEPAD_INPUT_BTN_LSTICK;
+            return CHOMP_INPUT_GAMEPAD_BTN_LSTICK;
             break;
         }
         case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
         {
-            return GAMEPAD_INPUT_BTN_RSTICK;
+            return CHOMP_INPUT_GAMEPAD_BTN_RSTICK;
             break;
         }
         case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
         {
-            return GAMEPAD_INPUT_BTN_LSHOULDER;
+            return CHOMP_INPUT_GAMEPAD_BTN_LSHOULDER;
             break;
         }
         case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
         {
-            return GAMEPAD_INPUT_BTN_RSHOULDER;
+            return CHOMP_INPUT_GAMEPAD_BTN_RSHOULDER;
             break;
         }
         case SDL_CONTROLLER_BUTTON_DPAD_UP:
         {
-            return GAMEPAD_INPUT_DPAD_U;
+            return CHOMP_INPUT_GAMEPAD_DPAD_U;
             break;
         }
         case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
         {
-            return GAMEPAD_INPUT_DPAD_D;
+            return CHOMP_INPUT_GAMEPAD_DPAD_D;
             break;
         }
         case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
         {
-            return GAMEPAD_INPUT_DPAD_L;
+            return CHOMP_INPUT_GAMEPAD_DPAD_L;
             break;
         }
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
         {
-            return GAMEPAD_INPUT_DPAD_R;
+            return CHOMP_INPUT_GAMEPAD_DPAD_R;
             break;
         }
     }
-    return GAMEPAD_INPUT_INVALID;
+    return CHOMP_INPUT_GAMEPAD_INVALID;
 }
 
-uint8_t ChompInputGamepad::convertSdlAxis(uint8_t sdlAxis)
+uint8_t Chomp::InputGamepad::convertSdlAxis(uint8_t sdlAxis)
 {
     switch (sdlAxis)
     {
         case SDL_CONTROLLER_AXIS_LEFTX:
         {
-            return GAMEPAD_INPUT_AXIS_LX;
+            return CHOMP_INPUT_GAMEPAD_AXIS_LX;
             break;
         }
         case SDL_CONTROLLER_AXIS_LEFTY:
         {
-            return GAMEPAD_INPUT_AXIS_LY;
+            return CHOMP_INPUT_GAMEPAD_AXIS_LY;
             break;
         }
         case SDL_CONTROLLER_AXIS_RIGHTX:
         {
-            return GAMEPAD_INPUT_AXIS_RX;
+            return CHOMP_INPUT_GAMEPAD_AXIS_RX;
             break;
         }
         case SDL_CONTROLLER_AXIS_RIGHTY:
         {
-            return GAMEPAD_INPUT_AXIS_RY;
+            return CHOMP_INPUT_GAMEPAD_AXIS_RY;
             break;
         }
         case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
         {
-            return GAMEPAD_INPUT_AXIS_LTRIGGER;
+            return CHOMP_INPUT_GAMEPAD_AXIS_LTRIGGER;
             break;
         }
         case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
         {
-            return GAMEPAD_INPUT_AXIS_RTRIGGER;
+            return CHOMP_INPUT_GAMEPAD_AXIS_RTRIGGER;
             break;
         }
     }
-    return GAMEPAD_INPUT_INVALID;
+    return CHOMP_INPUT_GAMEPAD_INVALID;
 }

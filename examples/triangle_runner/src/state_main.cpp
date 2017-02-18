@@ -3,23 +3,23 @@
 void ChompyStateMain::enter()
 {
 
-    ChompConfig config("game");
+    Chomp::Config config("game");
     std::string langConfigName = "lang_" + config.getString("default_lang", "en");
-    ChompConfig langConfig(langConfigName.c_str());
+    Chomp::Config langConfig(langConfigName.c_str());
 
     core->gfx.setCursorVisibility(true);
-    ChompGfxSize size;
+    Chomp::GfxSize size;
     size.w = 1.0;
     size.h = .49;
     titleText = core->gfx.newTextLayer("title", 48, &size);
-    titleText->setText(langConfig.getString("title", "Test Game").c_str(), TEXT_CENTER);
+    titleText->setText(langConfig.getString("title", "Test Game").c_str(), CHOMP_GFX_TEXT_CENTER);
     // if exact same size as above glitch occurs?? @TODO
     size.h = .499;
     flavorText = core->gfx.newTextLayer("normal", 24, &size);
-    flavorText->setText(langConfig.getString("flavor").c_str(), TEXT_CENTER);
+    flavorText->setText(langConfig.getString("flavor").c_str(), CHOMP_GFX_TEXT_CENTER);
     size.h = .5;
     startText = core->gfx.newTextLayer("normal", 24, &size);
-    startText->setText(langConfig.getString("start").c_str(), TEXT_CENTER);
+    startText->setText(langConfig.getString("start").c_str(), CHOMP_GFX_TEXT_CENTER);
 
 }
 
@@ -41,19 +41,19 @@ void ChompyStateMain::update()
 
     // mouse press
     if (
-        core->input.mouse.pressed(MOUSE_BUTTON_LEFT) ||
+        core->input.mouse.pressed(CHOMP_INPUT_MOUSE_BUTTON_LEFT) ||
         core->input.keyboard.hasInput(SDL_SCANCODE_SPACE) ||
-        core->input.gamepad.getDevicesWithInput(GAMEPAD_INPUT_BTN_A).size() > 0
+        core->input.gamepad.getDevicesWithInput(CHOMP_INPUT_GAMEPAD_BTN_A).size() > 0
     ) {
-        ChompState::changeState(playState);
+        Chomp::State::changeState(playState);
         return;
     }
 
     // current window size
-    ChompGfxSize windowSize = core->gfx.getWindowSize();
+    Chomp::GfxSize windowSize = core->gfx.getWindowSize();
 
     // draw title text
-    ChompGfxRect rect;
+    Chomp::GfxRect rect;
     rect.x = ( windowSize.w / 2 ) - ( titleText->size.w / 2);
     rect.y = .1;
     rect.w = titleText->size.w;

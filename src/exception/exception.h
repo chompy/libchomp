@@ -4,38 +4,42 @@
 #include <exception>
 #include <string>
 
-/**
- * Base exception class.
- */
-class ChompException : public std::exception
+namespace Chomp
 {
 
-public:
-
     /**
-     * Constructor.
-     * @param _msg Exception message.
+     * Base exception class.
      */
-    ChompException(const std::string& _msg);
+    class Exception : public std::exception
+    {
 
-    /**
-     * Destructor.
-     */
-    virtual ~ChompException() throw();
+    public:
 
-    /**
-     * Return exception message.
-     * @return Char array with message
-     */
-    virtual const char* what() const throw();
-    
-private:
+        /**
+         * Constructor.
+         * @param _msg Exception message.
+         */
+        Exception(const std::string& _msg);
 
-    /**
-     * String containing exception message.
-     */
-    std::string msg;
+        /**
+         * Destructor.
+         */
+        virtual ~Exception() throw();
 
+        /**
+         * Return exception message.
+         * @return Char array with message
+         */
+        virtual const char* what() const throw();
+        
+    private:
+
+        /**
+         * String containing exception message.
+         */
+        std::string msg;
+
+    };
 };
 
 #endif

@@ -7,44 +7,48 @@
 #include "gamepad.h"
 #include "keyboard.h"
 
-/**
- * Base class for handling inputs.
- */
-class ChompInput
+namespace Chomp
 {
-public:
 
     /**
-     * Handles mouse inputs.
+     * Base class for handling inputs.
      */
-    ChompInputMouse mouse;
+    class Input
+    {
+    public:
 
-    /**
-     * Handles gamepad inputs.
-     */
-    ChompInputGamepad gamepad;
+        /**
+         * Handles mouse inputs.
+         */
+        Chomp::InputMouse mouse;
 
-    /**
-     * Handles keyboard inputs.
-     */
-    ChompInputKeyboard keyboard;
+        /**
+         * Handles gamepad inputs.
+         */
+        Chomp::InputGamepad gamepad;
 
-    /**
-     * Constructor.
-     */
-    ChompInput();
+        /**
+         * Handles keyboard inputs.
+         */
+        Chomp::InputKeyboard keyboard;
 
-    /**
-     * Destructor.
-     */
-    ~ChompInput();
+        /**
+         * Constructor.
+         */
+        Input();
 
-    /**
-     * Register input event.
-     * @param event SDL Event
-     */
-    void event(SDL_Event* event);
+        /**
+         * Destructor.
+         */
+        ~Input();
 
+        /**
+         * Register input event.
+         * @param event SDL Event
+         */
+        void event(SDL_Event* event);
+
+    };
 };
 
 #endif

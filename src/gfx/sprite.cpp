@@ -1,7 +1,7 @@
 #include "sprite.h"
-char ChompGfxSprite::SPRITE_ASSET_PREFIX[] = "spr_";
+char Chomp::GfxSprite::SPRITE_ASSET_PREFIX[] = "spr_";
 
-ChompGfxSprite::~ChompGfxSprite()
+Chomp::GfxSprite::~GfxSprite()
 {
     for (uint16_t i = 0; i < spriteTextures.size(); i++) {
         SDL_DestroyTexture(spriteTextures[i]);
@@ -9,7 +9,7 @@ ChompGfxSprite::~ChompGfxSprite()
     spriteTextures.clear();
 }
 
-bool ChompGfxSprite::setFrame(const uint16_t frame)
+bool Chomp::GfxSprite::setFrame(const uint16_t frame)
 {
     if (frame >= spriteTextures.size()) {
         return false;
@@ -18,7 +18,7 @@ bool ChompGfxSprite::setFrame(const uint16_t frame)
     return true;
 }
 
-bool ChompGfxSprite::setAnimation(const char* name)
+bool Chomp::GfxSprite::setAnimation(const char* name)
 {
     std::string nameString = std::string(name);
     if (currentAnimation && currentAnimation->name == nameString) {
@@ -37,7 +37,7 @@ bool ChompGfxSprite::setAnimation(const char* name)
     return false;
 }
 
-void ChompGfxSprite::updateAnimationFrame()
+void Chomp::GfxSprite::updateAnimationFrame()
 {
     if (!currentAnimation) {
         return;
@@ -53,12 +53,12 @@ void ChompGfxSprite::updateAnimationFrame()
     lastAnimationTick = SDL_GetTicks();
 }
 
-void ChompGfxSprite::setTextures(uint8_t* bitmap)
+void Chomp::GfxSprite::setTextures(uint8_t* bitmap)
 {
     spriteTextures.clear();
-    for (uint16_t i = 0; i < ChompBitmap::getFrameCount(bitmap); i++) {
+    for (uint16_t i = 0; i < Chomp::Bitmap::getFrameCount(bitmap); i++) {
         spriteTextures.push_back(
-            ChompBitmap::getTexture(
+            Chomp::Bitmap::getTexture(
                 renderer,
                 bitmap,
                 i
@@ -70,10 +70,10 @@ void ChompGfxSprite::setTextures(uint8_t* bitmap)
     }
 }
 
-void ChompGfxSprite::getAnimationData(uint8_t* bitmap)
+void Chomp::GfxSprite::getAnimationData(uint8_t* bitmap)
 {
     currentAnimation = NULL;
-    uint8_t* data = ChompBitmap::getAnimationData(bitmap);
+    uint8_t* data = Chomp::Bitmap::getAnimationData(bitmap);
     uint8_t animationCount = data[0];
     animationFramerate = 1000 / (uint16_t) data[1];
     uint32_t pos = 2;
@@ -81,7 +81,7 @@ void ChompGfxSprite::getAnimationData(uint8_t* bitmap)
     uint16_t animationFrames;
 
     for (uint8_t i = 0; i < animationCount; i++) {
-        ChompGfxSpriteAnimationData animation;
+        Chomp::GfxSpriteAnimationData animation;
         animationNameLength = data[pos];
         char animationName[animationNameLength + 1];
         memcpy(

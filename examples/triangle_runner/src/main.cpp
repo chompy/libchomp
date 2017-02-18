@@ -7,7 +7,7 @@
 #include "state_play.h"
 
 int main(int argc, char **argv) {
-    Chomp chomp;
+    Chomp::Entry chomp;
     ChompyStatePlay playState(&chomp.core);
     ChompyStateMain mainState(&chomp.core, &playState);
     chomp.core.gfx.setWindowTitle("Triangle Runner -- LibChomp Example");

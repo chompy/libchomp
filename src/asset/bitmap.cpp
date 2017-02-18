@@ -1,6 +1,6 @@
 #include "bitmap.h"
 
-int16_t ChompBitmap::getWidth(uint8_t* bitmap)
+int16_t Chomp::Bitmap::getWidth(uint8_t* bitmap)
 {
     int16_t bitmapWidth = 0;
     if (!bitmap) {
@@ -10,7 +10,7 @@ int16_t ChompBitmap::getWidth(uint8_t* bitmap)
     return bitmapWidth;
 }
 
-int16_t ChompBitmap::getHeight(uint8_t* bitmap)
+int16_t Chomp::Bitmap::getHeight(uint8_t* bitmap)
 {
     int16_t bitmapHeight = 0;
     if (!bitmap) {
@@ -20,7 +20,7 @@ int16_t ChompBitmap::getHeight(uint8_t* bitmap)
     return bitmapHeight;
 }
 
-uint16_t ChompBitmap::getFrameCount(uint8_t* bitmap)
+uint16_t Chomp::Bitmap::getFrameCount(uint8_t* bitmap)
 {
     uint16_t bitmapFrameCount = 0;
     if (!bitmap) {
@@ -30,7 +30,7 @@ uint16_t ChompBitmap::getFrameCount(uint8_t* bitmap)
     return bitmapFrameCount;
 }
 
-uint8_t* ChompBitmap::getFrame(uint8_t* bitmap, const uint16_t frame)
+uint8_t* Chomp::Bitmap::getFrame(uint8_t* bitmap, const uint16_t frame)
 {
     if (!bitmap) {
         return 0;
@@ -44,23 +44,23 @@ uint8_t* ChompBitmap::getFrame(uint8_t* bitmap, const uint16_t frame)
     return currentPos;
 }
 
-uint8_t ChompBitmap::getAnimationFps(uint8_t* bitmap)
+uint8_t Chomp::Bitmap::getAnimationFps(uint8_t* bitmap)
 {
-    uint8_t* animationData = ChompBitmap::getFrame(bitmap, ChompBitmap::getFrameCount(bitmap));
+    uint8_t* animationData = Chomp::Bitmap::getFrame(bitmap, Chomp::Bitmap::getFrameCount(bitmap));
     return animationData[1];
 }
 
-uint8_t* ChompBitmap::getAnimationData(uint8_t* bitmap)
+uint8_t* Chomp::Bitmap::getAnimationData(uint8_t* bitmap)
 {
     if (!bitmap) {
         return NULL;
     }
-    return ChompBitmap::getFrame(bitmap, ChompBitmap::getFrameCount(bitmap));
+    return Chomp::Bitmap::getFrame(bitmap, Chomp::Bitmap::getFrameCount(bitmap));
 }
 
-SDL_Texture* ChompBitmap::getTexture(SDL_Renderer* renderer, uint8_t* bitmap, const uint16_t frame)
+SDL_Texture* Chomp::Bitmap::getTexture(SDL_Renderer* renderer, uint8_t* bitmap, const uint16_t frame)
 {
-    uint8_t* frameData = ChompBitmap::getFrame(bitmap, frame);
+    uint8_t* frameData = Chomp::Bitmap::getFrame(bitmap, frame);
     uint32_t frameDataSize = 0;
     memcpy(&frameDataSize, &frameData[0], 4);
     SDL_RWops* frameDataRW = SDL_RWFromMem(&frameData[4], frameDataSize);

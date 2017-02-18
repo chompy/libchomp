@@ -5,14 +5,14 @@
 
 #define INPUT_UPDATE_RATE 250
 
-class ChompyStateMain : public ChompState
+class ChompyStateMain : public Chomp::State
 {
 public:
 
     static const char* ACTIVE_GAMEPAD_COUNT_STRING;
     static const char* ACTIVE_GAMEPAD_INPUT_STRING;
 
-    ChompyStateMain(ChompCore* _core) : ChompState(_core)
+    ChompyStateMain(Chomp::Core* _core) : Chomp::State(_core)
     {
         lastInputUpdate = 0;
         activeGamepadCount = 1000;
@@ -27,10 +27,10 @@ public:
 protected:
 
     uint16_t activeGamepadCount;
-    ChompGfxText* activeGamepadCountText;
+    Chomp::GfxText* activeGamepadCountText;
 
     uint32_t lastInputUpdate;
-    ChompGfxText* activeInputText;
+    Chomp::GfxText* activeInputText;
 
     void setActiveGamepadCountText();
     void setActiveInputText();

@@ -4,27 +4,31 @@
 #include "../sdl_includes.h"
 #include "exception.h"
 
-/**
- * Exception that is thrown as a result of a
- * SDL Mixer error.
- */
-class ChompSdlMixerException : public ChompException
+namespace Chomp
 {
-public:
 
     /**
-     * Constructor.
-     * @see Mix_GetError()
-     * Passes exception message from Mix_GetError()
+     * Exception that is thrown as a result of a
+     * SDL Mixer error.
      */
-    ChompSdlMixerException() : ChompException(Mix_GetError()) { }
+    class SdlMixerException : public Chomp::Exception
+    {
+    public:
 
-    /**
-     * Constructor.
-     * @param _msg Exception message
-     */
-    ChompSdlMixerException(const std::string& _msg) : ChompException(_msg) { }
-    
+        /**
+         * Constructor.
+         * @see Mix_GetError()
+         * Passes exception message from Mix_GetError()
+         */
+        SdlMixerException() : Chomp::Exception(Mix_GetError()) { }
+
+        /**
+         * Constructor.
+         * @param _msg Exception message
+         */
+        SdlMixerException(const std::string& _msg) : Chomp::Exception(_msg) { }
+        
+    };
 };
 
 #endif

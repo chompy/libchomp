@@ -8,49 +8,53 @@
 #include "music.h"
 #include "sfx_sample.h"
 
-#define SFX_CHANNELS 64
+#define CHOMP_SFX_CHANNELS 64
 
-/**
- * Sound effect class.
- */
-class ChompSfx {
-
-public:
+namespace Chomp
+{
 
     /**
-     * Music player.
+     * Sound effect class.
      */
-    ChompSfxMusic music;
+    class Sfx {
 
-    /**
-     * Constructor.
-     */
-    ChompSfx();
+    public:
 
-    /**
-     * Destructor.
-     */
-    ~ChompSfx();
-    
-    /**
-     * Load a sample for playback.
-     * @param name Name of asset.
-     * @return Sample playback object
-     */
-    ChompSfxSample* loadSample(const char* name);
+        /**
+         * Music player.
+         */
+        Chomp::SfxMusic music;
 
-    /**
-     * Stop and unload all samples.
-     */
-    void unloadAllSamples();
+        /**
+         * Constructor.
+         */
+        Sfx();
 
-protected:
+        /**
+         * Destructor.
+         */
+        ~Sfx();
+        
+        /**
+         * Load a sample for playback.
+         * @param name Name of asset.
+         * @return Sample playback object
+         */
+        SfxSample* loadSample(const char* name);
 
-    /**
-     * Vector containing all loaded samples.
-     */
-    std::vector<ChompSfxSample> samples;
+        /**
+         * Stop and unload all samples.
+         */
+        void unloadAllSamples();
 
+    protected:
+
+        /**
+         * Vector containing all loaded samples.
+         */
+        std::vector<Chomp::SfxSample> samples;
+
+    };
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include "chomp.h"
 
 int main(int argc, char **argv) {
-    ChompConfig config("sample_config");
+    Chomp::Config config("sample_config");
     std::cout << "key1: " << config.getString("key1") << std::endl;
     std::cout << "key2.test1: " << config.getString("key2.test1") << std::endl;
     std::cout << "key2.test2: " << config.getInt("key2.test2") << std::endl;

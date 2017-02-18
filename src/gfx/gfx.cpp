@@ -1,17 +1,17 @@
 #include "gfx.h"
 
-ChompGfx::ChompGfx()
+Chomp::Gfx::Gfx()
 {
 
     // init sdl systems
     if (!SDL_WasInit(SDL_INIT_VIDEO) == 0 && SDL_Init(SDL_INIT_VIDEO) != 0) {
-        throw ChompSdlException();
+        throw Chomp::SdlException();
     }
     
     // init sdl ttf
     #ifndef WITHOUT_SDL_TTF
     if (!TTF_WasInit() && TTF_Init() == -1) {
-        throw ChompSdlTtfException();
+        throw Chomp::SdlTtfException();
     }
     #endif
 
@@ -20,13 +20,13 @@ ChompGfx::ChompGfx()
         "LibChomp Window",
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        DEFAULT_WINDOW_W,
-        DEFAULT_WINDOW_H,
+        CHOMP_GFX_DEFAULT_WINDOW_W,
+        CHOMP_GFX_DEFAULT_WINDOW_H,
         SDL_WINDOW_SHOWN |
         SDL_WINDOW_RESIZABLE
     );
     if (!window) {
-        throw ChompSdlException();
+        throw Chomp::SdlException();
         return;
     }
 
@@ -38,7 +38,7 @@ ChompGfx::ChompGfx()
         SDL_RENDERER_PRESENTVSYNC
     );
     if (!renderer) {
-        throw ChompSdlException();
+        throw Chomp::SdlException();
         return;
     }
 
@@ -47,7 +47,7 @@ ChompGfx::ChompGfx()
 
 }
 
-ChompGfx::~ChompGfx()
+Chomp::Gfx::~Gfx()
 {
     if (renderer) {
         SDL_DestroyRenderer(renderer);
@@ -62,11 +62,11 @@ ChompGfx::~ChompGfx()
     #endif
 }
 
-ChompGfxSize ChompGfx::getWindowSize()
+Chomp::GfxSize Chomp::Gfx::getWindowSize()
 {
     int ww,wh;
     SDL_GetWindowSize(window, &ww, &wh);
-    ChompGfxSize size;
+    Chomp::GfxSize size;
     if (ww > wh) {
         size.h = 1.0;
         size.w = (float) ww / (float) wh;
@@ -77,7 +77,7 @@ ChompGfxSize ChompGfx::getWindowSize()
     return size;
 }
 
-void ChompGfx::setWindowTitle(const char* title)
+void Chomp::Gfx::setWindowTitle(const char* title)
 {
     SDL_SetWindowTitle(
         window,
@@ -85,12 +85,12 @@ void ChompGfx::setWindowTitle(const char* title)
     );
 }
 
-ChompGfxPosition ChompGfx::getCameraPosition()
+Chomp::GfxPosition Chomp::Gfx::getCameraPosition()
 {
     return camera;
 }
 
-void ChompGfx::toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* height)
+void Chomp::Gfx::toPixelSize(Chomp::GfxSize* size, uint16_t* width, uint16_t* height)
 {
     int ww,wh;
     SDL_GetWindowSize(window, &ww, &wh);
@@ -103,9 +103,9 @@ void ChompGfx::toPixelSize(ChompGfxSize* size, uint16_t* width, uint16_t* height
     }
 }
 
-ChompGfxSize ChompGfx::fromPixelSize(const uint16_t width, const uint16_t height)
+Chomp::GfxSize Chomp::Gfx::fromPixelSize(const uint16_t width, const uint16_t height)
 {
-    ChompGfxSize size;
+    Chomp::GfxSize size;
     int ww,wh;
     SDL_GetWindowSize(window, &ww, &wh);    
     if (ww > wh) {
@@ -118,13 +118,13 @@ ChompGfxSize ChompGfx::fromPixelSize(const uint16_t width, const uint16_t height
     return size;
 }
 
-void ChompGfx::setCameraPosition(ChompGfxPosition* position)
+void Chomp::Gfx::setCameraPosition(Chomp::GfxPosition* position)
 {
     camera.x = position ? position->x : 0;
     camera.y = position ? position->y : 0;
 }
 
-void ChompGfx::setDrawColor(ChompGfxColor* color)
+void Chomp::Gfx::setDrawColor(Chomp::GfxColor* color)
 {
     if (!renderer) {
         return;
@@ -138,7 +138,7 @@ void ChompGfx::setDrawColor(ChompGfxColor* color)
     );
 }
 
-void ChompGfx::setCursorVisibility(bool state)
+void Chomp::Gfx::setCursorVisibility(bool state)
 {
     if (state) {
         SDL_ShowCursor(SDL_ENABLE);
@@ -147,16 +147,16 @@ void ChompGfx::setCursorVisibility(bool state)
     SDL_ShowCursor(SDL_DISABLE);
 }
 
-ChompGfxLayer* ChompGfx::newLayer(ChompGfxSize* size)
+Chomp::GfxLayer* Chomp::Gfx::newLayer(Chomp::GfxSize* size)
 {
     return newLayer(
-        size->w * DEFAULT_LAYER_PIXEL_SIZE,
-        size->h * DEFAULT_LAYER_PIXEL_SIZE,
+        size->w * CHOMP_GFX_DEFAULT_LAYER_PIXEL_SIZE,
+        size->h * CHOMP_GFX_DEFAULT_LAYER_PIXEL_SIZE,
         size
     );
 }
 
-ChompGfxLayer* ChompGfx::newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size)
+Chomp::GfxLayer* Chomp::Gfx::newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, Chomp::GfxSize* size)
 {
     SDL_Texture* texture = SDL_CreateTexture(
         renderer,
@@ -166,72 +166,76 @@ ChompGfxLayer* ChompGfx::newLayer(const uint16_t pixelWidth, const uint16_t pixe
         pixelHeight
     );
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-    return new ChompGfxLayer(
+    return new Chomp::GfxLayer(
         renderer,
         texture,
         size
     );
 }
 
-ChompGfxLayer* ChompGfx::newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame, ChompGfxSize* size)
+Chomp::GfxLayer* Chomp::Gfx::newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame, Chomp::GfxSize* size)
 {
     if (!bitmap) {
         return NULL;
     }
-    return new ChompGfxLayer(
+    return new Chomp::GfxLayer(
         renderer,
-        ChompBitmap::getTexture(renderer, bitmap, frame),
+        Chomp::Bitmap::getTexture(renderer, bitmap, frame),
         size
     );
 }
 
-ChompGfxSprite* ChompGfx::newSprite(const char* spriteName, ChompGfxSize* size)
+Chomp::GfxSprite* Chomp::Gfx::newSprite(const char* spriteName, Chomp::GfxSize* size)
 {
     if (!spriteName) {
         return NULL;
     }
     // build asset name string
-    std::string assetName = std::string(ChompGfxSprite::SPRITE_ASSET_PREFIX) + std::string(spriteName);
+    std::string assetName = std::string(Chomp::GfxSprite::SPRITE_ASSET_PREFIX) + std::string(spriteName);
+    // asset handler
+    Chomp::Asset asset;
     // load asset
-    if (!ChompAsset::assetExists(assetName.c_str())) {
+    if (!asset.assetExists(assetName.c_str())) {
         return NULL;
     }
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName.c_str());
+    uint32_t fileSize = asset.getAssetSize(assetName.c_str());
     // make bitmap
     std::vector<uint8_t> bitmap(fileSize, 0);
-    ChompAsset::readFile(assetName.c_str(), 0, &bitmap[0], fileSize);
+    asset.readFile(assetName.c_str(), 0, &bitmap[0], fileSize);
     // new sprite layer
-    return new ChompGfxSprite(
+    return new Chomp::GfxSprite(
         renderer,
         &bitmap[0],
         size
     );
 }
 
-ChompGfxText* ChompGfx::newTextLayer(const char* fontName, const uint16_t ptSize, ChompGfxSize* size)
+Chomp::GfxText* Chomp::Gfx::newTextLayer(const char* fontName, const uint16_t ptSize, Chomp::GfxSize* size)
 {
     return newTextLayer(
         fontName,
         ptSize,
-        size->w * DEFAULT_LAYER_PIXEL_SIZE,
-        size->h * DEFAULT_LAYER_PIXEL_SIZE,
+        size->w * CHOMP_GFX_DEFAULT_LAYER_PIXEL_SIZE,
+        size->h * CHOMP_GFX_DEFAULT_LAYER_PIXEL_SIZE,
         size
     );
 }
 
-ChompGfxText* ChompGfx::newTextLayer(const char* fontName, const uint16_t ptSize, const uint16_t pixelWidth, const uint16_t pixelHeight, ChompGfxSize* size)
+Chomp::GfxText* Chomp::Gfx::newTextLayer(const char* fontName, const uint16_t ptSize, const uint16_t pixelWidth, const uint16_t pixelHeight, Chomp::GfxSize* size)
 {
     if (!fontName) {
         return NULL;
     }
     // build asset name string
-    std::string assetName = std::string(ChompGfxText::FONT_ASSET_PREFIX) + std::string(fontName);
+    std::string assetName = std::string(Chomp::GfxText::FONT_ASSET_PREFIX) + std::string(fontName);
+    // asset handler
+    Chomp::Asset asset;
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName.c_str());
+    uint32_t fileSize = asset.getAssetSize(assetName.c_str());
     // get font data
     std::vector<uint8_t> fontData(fileSize, 0);
-    ChompAsset::readFile(assetName.c_str(), 0, &fontData[0], fileSize);
+    asset.readFile(assetName.c_str(), 0, &fontData[0], fileSize);
     // new texture
     SDL_Texture* texture = SDL_CreateTexture(
         renderer,
@@ -242,7 +246,7 @@ ChompGfxText* ChompGfx::newTextLayer(const char* fontName, const uint16_t ptSize
     );
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     // new text layer
-    return new ChompGfxText(
+    return new Chomp::GfxText(
         renderer,
         &fontData[0],
         fileSize,
@@ -252,7 +256,7 @@ ChompGfxText* ChompGfx::newTextLayer(const char* fontName, const uint16_t ptSize
     );
 }
 
-void ChompGfx::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, ChompGfxRect* dstRect)
+void Chomp::Gfx::addLayerToRenderer(Chomp::GfxLayer* layer, Chomp::GfxRect* srcRect, Chomp::GfxRect* dstRect)
 {
     if (!layer) {
         return;
@@ -271,7 +275,7 @@ void ChompGfx::addLayerToRenderer(ChompGfxLayer* layer, ChompGfxRect* srcRect, C
     renderLayers.push_back(renderLayer);
 }
 
-void ChompGfx::render()
+void Chomp::Gfx::render()
 {
 
     if (!window || !renderer) {
@@ -281,7 +285,7 @@ void ChompGfx::render()
     SDL_SetRenderTarget(renderer, NULL);
 
     #ifndef EMSCRIPTEN
-    ChompGfxColor originalColor;
+    Chomp::GfxColor originalColor;
     SDL_GetRenderDrawColor(renderer, &originalColor.r, &originalColor.g, &originalColor.b, &originalColor.a);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -295,7 +299,7 @@ void ChompGfx::render()
 
     for (uint16_t i = 0; i < renderLayers.size(); i++) {
         RenderLayers renderLayer = renderLayers[i];
-        ChompGfxLayer::drawLayerToRenderTarget(
+        Chomp::GfxLayer::drawLayerToRenderTarget(
             renderer,
             renderLayer.layer,
             &renderLayer.srcRect,

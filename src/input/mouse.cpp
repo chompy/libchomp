@@ -1,6 +1,6 @@
 #include "mouse.h"
 
-ChompInputMouse::ChompInputMouse()
+Chomp::InputMouse::InputMouse()
 {
     x = 0;
     y = 0;
@@ -8,12 +8,12 @@ ChompInputMouse::ChompInputMouse()
     yrel = 0;
 }
 
-ChompInputMouse::~ChompInputMouse()
+Chomp::InputMouse::~InputMouse()
 {
 
 }
 
-void ChompInputMouse::event(SDL_Event* event)
+void Chomp::InputMouse::event(SDL_Event* event)
 {
     switch(event->type) {
         case SDL_MOUSEMOTION:
@@ -47,7 +47,7 @@ void ChompInputMouse::event(SDL_Event* event)
     }
 }
 
-bool ChompInputMouse::pressed(uint8_t button)
+bool Chomp::InputMouse::pressed(uint8_t button)
 {
     for (uint16_t i = 0; i < buttons.size(); i++) {
         if (buttons[i] == button) {
@@ -57,7 +57,7 @@ bool ChompInputMouse::pressed(uint8_t button)
     return false;
 }
 
-bool ChompInputMouse::in(int32_t pixelX, int32_t pixelY, int32_t pixelW, int32_t pixelH)
+bool Chomp::InputMouse::in(int32_t pixelX, int32_t pixelY, int32_t pixelW, int32_t pixelH)
 {
     return (
         x >= pixelX && x <= pixelX + pixelW &&
@@ -65,7 +65,7 @@ bool ChompInputMouse::in(int32_t pixelX, int32_t pixelY, int32_t pixelW, int32_t
     );
 }
 
-/*bool ChompInputMouse::in(ChompGfxRect* rect)
+/*bool Chomp::InputMouse::in(ChompGfxRect* rect)
 {
 
 }*/

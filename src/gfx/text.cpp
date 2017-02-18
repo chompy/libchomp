@@ -1,8 +1,8 @@
 #include "text.h"
 
-char ChompGfxText::FONT_ASSET_PREFIX[] = "font_";
+char Chomp::GfxText::FONT_ASSET_PREFIX[] = "font_";
 
-ChompGfxText::~ChompGfxText()
+Chomp::GfxText::~GfxText()
 {
     if (font) {
         TTF_CloseFont(font);
@@ -15,7 +15,7 @@ ChompGfxText::~ChompGfxText()
     }
 }
 
-void ChompGfxText::setFont(uint8_t* _fontData, const uint32_t fontDataSize, const uint16_t fontPtSize)
+void Chomp::GfxText::setFont(uint8_t* _fontData, const uint32_t fontDataSize, const uint16_t fontPtSize)
 {
     #ifndef WITHOUT_SDL_TTF
     if (font) {
@@ -31,18 +31,17 @@ void ChompGfxText::setFont(uint8_t* _fontData, const uint32_t fontDataSize, cons
     memcpy(fontData, _fontData, fontDataSize);
     fontDataRW = SDL_RWFromMem(&fontData[0], fontDataSize);
     if (!fontDataRW) {
-        throw ChompSdlException();
+        throw Chomp::SdlException();
     }
-    //font = TTF_OpenFont("assets/font/tahoma.ttf", fontPtSize);
     font = TTF_OpenFontRW(fontDataRW, 0, fontPtSize);
     if (!font) {
-        throw ChompSdlTtfException();
+        throw Chomp::SdlTtfException();
     }
     setText("");
     #endif
 }
 
-std::vector<std::string> ChompGfxText::getLines(const char* text)
+std::vector<std::string> Chomp::GfxText::getLines(const char* text)
 {
     std::vector<std::string> lines;
     if (!text || !font) {
@@ -72,17 +71,17 @@ std::vector<std::string> ChompGfxText::getLines(const char* text)
     return lines;
 }
 
-void ChompGfxText::setText(const char* text)
+void Chomp::GfxText::setText(const char* text)
 {
-    setText(text, TEXT_LEFT, TEXT_TOP);
+    setText(text, CHOMP_GFX_TEXT_LEFT, CHOMP_GFX_TEXT_TOP);
 }
 
-void ChompGfxText::setText(const char* text, uint8_t hAlign)
+void Chomp::GfxText::setText(const char* text, uint8_t hAlign)
 {
-    setText(text, hAlign, TEXT_TOP);
+    setText(text, hAlign, CHOMP_GFX_TEXT_TOP);
 }
 
-void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
+void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
 {
     if (!font) {
         return;
@@ -121,7 +120,7 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
             color
         );
         if (!textSurface) {
-            throw ChompSdlTtfException();
+            throw Chomp::SdlTtfException();
         }
 
         // convert to texture
@@ -130,31 +129,31 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
             textSurface
         );
         if (!textTexture) {
-            throw ChompSdlException();
+            throw Chomp::SdlException();
         }
         SDL_Rect destRect = {0, lineY, textSurface->w, textSurface->h}; 
         SDL_FreeSurface(textSurface);
 
         // alignment
         switch (hAlign) {
-            case TEXT_CENTER:
+            case CHOMP_GFX_TEXT_CENTER:
             {
                 destRect.x = (getPixelWidth() / 2) - (textSurface->w / 2);
                 break;
             }
-            case TEXT_RIGHT:
+            case CHOMP_GFX_TEXT_RIGHT:
             {
                 destRect.x = getPixelWidth() - textSurface->w;
                 break;
             }
         }
         switch (vAlign) {
-            case TEXT_MIDDLE:
+            case CHOMP_GFX_TEXT_MIDDLE:
             {
                 destRect.y = (getPixelHeight() / 2) - (textSurface->h / 2);
                 break;
             }
-            case TEXT_BOTTOM:
+            case CHOMP_GFX_TEXT_BOTTOM:
             {
                 destRect.y = getPixelHeight() - textSurface->h;
                 break;
@@ -170,7 +169,7 @@ void ChompGfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
                 &destRect
             ) != 0
         ) {
-            throw ChompSdlException();
+            throw Chomp::SdlException();
         }
         SDL_DestroyTexture(textTexture);
 

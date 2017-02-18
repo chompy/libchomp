@@ -6,152 +6,156 @@
 #include "../sdl_includes.h"
 #include "../asset/asset.h"
 
-#define SFX_FAILED 200
-#define SFX_STOP 0
-#define SFX_PLAY 1
-#define SFX_FADEIN 2
-#define SFX_FADEOUT 3
+#define CHOMP_SFX_FAILED 200
+#define CHOMP_SFX_STOP 0
+#define CHOMP_SFX_PLAY 1
+#define CHOMP_SFX_FADEIN 2
+#define CHOMP_SFX_FADEOUT 3
 
-#define SFX_DEFAULT_FADE 0
-#define SFX_DEFAULT_TICKS -1
+#define CHOMP_SFX_DEFAULT_FADE 0
+#define CHOMP_SFX_DEFAULT_TICKS -1
 
-/**
- * Sound effect sample player.
- */
-class ChompSfxSample {
-
-public:
+namespace Chomp
+{
 
     /**
-     * Sample asset prefix.
+     * Sound effect sample player.
      */
-    static char SAMPLE_ASSET_PREFIX[];
+    class SfxSample {
 
-    #ifndef WITHOUT_SDL_MIXER
-    
-    /**
-     * SDL Mix Chunk
-     */
-    Mix_Chunk* chunk;
-    
-    #else
+    public:
 
-    /**
-     * Null chunk Pointer (if SDL Mixer not loaded)
-     */
-    void* chunk;
+        /**
+         * Sample asset prefix.
+         */
+        static char SAMPLE_ASSET_PREFIX[];
 
-    #endif
+        #ifndef WITHOUT_SDL_MIXER
+        
+        /**
+         * SDL Mix Chunk
+         */
+        Mix_Chunk* chunk;
+        
+        #else
 
-    /**
-     * Constructor.
-     * @param name Name of asset
-     */
-    ChompSfxSample(const char* name);
+        /**
+         * Null chunk Pointer (if SDL Mixer not loaded)
+         */
+        void* chunk;
 
-    /**
-     * Destructor.
-     */
-    ~ChompSfxSample();
+        #endif
 
-    /**
-     * Get channel this sample will play on.
-     * @return Channel number
-     */
-    uint8_t getChannel() { return channel; }
+        /**
+         * Constructor.
+         * @param name Name of asset
+         */
+        SfxSample(const char* name);
 
-    /**
-     * Get status of sample.
-     * @return Status code (SFX_FAILED|SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
-     */
-    uint8_t getStatus();
+        /**
+         * Destructor.
+         */
+        ~SfxSample();
 
-    /**
-     * Change status of sample.
-     * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
-     */
-    void setMode(uint8_t operation);
+        /**
+         * Get channel this sample will play on.
+         * @return Channel number
+         */
+        uint8_t getChannel() { return channel; }
 
-    /**
-     * Change status of sample.
-     * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
-     * @param loops Number of times to loop sample (-1 for unlimited)
-     */
-    void setMode(uint8_t operation, int16_t loops);
+        /**
+         * Get status of sample.
+         * @return Status code (SFX_FAILED|SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
+         */
+        uint8_t getStatus();
 
-    /**
-     * Change status of sample.
-     * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
-     * @param loops Number of times to loop sample (-1 for unlimited)
-     * @param fadeDuration Time in ms to fade for
-     */
-    void setMode(uint8_t operation, int16_t loops, int32_t fadeDuration);
+        /**
+         * Change status of sample.
+         * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
+         */
+        void setMode(uint8_t operation);
 
-    /**
-     * Change status of sample.
-     * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
-     * @param loops Number of times to loop sample (-1 for unlimited)
-     * @param fadeDuration Time in ms to fade for
-     * @param ticks Max play length of sample
-     */    
-    void setMode(uint8_t operation, int16_t loops, int32_t fadeDuration, int32_t ticks);
+        /**
+         * Change status of sample.
+         * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
+         * @param loops Number of times to loop sample (-1 for unlimited)
+         */
+        void setMode(uint8_t operation, int16_t loops);
 
-    /**
-     * Convienence function that calls setMode
-     * with parameters to play sample.
-     */
-    void play() { setMode(SFX_PLAY); }
+        /**
+         * Change status of sample.
+         * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
+         * @param loops Number of times to loop sample (-1 for unlimited)
+         * @param fadeDuration Time in ms to fade for
+         */
+        void setMode(uint8_t operation, int16_t loops, int32_t fadeDuration);
 
-    /**
-     * Convienence function that calls setMode
-     * with parameters to stop sample.
-     */
-    void stop() { setMode(SFX_STOP); }
+        /**
+         * Change status of sample.
+         * @param operation Operation to perform (SFX_STOP|SFX_PLAY|SFX_FADEIN|SFX_FADEOUT)
+         * @param loops Number of times to loop sample (-1 for unlimited)
+         * @param fadeDuration Time in ms to fade for
+         * @param ticks Max play length of sample
+         */    
+        void setMode(uint8_t operation, int16_t loops, int32_t fadeDuration, int32_t ticks);
 
-    /**
-     * Convienence function that calls setMode
-     * with parameters to fade in sample.
-     * @param duration Time in ms to fade for
-     */
-    void fadeIn(int32_t duration) { setMode(SFX_FADEIN, 1, duration); }
+        /**
+         * Convienence function that calls setMode
+         * with parameters to play sample.
+         */
+        void play() { setMode(CHOMP_SFX_PLAY); }
 
-    /**
-     * Convienence function that calls setMode
-     * with parameters to fade out sample.
-     * @param duration Time in ms to fade for
-     */
-    void fadeOut(int32_t duration) { setMode(SFX_FADEOUT, 1, duration); }
+        /**
+         * Convienence function that calls setMode
+         * with parameters to stop sample.
+         */
+        void stop() { setMode(CHOMP_SFX_STOP); }
+
+        /**
+         * Convienence function that calls setMode
+         * with parameters to fade in sample.
+         * @param duration Time in ms to fade for
+         */
+        void fadeIn(int32_t duration) { setMode(CHOMP_SFX_FADEIN, 1, duration); }
+
+        /**
+         * Convienence function that calls setMode
+         * with parameters to fade out sample.
+         * @param duration Time in ms to fade for
+         */
+        void fadeOut(int32_t duration) { setMode(CHOMP_SFX_FADEOUT, 1, duration); }
 
 
-    /**
-     * Set volume to play sample at.
-     * @param volume Volume as a percentage (0=mute,100=max)
-     */
-    void setVolume(uint8_t volume);
+        /**
+         * Set volume to play sample at.
+         * @param volume Volume as a percentage (0=mute,100=max)
+         */
+        void setVolume(uint8_t volume);
 
-    /**
-     * Get volume sample will play at.
-     * @return Volume as a percentage (0=mute, 100=max)
-     */
-    uint8_t getVolume();
+        /**
+         * Get volume sample will play at.
+         * @return Volume as a percentage (0=mute, 100=max)
+         */
+        uint8_t getVolume();
 
-protected:
+    protected:
 
-    /**
-     * Vector containing raw sample data
-     */
-    std::vector<uint8_t> sampleData;
+        /**
+         * Vector containing raw sample data
+         */
+        std::vector<uint8_t> sampleData;
 
-    /**
-     * Channel sample is to be played on.
-     */
-    int16_t channel;
+        /**
+         * Channel sample is to be played on.
+         */
+        int16_t channel;
 
-    /**
-     * Free currently loaded SDL chunk and stop playback.
-     */
-    void freeChunk();
+        /**
+         * Free currently loaded SDL chunk and stop playback.
+         */
+        void freeChunk();
 
+    };
 };
 
 #endif

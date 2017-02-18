@@ -4,27 +4,31 @@
 #include "../sdl_includes.h"
 #include "exception.h"
 
-/**
- * Exception that is thrown as a result of a
- * SDL TTF error.
- */
-class ChompSdlTtfException : public ChompException
+namespace Chomp
 {
-public:
 
     /**
-     * Constructor.
-     * @see TTF_GetError()
-     * Passes exception message from TTF_GetError()
-     */    
-    ChompSdlTtfException() : ChompException(TTF_GetError()) { }
+     * Exception that is thrown as a result of a
+     * SDL TTF error.
+     */
+    class SdlTtfException : public Chomp::Exception
+    {
+    public:
 
-    /**
-     * Constructor.
-     * @param _msg Exception message
-     */ 
-    ChompSdlTtfException(const std::string& _msg) : ChompException(_msg) { }
+        /**
+         * Constructor.
+         * @see TTF_GetError()
+         * Passes exception message from TTF_GetError()
+         */    
+        SdlTtfException() : Chomp::Exception(TTF_GetError()) { }
 
+        /**
+         * Constructor.
+         * @param _msg Exception message
+         */ 
+        SdlTtfException(const std::string& _msg) : Chomp::Exception(_msg) { }
+
+    };
 };
 
 #endif

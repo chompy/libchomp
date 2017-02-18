@@ -3,12 +3,12 @@
 void ChompyStateMain::enter()
 {
     if (!textLayer) {
-        ChompGfxSize layerSize;
+        Chomp::GfxSize layerSize;
         layerSize.w = 1;
         layerSize.h = 1;
         textLayer = core->gfx.newTextLayer("impact", 48, &layerSize);
 
-        ChompGfxColor color;
+        Chomp::GfxColor color;
         color.r = 255;
         color.g = 0;
         color.b = 0;
@@ -17,8 +17,8 @@ void ChompyStateMain::enter()
 
         textLayer->setText(
             "Hello World!",
-            TEXT_CENTER,
-            TEXT_MIDDLE
+            CHOMP_GFX_TEXT_CENTER,
+            CHOMP_GFX_TEXT_MIDDLE
         );
         textLayer->zIndex = 1;
     }
@@ -33,8 +33,8 @@ void ChompyStateMain::exit()
 
 void ChompyStateMain::update()
 {
-    ChompGfxSize windowSize = core->gfx.getWindowSize();
-    ChompGfxRect dstRect;
+    Chomp::GfxSize windowSize = core->gfx.getWindowSize();
+    Chomp::GfxRect dstRect;
     dstRect.x = (windowSize.w / 2) - (textLayer->size.w / 2);
     dstRect.y = (windowSize.h / 2) - (textLayer->size.h / 2);
     dstRect.w = textLayer->size.w;

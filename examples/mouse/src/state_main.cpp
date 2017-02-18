@@ -3,7 +3,7 @@
 void ChompyStateMain::enter()
 {
     if (!layer) {
-        ChompGfxSize size;
+        Chomp::GfxSize size;
         size.w = 1;
         size.h = 1;
         layer = core->gfx.newLayer(
@@ -25,15 +25,15 @@ void ChompyStateMain::update()
 {
 
     // layer position
-    ChompGfxSize windowSize = core->gfx.getWindowSize();
-    ChompGfxRect dstRect;
+    Chomp::GfxSize windowSize = core->gfx.getWindowSize();
+    Chomp::GfxRect dstRect;
     dstRect.x = (windowSize.w / 2) - (layer->size.w / 2);
     dstRect.y = (windowSize.h / 2) - (layer->size.h / 2);
     dstRect.w = layer->size.w;
     dstRect.h = layer->size.h;
 
     // init color
-    ChompGfxColor color;
+    Chomp::GfxColor color;
     color.r = 0;
     color.g = 0;
     color.b = 0;
@@ -44,7 +44,7 @@ void ChompyStateMain::update()
     layer->fill();
 
     // init rect
-    ChompGfxRect rect;
+    Chomp::GfxRect rect;
 
     // init mouse coords
     uint16_t mx,my,mw,mh;
@@ -60,7 +60,7 @@ void ChompyStateMain::update()
     color.g = 0;
     color.b = 0;
     color.a = 255;
-    if (core->input.mouse.pressed(MOUSE_BUTTON_LEFT) && core->input.mouse.in(mx, my, mw, mh)) {
+    if (core->input.mouse.pressed(CHOMP_INPUT_MOUSE_BUTTON_LEFT) && core->input.mouse.in(mx, my, mw, mh)) {
         color.r = 0;
         color.g = 0;
         color.b = 255;
@@ -79,7 +79,7 @@ void ChompyStateMain::update()
     color.g = 0;
     color.b = 0;
     color.a = 255;
-    if (core->input.mouse.pressed(MOUSE_BUTTON_LEFT) && core->input.mouse.in(mx, my, mw, mh)) {
+    if (core->input.mouse.pressed(CHOMP_INPUT_MOUSE_BUTTON_LEFT) && core->input.mouse.in(mx, my, mw, mh)) {
         color.r = 0;
         color.g = 0;
         color.b = 255;
@@ -92,9 +92,9 @@ void ChompyStateMain::update()
     core->gfx.addLayerToRenderer(layer, NULL, &dstRect);
 }
 
-void ChompyStateMain::rectToPixelCoords(ChompGfxRect* rect, ChompGfxRect* offset, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h)
+void ChompyStateMain::rectToPixelCoords(Chomp::GfxRect* rect, Chomp::GfxRect* offset, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h)
 {
-    ChompGfxSize size;
+    Chomp::GfxSize size;
     size.w = rect->x + offset->x;
     size.h = rect->y + offset->y;
     core->gfx.toPixelSize(&size, x, y);

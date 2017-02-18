@@ -1,16 +1,16 @@
 #include "input.h"
 
-ChompInput::ChompInput()
+Chomp::Input::Input()
 {
 
 }
 
-ChompInput::~ChompInput()
+Chomp::Input::~Input()
 {
     
 }
 
-void ChompInput::event(SDL_Event* event)
+void Chomp::Input::event(SDL_Event* event)
 {
     switch (event->type)
     {

@@ -1,8 +1,8 @@
 #include "music.h"
 
-char ChompSfxMusic::MUSIC_ASSET_PREFIX[] = "mus_";
+char Chomp::SfxMusic::MUSIC_ASSET_PREFIX[] = "mus_";
 
-ChompSfxMusic::ChompSfxMusic()
+Chomp::SfxMusic::SfxMusic()
 {
     music = NULL;
     musicData.clear();
@@ -12,31 +12,31 @@ ChompSfxMusic::ChompSfxMusic()
     queuedMusicFadeDuration = 0;
 }
 
-ChompSfxMusic::~ChompSfxMusic()
+Chomp::SfxMusic::~SfxMusic()
 {
     unloadMusic();
 }
 
-uint8_t ChompSfxMusic::loadMusic(const char* name)
+uint8_t Chomp::SfxMusic::loadMusic(const char* name)
 {
-    return loadMusic(name, MUSIC_STOP, 0, 0);
+    return loadMusic(name, CHOMP_SFX_MUSIC_STOP, 0, 0);
 }
 
-uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation)
+uint8_t Chomp::SfxMusic::loadMusic(const char* name, uint8_t operation)
 {
     return loadMusic(name, operation, -1, 0);
 }
 
-uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation, int16_t loops)
+uint8_t Chomp::SfxMusic::loadMusic(const char* name, uint8_t operation, int16_t loops)
 {
     return loadMusic(name, operation, loops, 0);
 }
 
-uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation, int16_t loops, int16_t fadeDuration)
+uint8_t Chomp::SfxMusic::loadMusic(const char* name, uint8_t operation, int16_t loops, int16_t fadeDuration)
 {
     #ifndef WITHOUT_SDL_MIXER
-    if (!name || operation == MUSIC_FADEOUT) {
-        return MUSIC_LOAD_FAILED;
+    if (!name || operation == CHOMP_SFX_MUSIC_FADEOUT) {
+        return CHOMP_SFX_MUSIC_LOAD_FAILED;
     }
 
     // queue up music if previous music is fading out
@@ -45,35 +45,36 @@ uint8_t ChompSfxMusic::loadMusic(const char* name, uint8_t operation, int16_t lo
         queuedMusicOperation = operation;
         queuedMusicLoops = loops;
         queuedMusicFadeDuration = fadeDuration;
-        return MUSIC_LOAD_QUEUED;
+        return CHOMP_SFX_MUSIC_LOAD_QUEUED;
     }
-
+    // init asset handler
+    Chomp::Asset asset;
     // build asset name string
-    std::string assetName = std::string(ChompSfxMusic::MUSIC_ASSET_PREFIX) + std::string(name);
+    std::string assetName = std::string(Chomp::SfxMusic::MUSIC_ASSET_PREFIX) + std::string(name);
     // load asset
-    if (!ChompAsset::assetExists(assetName.c_str())) {
-        return MUSIC_LOAD_FAILED;
+    if (!asset.assetExists(assetName.c_str())) {
+        return CHOMP_SFX_MUSIC_LOAD_FAILED;
     }
 
     // get filesize
-    uint32_t fileSize = ChompAsset::getAssetSize(assetName.c_str());
+    uint32_t fileSize = asset.getAssetSize(assetName.c_str());
 
     // get data
     musicData.resize(fileSize);
-    ChompAsset::readFile(assetName.c_str(), 0, &musicData[0], fileSize);
+    asset.readFile(assetName.c_str(), 0, &musicData[0], fileSize);
     SDL_RWops* musicDataRW = SDL_RWFromMem(&musicData[0], fileSize);
 
     // load music
     unloadMusic();
     music = Mix_LoadMUS_RW(musicDataRW, 1);
     setMusic(operation, loops, fadeDuration);
-    return MUSIC_LOAD_COMPLETE;
+    return CHOMP_SFX_MUSIC_LOAD_COMPLETE;
     #else
-    return MUSIC_LOAD_FAILED;
+    return CHOMP_SFX_MUSIC_LOAD_FAILED;
     #endif
 }
 
-void ChompSfxMusic::unloadMusic()
+void Chomp::SfxMusic::unloadMusic()
 {
     #ifndef WITHOUT_SDL_MIXER
     if (music) {
@@ -84,7 +85,7 @@ void ChompSfxMusic::unloadMusic()
     #endif
 }
 
-bool ChompSfxMusic::checkMusicQueue()
+bool Chomp::SfxMusic::checkMusicQueue()
 {
     #ifndef WITHOUT_SDL_MIXER
     if (!queuedMusic.empty() && Mix_FadingMusic() != MIX_FADING_OUT && !Mix_PlayingMusic()) {
@@ -99,40 +100,40 @@ bool ChompSfxMusic::checkMusicQueue()
     return false;
 }
 
-void ChompSfxMusic::setMusic(uint8_t operation)
+void Chomp::SfxMusic::setMusic(uint8_t operation)
 {
-    setMusic(operation, MUSIC_DEFAULT_LOOPS, MUSIC_DEFAULT_FADE);
+    setMusic(operation, CHOMP_SFX_MUSIC_DEFAULT_LOOPS, CHOMP_SFX_MUSIC_DEFAULT_FADE);
 }
 
-void ChompSfxMusic::setMusic(uint8_t operation, int16_t loops)
+void Chomp::SfxMusic::setMusic(uint8_t operation, int16_t loops)
 {
-    setMusic(operation, loops, MUSIC_DEFAULT_FADE);
+    setMusic(operation, loops, CHOMP_SFX_MUSIC_DEFAULT_FADE);
 }
 
-void ChompSfxMusic::setMusic(uint8_t operation, int16_t loops, int32_t fadeDuration)
+void Chomp::SfxMusic::setMusic(uint8_t operation, int16_t loops, int32_t fadeDuration)
 {
     #ifndef WITHOUT_SDL_MIXER
     switch (operation) {
-        case MUSIC_STOP:
+        case CHOMP_SFX_MUSIC_STOP:
         {
             Mix_HaltMusic();
             break;
         }
-        case MUSIC_PLAY:
+        case CHOMP_SFX_MUSIC_PLAY:
         {
             if (music) {
                 Mix_PlayMusic(music, loops);
             }
             break;
         }
-        case MUSIC_FADEIN:
+        case CHOMP_SFX_MUSIC_FADEIN:
         {
             if (music) {
                 Mix_FadeInMusic(music, loops, fadeDuration);
             }
             break;
         }
-        case MUSIC_FADEOUT:
+        case CHOMP_SFX_MUSIC_FADEOUT:
         {
             if (Mix_PlayingMusic()) {
                 Mix_FadeOutMusic(fadeDuration);
@@ -143,14 +144,14 @@ void ChompSfxMusic::setMusic(uint8_t operation, int16_t loops, int32_t fadeDurat
     #endif
 }
 
-void ChompSfxMusic::setVolume(uint8_t volume)
+void Chomp::SfxMusic::setVolume(uint8_t volume)
 {
     Mix_VolumeMusic(
         volume * (MIX_MAX_VOLUME / 100)
     );
 }
 
-uint8_t ChompSfxMusic::getVolume()
+uint8_t Chomp::SfxMusic::getVolume()
 {
     return Mix_VolumeMusic(-1) * (100 / MIX_MAX_VOLUME);
 }

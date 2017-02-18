@@ -8,39 +8,43 @@
 #include "sfx/sfx.h"
 #include "input/input.h"
 
-/**
- * Libchomp Core
- */
-class ChompCore
+namespace Chomp
 {
-public:
 
     /**
-     * Graphics object
+     * Libchomp Core
      */
-    ChompGfx gfx;
+    class Core
+    {
+    public:
 
-    /**
-     * Sound effects object
-     */
-    ChompSfx sfx;
+        /**
+         * Graphics object
+         */
+        Chomp::Gfx gfx;
 
-    /**
-     * Input object
-     */
-    ChompInput input;
+        /**
+         * Sound effects object
+         */
+        Chomp::Sfx sfx;
 
-    /**
-     * Last frame delta time.
-     */
-    float deltaTime;
+        /**
+         * Input object
+         */
+        Chomp::Input input;
 
-    /**
-     * Get time since start of app.
-     * @return Milliseconds since start
-     */
-    uint32_t getTicks() { return SDL_GetTicks(); }
+        /**
+         * Last frame delta time.
+         */
+        float deltaTime;
 
+        /**
+         * Get time since start of app.
+         * @return Milliseconds since start
+         */
+        uint32_t getTicks() { return SDL_GetTicks(); }
+
+    };
 };
 
 #endif

@@ -5,80 +5,84 @@
 #include "../sdl_includes.h"
 #include "../gfx/structs.h"
 
-#define MOUSE_BUTTON_LEFT SDL_BUTTON_LEFT
-#define MOUSE_BUTTON_MIDDLE SDL_BUTTON_MIDDLE
-#define MOUSE_BUTTON_RIGHT SDL_BUTTON_RIGHT
-#define MOUSE_BUTTON_X1 SDL_BUTTON_X1
-#define MOUSE_BUTTON_X2 SDL_BUTTON_X2
+#define CHOMP_INPUT_MOUSE_BUTTON_LEFT SDL_BUTTON_LEFT
+#define CHOMP_INPUT_MOUSE_BUTTON_MIDDLE SDL_BUTTON_MIDDLE
+#define CHOMP_INPUT_MOUSE_BUTTON_RIGHT SDL_BUTTON_RIGHT
+#define CHOMP_INPUT_MOUSE_BUTTON_X1 SDL_BUTTON_X1
+#define CHOMP_INPUT_MOUSE_BUTTON_X2 SDL_BUTTON_X2
 
-/**
- * Mouse input class.
- */
-class ChompInputMouse
+namespace Chomp
 {
-public:
 
     /**
-     * Constructor.
+     * Mouse input class.
      */
-    ChompInputMouse();
+    class InputMouse
+    {
+    public:
 
-    /**
-     * Destructor.
-     */
-    ~ChompInputMouse();
+        /**
+         * Constructor.
+         */
+        InputMouse();
 
-    /**
-     * Pixel x position of mouse.
-     */
-    int32_t x;
+        /**
+         * Destructor.
+         */
+        ~InputMouse();
 
-    /**
-     * Pixel y position of mouse.
-     */
-    int32_t y;
+        /**
+         * Pixel x position of mouse.
+         */
+        int32_t x;
 
-    /**
-     * Mouse relative x motion.
-     */
-    int32_t xrel;
+        /**
+         * Pixel y position of mouse.
+         */
+        int32_t y;
 
-    /**
-     * Mouse relative y motion.
-     */
-    int32_t yrel;
+        /**
+         * Mouse relative x motion.
+         */
+        int32_t xrel;
 
-    /**
-     * Check pressed state of given button.
-     * @param button Button (MOUSE_BUTTON_LEFT|MOUSE_BUTTON_MIDDLE|MOUSE_BUTTON_RIGHT|MOUSE_BUTTON_X1|MOUSE_BUTTON_X2)
-     * @return True if button pressed
-     */
-    bool pressed(uint8_t button);
+        /**
+         * Mouse relative y motion.
+         */
+        int32_t yrel;
 
-    /**
-     * Check if mouse pointer is in a given boundary.
-     * @param pixelX Pixel x
-     * @param pixelY Pixel y
-     * @param pixelW Pixel width
-     * @param pixelH Pixel height
-     * Return True if mouse is in boundary
-     */
-    bool in(int32_t pixelX, int32_t pixelY, int32_t pixelW, int32_t pixelH);
+        /**
+         * Check pressed state of given button.
+         * @param button Button (MOUSE_BUTTON_LEFT|MOUSE_BUTTON_MIDDLE|MOUSE_BUTTON_RIGHT|MOUSE_BUTTON_X1|MOUSE_BUTTON_X2)
+         * @return True if button pressed
+         */
+        bool pressed(uint8_t button);
 
-    /**
-     * Register mouse input event.
-     * @param event SDL Event
-     */
-    void event(SDL_Event* event);
+        /**
+         * Check if mouse pointer is in a given boundary.
+         * @param pixelX Pixel x
+         * @param pixelY Pixel y
+         * @param pixelW Pixel width
+         * @param pixelH Pixel height
+         * Return True if mouse is in boundary
+         */
+        bool in(int32_t pixelX, int32_t pixelY, int32_t pixelW, int32_t pixelH);
 
-private:
+        /**
+         * Register mouse input event.
+         * @param event SDL Event
+         */
+        void event(SDL_Event* event);
 
-    /**
-     * Vector containing all currently pressed
-     * buttons.
-     */
-    std::vector<uint8_t> buttons;
+    private:
 
+        /**
+         * Vector containing all currently pressed
+         * buttons.
+         */
+        std::vector<uint8_t> buttons;
+
+    };
 };
 
 #endif

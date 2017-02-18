@@ -8,61 +8,57 @@
 #include <emscripten.h>
 #endif
 
-#define TARGET_FPS 60
+#define CHOMP_TARGET_FPS 60
 
-/**
- * Main class for libchomp
- */
-class Chomp
+namespace Chomp
 {
-public:
 
     /**
-     * Constructor.
+     * Entry point for libchomp engine.
      */
-    Chomp();
+    class Entry
+    {
 
-    /**
-     * Destructor.
-     */
-    ~Chomp();
+    public:
 
-    /**
-     * Core object.
-     */
-    ChompCore core;
+        /**
+         * Core object.
+         */
+        Chomp::Core core;
 
-    /**
-     * Init libchomp and run given state.
-     * @param state State to run
-     */
-    void start(ChompState* state);
+        /**
+         * Init libchomp and run given state.
+         * @param state State to run
+         */
+        void start(Chomp::State* state);
 
-    /**
-     * Main loop for Emscripten platform
-     * @param core Void pointer to core object
-     */
-    static void emscriptenLoop(void* core);
+        /**
+         * Main loop for Emscripten platform
+         * @param core Void pointer to core object
+         */
+        void emscriptenLoop(void* core);
 
-    /**
-     * Main loop.
-     * @param core Core object
-     * @return False if exiting
-     */
-    static bool loop(ChompCore* core);
+        /**
+         * Main loop.
+         * @param core Core object
+         * @return False if exiting
+         */
+        bool loop(Chomp::Core* core);
 
-private:
+    protected:
 
-    /**
-     * Time in milliseconds to delay app
-     * between each frame for desired FPS.
-     */
-    static float targetFrameDelay;
+        /**
+         * Time in milliseconds to delay app
+         * between each frame for desired FPS.
+         */
+        static float targetFrameDelay;
 
-    /**
-     * Last tick a frame was rendered.
-     */
-    static uint32_t lastFrameTime;
+        /**
+         * Last tick a frame was rendered.
+         */
+        static uint32_t lastFrameTime;
+
+    };
 
 };
 

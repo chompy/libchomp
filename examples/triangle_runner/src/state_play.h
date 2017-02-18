@@ -27,11 +27,11 @@
 #define INPUT_KEYBOARD 1
 #define INPUT_GAMEPAD 2
 
-class ChompyStatePlay : public ChompState
+class ChompyStatePlay : public Chomp::State
 {
 public:
 
-    ChompyStatePlay(ChompCore* _core) : ChompState(_core)
+    ChompyStatePlay(Chomp::Core* _core) : Chomp::State(_core)
     {
         gameLayer = NULL;
         playerSprite = NULL;
@@ -68,16 +68,16 @@ protected:
     uint32_t score;
     uint16_t round;
     uint16_t lastScoreX;
-    ChompGfxPosition playerPos;
+    Chomp::GfxPosition playerPos;
     float playerYTo;
     float speed;
     std::vector<std::vector<bool> > walls;
 
     // gfx layers
-    ChompGfxLayer* gameLayer;
-    ChompGfxSprite* playerSprite;
-    ChompGfxSprite* wallSprite;
-    ChompGfxText* scoreText;
+    Chomp::GfxLayer* gameLayer;
+    Chomp::GfxSprite* playerSprite;
+    Chomp::GfxSprite* wallSprite;
+    Chomp::GfxText* scoreText;
 
     void startRound();
     void generateWall();

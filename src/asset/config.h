@@ -10,117 +10,120 @@
 #define CONFIG_TYPE_INT 1
 #define CONFIG_TYPE_FLOAT 2
 
-/**
- * Struct for storing config
- * key/value pairs.
- */
-struct ChompConfigValue
+namespace Chomp
 {
-    std::string key; /**< Key string >*/
-    uint8_t type; /**< Type of value >*/
-    std::vector<uint8_t> data; /**< Raw value data >*/
-};
-
-/**
- * Read configuration key/value pairs from config
- * asset file.
- */
-class ChompConfig
-{
-public:
 
     /**
-     * Config asset name prefix
+     * Struct for storing config
+     * key/value pairs.
      */
-    static char CONFIG_ASSET_PREFIX[];
+    struct ConfigValue
+    {
+        std::string key; /**< Key string >*/
+        uint8_t type; /**< Type of value >*/
+        std::vector<uint8_t> data; /**< Raw value data >*/
+    };
 
     /**
-     * Constructor.
-     * Load config data with its filename.
-     * @param configName Config filename.
+     * Read configuration key/value pairs from config
+     * asset file.
      */
-    ChompConfig(const char* configName);
+    class Config
+    {
+    public:
 
-    /**
-     * Constructor.
-     * Load config data from a byte array.
-     * @param data Byte array
-     * @param size Size of byte array
-     */
-    ChompConfig(uint8_t* data, uint32_t size);
+        /**
+         * Config asset name prefix
+         */
+        static char CONFIG_ASSET_PREFIX[];
 
-    /**
-     * Destructor.
-     */
-    ~ChompConfig();
+        /**
+         * Constructor.
+         * Load config data with its filename.
+         * @param configName Config filename.
+         */
+        Config(const char* configName);
 
-    /**
-     * Check if given key exists.
-     * @param key Key to check
-     * @return True if key exists
-     */
-    bool hasKey(std::string key);
+        /**
+         * Constructor.
+         * Load config data from a byte array.
+         * @param data Byte array
+         * @param size Size of byte array
+         */
+        Config(uint8_t* data, uint32_t size);
 
-    /**
-     * Retrieve string value from config.
-     * @param key Key containing string value
-     * @return String value
-     */
-    std::string getString(std::string key);
+        /**
+         * Destructor.
+         */
+        ~Config();
 
-    /**
-     * Retrieve string value from config.
-     * @param key Key containing string value
-     * @param defaultValue Value to return if key does not exist
-     * @return String value
-     */    
-    std::string getString(std::string key, std::string defaultValue);
+        /**
+         * Check if given key exists.
+         * @param key Key to check
+         * @return True if key exists
+         */
+        bool hasKey(std::string key);
 
-    /**
-     * Retrieve integer value from config.
-     * @param key Key containing integer value
-     * @return Integer value
-     */
-    int32_t getInt(std::string key);
+        /**
+         * Retrieve string value from config.
+         * @param key Key containing string value
+         * @return String value
+         */
+        std::string getString(std::string key);
 
-    /**
-     * Retrieve integer value from config.
-     * @param key Key containing integer value
-     * @param defaultValue Value to return if key does not exist
-     * @return Integer value
-     */
-    int32_t getInt(std::string key, int32_t defaultValue);
+        /**
+         * Retrieve string value from config.
+         * @param key Key containing string value
+         * @param defaultValue Value to return if key does not exist
+         * @return String value
+         */    
+        std::string getString(std::string key, std::string defaultValue);
 
-    /**
-     * Retrieve float value from config.
-     * @param key Key containing float value
-     * @return Integer value
-     */
-    float getFloat(std::string key);
+        /**
+         * Retrieve integer value from config.
+         * @param key Key containing integer value
+         * @return Integer value
+         */
+        int32_t getInt(std::string key);
 
-    /**
-     * Retrieve float value from config.
-     * @param key Key containing float value
-     * @param defaultValue Value to return if key does not exist
-     * @return Integer value
-     */
-    float getFloat(std::string key, float defaultValue);
+        /**
+         * Retrieve integer value from config.
+         * @param key Key containing integer value
+         * @param defaultValue Value to return if key does not exist
+         * @return Integer value
+         */
+        int32_t getInt(std::string key, int32_t defaultValue);
 
-protected:
+        /**
+         * Retrieve float value from config.
+         * @param key Key containing float value
+         * @return Integer value
+         */
+        float getFloat(std::string key);
 
-    /**
-     * Load config data from byte array.
-     * @param data Byte array
-     * @param size Size of byte array
-     */
-    void loadConfig(uint8_t* data, uint32_t size);
+        /**
+         * Retrieve float value from config.
+         * @param key Key containing float value
+         * @param defaultValue Value to return if key does not exist
+         * @return Integer value
+         */
+        float getFloat(std::string key, float defaultValue);
 
-    /**
-     * Vector containing key/value pairs.
-     */
-    std::vector<ChompConfigValue> values;
+    protected:
 
+        /**
+         * Load config data from byte array.
+         * @param data Byte array
+         * @param size Size of byte array
+         */
+        void loadConfig(uint8_t* data, uint32_t size);
 
+        /**
+         * Vector containing key/value pairs.
+         */
+        std::vector<ConfigValue> values;
+
+    };
 };
 
 #endif 

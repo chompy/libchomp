@@ -6,188 +6,192 @@
 #include "../sdl_includes.h"
 #include "../asset/asset.h"
 
-#define MUSIC_STOP 0
-#define MUSIC_PLAY 1
-#define MUSIC_FADEIN 2
-#define MUSIC_FADEOUT 3
+#define CHOMP_SFX_MUSIC_STOP 0
+#define CHOMP_SFX_MUSIC_PLAY 1
+#define CHOMP_SFX_MUSIC_FADEIN 2
+#define CHOMP_SFX_MUSIC_FADEOUT 3
 
-#define MUSIC_LOAD_FAILED 0
-#define MUSIC_LOAD_COMPLETE 1
-#define MUSIC_LOAD_QUEUED 2
+#define CHOMP_SFX_MUSIC_LOAD_FAILED 0
+#define CHOMP_SFX_MUSIC_LOAD_COMPLETE 1
+#define CHOMP_SFX_MUSIC_LOAD_QUEUED 2
 
-#define MUSIC_DEFAULT_FADE 0
-#define MUSIC_DEFAULT_LOOPS -1
+#define CHOMP_SFX_MUSIC_DEFAULT_FADE 0
+#define CHOMP_SFX_MUSIC_DEFAULT_LOOPS -1
 
-/**
- * Music player class.
- */
-class ChompSfxMusic {
-
-public:
+namespace Chomp
+{
 
     /**
-     * Music asset prefix.
+     * Music player class.
      */
-    static char MUSIC_ASSET_PREFIX[];
+    class SfxMusic {
 
-    #ifndef WITHOUT_SDL_MIXER
-    
-    /**
-     * SDL Mix Music
-     */
-    Mix_Music* music;
-    
-    #else
+    public:
 
-    /**
-     * Null Music Pointer (if SDL Mixer not loaded)
-     */
-    void* music;
+        /**
+         * Music asset prefix.
+         */
+        static char MUSIC_ASSET_PREFIX[];
 
-    #endif
+        #ifndef WITHOUT_SDL_MIXER
+        
+        /**
+         * SDL Mix Music
+         */
+        Mix_Music* music;
+        
+        #else
 
-    /**
-     * Constructor.
-     */
-    ChompSfxMusic();
+        /**
+         * Null Music Pointer (if SDL Mixer not loaded)
+         */
+        void* music;
 
-    /**
-     * Destructor.
-     */
-    ~ChompSfxMusic();
+        #endif
 
-    /**
-     * Load music file.
-     * @param name Char array containing music filename
-     * @return Status (MUSIC_LOAD_FAILED|MUSIC_LOAD_COMPLETE|MUSIC_LOAD_QUEUED)
-     */
-    uint8_t loadMusic(const char* name);
+        /**
+         * Constructor.
+         */
+        SfxMusic();
 
-    /**
-     * Load music file and perform operation.
-     * @param name Char array containing music filename
-     * @param operation Operation to perform (MUSIC_STOP|MUSIC_PLAY|MUSIC_FADEIN|MUSIC_FADEOUT)
-     * @return Status (MUSIC_LOAD_FAILED|MUSIC_LOAD_COMPLETE|MUSIC_LOAD_QUEUED)
-     */
-    uint8_t loadMusic(const char* name, uint8_t operation);
+        /**
+         * Destructor.
+         */
+        ~SfxMusic();
 
-    /**
-     * Load music file and perform operation.
-     * @param name Char array containing music filename
-     * @param operation Operation to perform (MUSIC_STOP|MUSIC_PLAY|MUSIC_FADEIN|MUSIC_FADEOUT)
-     * @param loops Number of times to loop music, -1 for infinite
-     * @return Status (MUSIC_LOAD_FAILED|MUSIC_LOAD_COMPLETE|MUSIC_LOAD_QUEUED)
-     */    
-    uint8_t loadMusic(const char* name, uint8_t operation, int16_t loops);
+        /**
+         * Load music file.
+         * @param name Char array containing music filename
+         * @return Status (CHOMP_SFX_MUSIC_LOAD_FAILED|CHOMP_SFX_MUSIC_LOAD_COMPLETE|CHOMP_SFX_MUSIC_LOAD_QUEUED)
+         */
+        uint8_t loadMusic(const char* name);
 
-    /**
-     * Load music file and perform operation.
-     * @param name Char array containing music filename
-     * @param operation Operation to perform (MUSIC_STOP|MUSIC_PLAY|MUSIC_FADEIN|MUSIC_FADEOUT)
-     * @param loops Number of times to loop music, -1 for infinite
-     * @param fadeDuration Time in milliseconds for fade in/out
-     * @return Status (MUSIC_LOAD_FAILED|MUSIC_LOAD_COMPLETE|MUSIC_LOAD_QUEUED)
-     */        
-    uint8_t loadMusic(const char* name, uint8_t operation, int16_t loops, int16_t fadeDuration);
+        /**
+         * Load music file and perform operation.
+         * @param name Char array containing music filename
+         * @param operation Operation to perform (CHOMP_SFX_MUSIC_STOP|CHOMP_SFX_MUSIC_PLAY|CHOMP_SFX_MUSIC_FADEIN|CHOMP_SFX_MUSIC_FADEOUT)
+         * @return Status (CHOMP_SFX_MUSIC_LOAD_FAILED|CHOMP_SFX_MUSIC_LOAD_COMPLETE|CHOMP_SFX_MUSIC_LOAD_QUEUED)
+         */
+        uint8_t loadMusic(const char* name, uint8_t operation);
 
-    /**
-     * Unload current music.
-     */
-    void unloadMusic();
+        /**
+         * Load music file and perform operation.
+         * @param name Char array containing music filename
+         * @param operation Operation to perform (CHOMP_SFX_MUSIC_STOP|CHOMP_SFX_MUSIC_PLAY|CHOMP_SFX_MUSIC_FADEIN|CHOMP_SFX_MUSIC_FADEOUT)
+         * @param loops Number of times to loop music, -1 for infinite
+         * @return Status (CHOMP_SFX_MUSIC_LOAD_FAILED|CHOMP_SFX_MUSIC_LOAD_COMPLETE|CHOMP_SFX_MUSIC_LOAD_QUEUED)
+         */    
+        uint8_t loadMusic(const char* name, uint8_t operation, int16_t loops);
 
-    /**
-     * Check to see if queue is ready to play next music.
-     * Next music will play if ready.
-     * @return True if queue is ready.
-     */
-    bool checkMusicQueue();
+        /**
+         * Load music file and perform operation.
+         * @param name Char array containing music filename
+         * @param operation Operation to perform (CHOMP_SFX_MUSIC_STOP|CHOMP_SFX_MUSIC_PLAY|CHOMP_SFX_MUSIC_FADEIN|CHOMP_SFX_MUSIC_FADEOUT)
+         * @param loops Number of times to loop music, -1 for infinite
+         * @param fadeDuration Time in milliseconds for fade in/out
+         * @return Status (CHOMP_SFX_MUSIC_LOAD_FAILED|CHOMP_SFX_MUSIC_LOAD_COMPLETE|CHOMP_SFX_MUSIC_LOAD_QUEUED)
+         */        
+        uint8_t loadMusic(const char* name, uint8_t operation, int16_t loops, int16_t fadeDuration);
 
-    /**
-     * Change status of music.
-     * @param operation Operation to perform (MUSIC_STOP|MUSIC_PLAY|MUSIC_FADEIN|MUSIC_FADEOUT)
-     */
-    void setMusic(uint8_t operation);
+        /**
+         * Unload current music.
+         */
+        void unloadMusic();
 
-    /**
-     * Change status of music.
-     * @param operation Operation to perform (MUSIC_STOP|MUSIC_PLAY|MUSIC_FADEIN|MUSIC_FADEOUT)
-     * @param loops Number of times to loop music, -1 for infinite
-     */    
-    void setMusic(uint8_t operation, int16_t loops);
+        /**
+         * Check to see if queue is ready to play next music.
+         * Next music will play if ready.
+         * @return True if queue is ready.
+         */
+        bool checkMusicQueue();
 
-    /**
-     * Change status of music.
-     * @param operation Operation to perform (MUSIC_STOP|MUSIC_PLAY|MUSIC_FADEIN|MUSIC_FADEOUT)
-     * @param loops Number of times to loop music, -1 for infinite
-     * @param fadeDuration Time in milliseconds for fade in/out
-     */    
-    void setMusic(uint8_t operation, int16_t loops, int32_t fadeDuration);
+        /**
+         * Change status of music.
+         * @param operation Operation to perform (CHOMP_SFX_MUSIC_STOP|CHOMP_SFX_MUSIC_PLAY|CHOMP_SFX_MUSIC_FADEIN|CHOMP_SFX_MUSIC_FADEOUT)
+         */
+        void setMusic(uint8_t operation);
 
-    /**
-     * Convienence function that calls setMusic
-     * with parameters to play loaded music.
-     */
-    void play() { setMusic(MUSIC_PLAY); }
+        /**
+         * Change status of music.
+         * @param operation Operation to perform (CHOMP_SFX_MUSIC_STOP|CHOMP_SFX_MUSIC_PLAY|CHOMP_SFX_MUSIC_FADEIN|CHOMP_SFX_MUSIC_FADEOUT)
+         * @param loops Number of times to loop music, -1 for infinite
+         */    
+        void setMusic(uint8_t operation, int16_t loops);
 
-    /**
-     * Convienence function that calls setMusic
-     * with parameters to stop playback of music.
-     */
-    void stop() { setMusic(MUSIC_STOP); }
+        /**
+         * Change status of music.
+         * @param operation Operation to perform (CHOMP_SFX_MUSIC_STOP|CHOMP_SFX_MUSIC_PLAY|CHOMP_SFX_MUSIC_FADEIN|CHOMP_SFX_MUSIC_FADEOUT)
+         * @param loops Number of times to loop music, -1 for infinite
+         * @param fadeDuration Time in milliseconds for fade in/out
+         */    
+        void setMusic(uint8_t operation, int16_t loops, int32_t fadeDuration);
 
-    /**
-     * Convienence function that calls setMusic
-     * with parameters to fade in loaded music.
-     * @param duration Time in ms for fade
-     */
-    void fadeIn(int32_t duration) { setMusic(MUSIC_FADEIN, MUSIC_DEFAULT_LOOPS, duration); }
+        /**
+         * Convienence function that calls setMusic
+         * with parameters to play loaded music.
+         */
+        void play() { setMusic(CHOMP_SFX_MUSIC_PLAY); }
 
-    /**
-     * Convienence function that calls setMusic
-     * with parameters to fade out music.
-     * @param duration Time in ms for fade
-     */
-    void fadeOut(int32_t duration) { setMusic(MUSIC_FADEOUT, MUSIC_DEFAULT_LOOPS, duration); }
+        /**
+         * Convienence function that calls setMusic
+         * with parameters to stop playback of music.
+         */
+        void stop() { setMusic(CHOMP_SFX_MUSIC_STOP); }
 
-    /**
-     * Set volume to play music at.
-     * @param volume Volume as a percentage (0=mute,100=max)
-     */
-    void setVolume(uint8_t volume);
+        /**
+         * Convienence function that calls setMusic
+         * with parameters to fade in loaded music.
+         * @param duration Time in ms for fade
+         */
+        void fadeIn(int32_t duration) { setMusic(CHOMP_SFX_MUSIC_FADEIN, CHOMP_SFX_MUSIC_DEFAULT_LOOPS, duration); }
 
-    /**
-     * Get volume music will play at.
-     * @return Volume as a percentage (0=mute, 100=max)
-     */
-    uint8_t getVolume();
+        /**
+         * Convienence function that calls setMusic
+         * with parameters to fade out music.
+         * @param duration Time in ms for fade
+         */
+        void fadeOut(int32_t duration) { setMusic(CHOMP_SFX_MUSIC_FADEOUT, CHOMP_SFX_MUSIC_DEFAULT_LOOPS, duration); }
 
-protected:
+        /**
+         * Set volume to play music at.
+         * @param volume Volume as a percentage (0=mute,100=max)
+         */
+        void setVolume(uint8_t volume);
 
-    /**
-     * Vector containing raw music data
-     */
-    std::vector<uint8_t> musicData;
-    
-    /**
-     * String containing filename of queued music.
-     */
-    std::string queuedMusic;
+        /**
+         * Get volume music will play at.
+         * @return Volume as a percentage (0=mute, 100=max)
+         */
+        uint8_t getVolume();
 
-    /**
-     * Operation to peform on queued music.
-     */
-    uint8_t queuedMusicOperation;
+    protected:
 
-    /**
-     * Times to loop queued music.
-     */
-    int16_t queuedMusicLoops;
+        /**
+         * Vector containing raw music data
+         */
+        std::vector<uint8_t> musicData;
+        
+        /**
+         * String containing filename of queued music.
+         */
+        std::string queuedMusic;
 
-    /**
-     * Fade duration of looped music.
-     */
-    int32_t queuedMusicFadeDuration;
+        /**
+         * Operation to peform on queued music.
+         */
+        uint8_t queuedMusicOperation;
 
+        /**
+         * Times to loop queued music.
+         */
+        int16_t queuedMusicLoops;
+
+        /**
+         * Fade duration of looped music.
+         */
+        int32_t queuedMusicFadeDuration;
+
+    };
 };
 
 #endif

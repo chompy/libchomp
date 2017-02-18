@@ -5,11 +5,11 @@
 #include "state.h"
 #include "state_play.h"
 
-class ChompyStateMain : public ChompState
+class ChompyStateMain : public Chomp::State
 {
 public:
 
-    ChompyStateMain(ChompCore* _core, ChompyStatePlay* _playState) : ChompState(_core)
+    ChompyStateMain(Chomp::Core* _core, ChompyStatePlay* _playState) : Chomp::State(_core)
     {
         titleText = NULL;
         flavorText = NULL;
@@ -24,9 +24,9 @@ public:
 protected:
 
     ChompyStatePlay* playState;
-    ChompGfxText* titleText;
-    ChompGfxText* flavorText;
-    ChompGfxText* startText;
+    Chomp::GfxText* titleText;
+    Chomp::GfxText* flavorText;
+    Chomp::GfxText* startText;
 
 };
 
