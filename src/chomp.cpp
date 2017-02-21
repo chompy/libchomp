@@ -39,7 +39,7 @@ void Chomp::Entry::start(Chomp::State* state)
     Chomp::Asset::ASSET_BASE_PATH = SDL_GetBasePath();
 
     // set application pref path
-    if (!ORGANIZATION_NAME.empty() && APPLICATION_NAME.empty()) {
+    if (!ORGANIZATION_NAME.empty() && !APPLICATION_NAME.empty()) {
         Chomp::Core::PREF_PATH = SDL_GetPrefPath(ORGANIZATION_NAME.c_str(), APPLICATION_NAME.c_str());
     }
 
