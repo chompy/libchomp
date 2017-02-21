@@ -36,6 +36,13 @@ namespace Chomp
     public:
 
         /**
+         * Application specific path where user
+         * data should be stored.
+         * @see https://wiki.libsdl.org/SDL_GetPrefPath
+         */
+        static char* PREF_PATH;
+
+        /**
          * Graphics object
          */
         Chomp::Gfx gfx;

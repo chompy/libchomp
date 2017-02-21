@@ -18,6 +18,9 @@
 #include "chomp.h"
 uint32_t Chomp::Entry::lastFrameTime = 0;
 float Chomp::Entry::targetFrameDelay = 0;
+std::string Chomp::Entry::ORGANIZATION_NAME = "Libchomp";
+std::string Chomp::Entry::APPLICATION_NAME = "Libchomp";
+char* Chomp::Core::PREF_PATH = NULL;
 
 void Chomp::Entry::start(Chomp::State* state)
 {
@@ -31,6 +34,14 @@ void Chomp::Entry::start(Chomp::State* state)
         return;
     }
     core.deltaTime = 1;
+
+    // set application base path
+    Chomp::Asset::ASSET_BASE_PATH = SDL_GetBasePath();
+
+    // set application pref path
+    if (!ORGANIZATION_NAME.empty() && APPLICATION_NAME.empty()) {
+        Chomp::Core::PREF_PATH = SDL_GetPrefPath(ORGANIZATION_NAME.c_str(), APPLICATION_NAME.c_str());
+    }
 
     // set current state
     Chomp::State::changeState(state);

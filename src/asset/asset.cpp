@@ -17,6 +17,7 @@
 
 #include "asset.h"
 
+char* Chomp::Asset::ASSET_BASE_PATH = NULL;
 const char Chomp::Asset::DEFAULT_ASSET_FILE[] = "assets.dat";
 
 Chomp::Asset::Asset()
@@ -48,8 +49,14 @@ uint8_t Chomp::Asset::readFileByte(const char* name, const uint32_t position)
         return 0;
     }
 
+    // build full file path, if possible
+    std::string filePath = assetFilename;
+    if (ASSET_BASE_PATH) {
+        filePath = std::string(ASSET_BASE_PATH) + assetFilename;
+    }
+
     // open asset file
-    SDL_RWops* file = SDL_RWFromFile(assetFilename.c_str(), "rb");
+    SDL_RWops* file = SDL_RWFromFile(filePath.c_str(), "rb");
     if (!file) {
         std::string message = "Unable to open asset file. (" + assetFilename + ")";
         throw Chomp::AssetException(message.c_str());
@@ -85,8 +92,14 @@ void Chomp::Asset::readFile(const char* name, const uint32_t position, void* buf
         return;
     }
 
+    // build full file path, if possible
+    std::string filePath = assetFilename;
+    if (ASSET_BASE_PATH) {
+        filePath = std::string(ASSET_BASE_PATH) + assetFilename;
+    }
+
     // open asset file
-    SDL_RWops* file = SDL_RWFromFile(assetFilename.c_str(), "rb");
+    SDL_RWops* file = SDL_RWFromFile(filePath.c_str(), "rb");
     if (!file) {
         std::string message = "Unable to open asset file. (" + assetFilename + ")";
         throw Chomp::AssetException(message.c_str());
@@ -119,8 +132,14 @@ uint32_t Chomp::Asset::getAssetSize(const char* name)
 void Chomp::Asset::getAssetData(const char* name, uint32_t* position, uint32_t* size, uint8_t* nameLength)
 {
 
+    // build full file path, if possible
+    std::string filePath = assetFilename;
+    if (ASSET_BASE_PATH) {
+        filePath = std::string(ASSET_BASE_PATH) + assetFilename;
+    }
+
     // open asset file
-    SDL_RWops* file = SDL_RWFromFile(assetFilename.c_str(), "rb");
+    SDL_RWops* file = SDL_RWFromFile(filePath.c_str(), "rb");
     if (!file) {
         std::string message = "Unable to open asset file. (" + assetFilename + ")";
         throw Chomp::AssetException(message.c_str());

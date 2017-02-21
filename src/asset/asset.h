@@ -33,6 +33,12 @@ namespace Chomp
     public:
 
         /**
+         * Path to application data directory.
+         * @see https://wiki.libsdl.org/SDL_GetBasePath
+         */
+        static char* ASSET_BASE_PATH;
+
+        /**
          * Name of default file with asset data.
          */
         static const char DEFAULT_ASSET_FILE[];

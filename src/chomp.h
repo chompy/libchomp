@@ -18,6 +18,7 @@
 #ifndef CHOMP_H
 #define CHOMP_H
 
+#include <string>
 #include "exception/sdl_exception.h"
 #include "state.h"
 #include "core.h"
@@ -37,6 +38,20 @@ namespace Chomp
     {
 
     public:
+
+        /**
+         * Name of developer's organization.
+         * This should be set before calling the
+         * 'start' method.
+         */
+        static std::string ORGANIZATION_NAME;
+
+        /**
+         * Name of application.
+         * This should be set before calling the
+         * 'start' method.
+         */
+        static std::string APPLICATION_NAME;
 
         /**
          * Core object.
