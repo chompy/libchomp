@@ -31,7 +31,7 @@ def parse_json(fullpath):
     with open(fullpath, "r") as fp:
         return json.loads( fp.read() )
 
-class AssetCompiler:
+class AssetCompilerCore:
 
     DEFAULT_ANIMATION_FPS = 24
     OUTPUT_PATH = "assets.dat"
@@ -345,3 +345,6 @@ class AssetCompiler:
     # modify final output
     def output(self, outputBuffer):
         return outputBuffer
+
+class AssetCompiler(AssetCompilerCore):
+    pass
