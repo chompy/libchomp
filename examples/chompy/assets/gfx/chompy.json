@@ -1,8 +1,6 @@
 {
     "frame_size" : [128,128],
-    "source" : {
-        "sdl2" : "chompy.png"
-    },
+    "source" : "chompy.png",
     "animation" : {
         "stop" : ["0-20"],
         "walk" : ["21-40"]

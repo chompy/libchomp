@@ -1,5 +1,3 @@
 {
-    "source" : {
-        "sdl2" : "organfinale.mp3"
-    }
+    "source" : "organfinale.mp3"
 }

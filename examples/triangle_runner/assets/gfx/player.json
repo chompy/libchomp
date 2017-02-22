@@ -1,8 +1,6 @@
 {
     "frame_size" : [1024,1024],
-    "source" : {
-        "sdl2" : "player.png"
-    },
+    "source" : "player.png",
     "animation" : {
         "stop" : [0],
         "move" : [0],

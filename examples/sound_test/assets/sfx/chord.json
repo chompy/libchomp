@@ -1,5 +1,3 @@
 {
-    "source" : {
-        "sdl2" : "chord.wav"
-    }
+    "source" : "chord.wav"
 }

@@ -1,6 +1,4 @@
 {
     "frame_size" : [256,1024],
-    "source" : {
-        "sdl2" : "wall.png"
-    }
+    "source" : "wall.png"
 }

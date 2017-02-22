@@ -31,9 +31,8 @@ def parse_json(fullpath):
     with open(fullpath, "r") as fp:
         return json.loads( fp.read() )
 
-class AssetCompilerCore:
+class AssetCompiler:
 
-    PLATFORM_NAME = "core"
     DEFAULT_ANIMATION_FPS = 24
     OUTPUT_PATH = "assets.dat"
     RAND_MAX = 32767
@@ -41,6 +40,10 @@ class AssetCompilerCore:
     CONFIG_TYPE_STRING = 0
     CONFIG_TYPE_INT = 1
     CONFIG_TYPE_FLOAT = 2
+
+    def __init__(self, config = {}):
+        if "output" in config and config["output"]:
+            self.OUTPUT_PATH = config["output"]
 
     def compile_game_controller_db(self, filePath):
 
@@ -115,11 +118,11 @@ class AssetCompilerCore:
         config = parse_json(filePath)
 
         # determine filename of sprite
-        if not "source" in config or not self.PLATFORM_NAME in config["source"]:
+        if not "source" in config or not config["source"] or type(config["source"]) is not str:
             print("skipped")
             print("\t----> sprite '%s' not provided" % os.path.splitext(filePath)[0])
             return None
-        spriteFilename = config["source"][self.PLATFORM_NAME]
+        spriteFilename = config["source"]
 
         # name of sprite
         spriteName = os.path.splitext(os.path.basename(filePath))[0].strip().replace(" ", "_").lower()[:255]
@@ -308,11 +311,11 @@ class AssetCompilerCore:
         config = parse_json(filepath)
 
         # determine filename of audio clip
-        if not "source" in config or not self.PLATFORM_NAME in config["source"]:
+        if not "source" in config or not config["source"] or type(config["source"]) is not str:
             print("skipped")
             print("\t----> audio '%s' not provided" % os.path.splitext(filepath)[0])
             return None
-        audioFilename = config["source"][self.PLATFORM_NAME]
+        audioFilename = config["source"]
         audioExt = os.path.splitext(audioFilename)[1].replace(".", "")
 
         # name of audio clip

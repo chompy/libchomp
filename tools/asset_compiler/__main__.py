@@ -18,6 +18,7 @@
 import sys
 import loader
 import os
+import core
 
 # list of compilers and their configurations
 COMPILERS = {
@@ -53,16 +54,15 @@ COMPILERS = {
     }
 }
 
-# default platform
-platform = "sdl2"
+# default config
+config = {
+    "output" : "asset.dat" # output filepath
+}
 
-# set arguements
+# set config from arguments
 for arg in sys.argv:
+    for i in config.keys():
+        if arg[:len(i) + 3] == ("--%s=" % i):
+            config[i] = arg[len(i) + 3:]
 
-    # set compiler platform
-    if arg[:11] == "--platform=":
-        platform = arg[11:].strip()
-    elif arg == "--sdl2":
-        platform = "sdl2" 
-
-loader.run(COMPILERS, __import__(platform))
+loader.run(COMPILERS, core, config)

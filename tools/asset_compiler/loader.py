@@ -18,10 +18,10 @@
 import os
 import struct
 
-def run(compilerConfig, compiler):
+def run(compilerConfig, compiler, config = {}):
 
     # get platform compiler module
-    compiler = compiler.AssetCompiler()
+    compiler = compiler.AssetCompiler(config)
 
     # data to compile
     dataBuffer = []
