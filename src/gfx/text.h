@@ -49,6 +49,7 @@ namespace Chomp
          * Constructor.
          * @param _renderer SDL Renderer
          * @param _fontData Byte array containing font data
+         * @param fontDataSize Length of font data
          * @param fontPtSize Point size of font
          * @param _texture SDL Texture to draw to
          * @param _size Size of layer
