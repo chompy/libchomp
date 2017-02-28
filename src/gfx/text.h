@@ -30,6 +30,9 @@
 #define CHOMP_GFX_TEXT_MIDDLE 1
 #define CHOMP_GFX_TEXT_BOTTOM 2
 
+#define CHOMP_GFX_TEXT_DRAW_MODE_SOLID 0
+#define CHOMP_GFX_TEXT_DRAW_MODE_BLENDED 1
+
 namespace Chomp
 {
 
@@ -95,6 +98,12 @@ namespace Chomp
          */
         void setText(const char* text, const uint8_t hAlign, const uint8_t vAlign);
 
+        /**
+         * Set draw mode. (solid, blended, etc)
+         * @param _drawMode Draw mode (CHOMP_GFX_TEXT_DRAW_MODE_SOLID|CHOMP_GFX_TEXT_DRAW_MODE_BLENDED)
+         */
+        void setDrawMode(uint8_t _drawMode);
+
     protected:
 
         /**
@@ -122,6 +131,11 @@ namespace Chomp
         void* font;
 
         #endif
+
+        /**
+         * Draw mode. (solid, blended, etc)
+         */
+        uint8_t drawMode;
 
         /**
          * Set current font.

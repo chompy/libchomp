@@ -6,7 +6,9 @@ void ChompyStateMain::enter()
         Chomp::GfxSize layerSize;
         layerSize.w = 1;
         layerSize.h = 1;
+        
         textLayer = core->gfx.newTextLayer("impact", 48, &layerSize);
+        textLayer->setDrawMode(CHOMP_GFX_TEXT_DRAW_MODE_BLENDED);
 
         Chomp::GfxColor color;
         color.r = 255;

@@ -18,6 +18,7 @@ void ChompyStateMain::enter()
         textLayerSize.w = .75;
         textLayerSize.h = .1;
         activeGamepadCountText = core->gfx.newTextLayer("ariali", 24, &textLayerSize);
+        activeGamepadCountText->setDrawMode(CHOMP_GFX_TEXT_DRAW_MODE_BLENDED);
     }
     // create active input text
     if (!activeInputText) {
@@ -25,6 +26,7 @@ void ChompyStateMain::enter()
         textLayerSize.w = 1.0;
         textLayerSize.h = .85;
         activeInputText = core->gfx.newTextLayer("ariali", 18, &textLayerSize);
+        activeInputText->setDrawMode(CHOMP_GFX_TEXT_DRAW_MODE_BLENDED);
     }
 
 }

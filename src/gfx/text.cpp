@@ -130,12 +130,29 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
         std::string line = lines[i];
 
         // create texture surface
-        // @TODO option to use other render methods
-        SDL_Surface* textSurface = TTF_RenderText_Blended(
-            font,
-            line.c_str(),
-            color
-        );
+        SDL_Surface* textSurface = NULL;
+        switch (drawMode)
+        {
+            case CHOMP_GFX_TEXT_DRAW_MODE_BLENDED:
+            {
+                textSurface = TTF_RenderText_Blended(
+                    font,
+                    line.c_str(),
+                    color
+                );
+                break;
+            }
+            default:
+            {
+                textSurface = TTF_RenderText_Solid(
+                    font,
+                    line.c_str(),
+                    color
+                );
+                break;
+            }
+        }        
+
         if (!textSurface) {
             throw Chomp::SdlTtfException();
         }
@@ -195,4 +212,21 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
     }
     #endif
 
+}
+
+void Chomp::GfxText::setDrawMode(uint8_t _drawMode)
+{
+    switch (_drawMode)
+    {
+        case CHOMP_GFX_TEXT_DRAW_MODE_BLENDED:
+        {
+            drawMode = CHOMP_GFX_TEXT_DRAW_MODE_BLENDED;
+            break;
+        }
+        default:
+        {
+            drawMode = CHOMP_GFX_TEXT_DRAW_MODE_SOLID;
+            break;
+        }
+    }
 }
