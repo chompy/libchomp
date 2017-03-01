@@ -1,5 +1,6 @@
 build
 assets.dat
+asset.dat
 doc
 *.sublime-project
 *.sublime-workspace
