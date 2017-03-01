@@ -167,18 +167,6 @@ namespace Chomp
         Chomp::GfxText* newTextLayer(const char* fontName, const uint16_t ptSize, Chomp::GfxSize* size);
 
         /**
-         * Create a text render layer for displaying text
-         * of a given font. Set pixel width and height of layer.
-         * @param fontName Char array containing font filename
-         * @param ptSize Point size of font
-         * @param pixelWidth Desired pixel width
-         * @param pixelHeight Desired pixel height
-         * @param Struct containing desired size of layer
-         * @return Pointer to layer
-         */    
-        Chomp::GfxText* newTextLayer(const char* fontName, const uint16_t ptSize, const uint16_t pixelWidth, const uint16_t pixelHeight, Chomp::GfxSize* size);
-
-        /**
          * Add given layer to render queue. The render
          * order is affected by the layer's zIndex value.
          * @param layer Layer to add to queue

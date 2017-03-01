@@ -65,16 +65,13 @@ std::vector<std::string> Chomp::GfxText::getLines(const char* text)
         return lines;
     }
     std::string line;
-    int w;
     for(uint16_t i = 0; i < strlen(text); i++) {
         // null terminator
         if (text[i] == '\0') {
             break;
         }
-        // get current line size
-        TTF_SizeText(font, line.c_str(), &w, NULL);
         // new line
-        if (text[i] == '\n' || w > getPixelWidth()) {
+        if (text[i] == '\n') {
             lines.push_back(line);
             line.clear();
             continue;
@@ -121,12 +118,19 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
     }
 
     #ifndef WITHOUT_SDL_TTF
+    
     // get lines
     std::vector<std::string> lines = getLines(text);
     uint16_t lineY = 0;
 
+    // vector containing each line of text as SDL_Surface pointer
+    std::vector<SDL_Surface*> textSurfaces;
+
     // iterate lines
+    uint32_t maxWidth = 0;
+    uint32_t totalHeight = 0;
     for (uint16_t i = 0; i < lines.size(); i++) {
+
         std::string line = lines[i];
 
         // create texture surface
@@ -157,39 +161,75 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
             throw Chomp::SdlTtfException();
         }
 
-        // convert to texture
+        if (textSurface->w > maxWidth) {
+            maxWidth = textSurface->w;
+        }
+        totalHeight += textSurface->h;
+
+        textSurfaces.push_back(textSurface);
+
+    }
+
+    // create layer texture
+    uint32_t actualHeight = (size.h / size.w) * (float) maxWidth;
+    texture = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        maxWidth,
+        actualHeight
+    );
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(renderer, texture);
+    setPixelSize();
+
+    // dest rect for drawing text surfaces
+    SDL_Rect destRect;
+
+    // determine vertical alignment
+    destRect.y = 0;
+    switch (vAlign)
+    {
+        case CHOMP_GFX_TEXT_MIDDLE:
+        {
+            if (totalHeight < actualHeight) {
+                destRect.y = (actualHeight / 2) - (totalHeight / 2);
+            }
+            break;
+        }
+        case CHOMP_GFX_TEXT_BOTTOM:
+        {
+            if (totalHeight < actualHeight) {
+                destRect.y = actualHeight - totalHeight;
+            }  
+            break;
+        }
+    }
+
+    for (uint16_t i = 0; i < textSurfaces.size(); i++) {
+
+        // create text texture from surface
         SDL_Texture* textTexture = SDL_CreateTextureFromSurface(
             renderer,
-            textSurface
+            textSurfaces[i]
         );
-        if (!textTexture) {
-            throw Chomp::SdlException();
-        }
-        SDL_Rect destRect = {0, lineY, textSurface->w, textSurface->h}; 
-        SDL_FreeSurface(textSurface);
 
-        // alignment
-        switch (hAlign) {
+        // set dest rect size
+        destRect.w = textSurfaces[i]->w;
+        destRect.h = textSurfaces[i]->h;
+
+        // set dest rect based on hor alignment
+        destRect.x = 0;
+        switch (hAlign)
+        {
             case CHOMP_GFX_TEXT_CENTER:
             {
-                destRect.x = (getPixelWidth() / 2) - (textSurface->w / 2);
+                destRect.x = (maxWidth / 2) - (textSurfaces[i]->w / 2);
                 break;
             }
-            case CHOMP_GFX_TEXT_RIGHT:
+            case CHOMP_GFX_TEXT_LEFT:
             {
-                destRect.x = getPixelWidth() - textSurface->w;
-                break;
-            }
-        }
-        switch (vAlign) {
-            case CHOMP_GFX_TEXT_MIDDLE:
-            {
-                destRect.y = (getPixelHeight() / 2) - (textSurface->h / 2);
-                break;
-            }
-            case CHOMP_GFX_TEXT_BOTTOM:
-            {
-                destRect.y = getPixelHeight() - textSurface->h;
+                destRect.x = maxWidth - textSurfaces[i]->w;
                 break;
             }
         }
@@ -205,10 +245,14 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
         ) {
             throw Chomp::SdlException();
         }
+
+        // inc y position
+        destRect.y += textSurfaces[i]->h;
+
+        // free text surface and texture
+        SDL_FreeSurface(textSurfaces[i]);
         SDL_DestroyTexture(textTexture);
 
-        // next line
-        lineY += destRect.h;
     }
     #endif
 

@@ -62,9 +62,8 @@ namespace Chomp
             uint8_t* _fontData,
             const uint32_t fontDataSize,
             const uint16_t fontPtSize,
-            SDL_Texture* _texture,
             Chomp::GfxSize* _size
-        ) : Chomp::GfxLayer(_renderer, _texture, _size)
+        ) : Chomp::GfxLayer(_renderer, NULL, _size)
         {
             fontData = NULL;
             fontDataRW = NULL;

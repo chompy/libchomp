@@ -230,17 +230,6 @@ Chomp::GfxSprite* Chomp::Gfx::newSprite(const char* spriteName, Chomp::GfxSize* 
 
 Chomp::GfxText* Chomp::Gfx::newTextLayer(const char* fontName, const uint16_t ptSize, Chomp::GfxSize* size)
 {
-    return newTextLayer(
-        fontName,
-        ptSize,
-        size->w * CHOMP_GFX_DEFAULT_LAYER_PIXEL_SIZE,
-        size->h * CHOMP_GFX_DEFAULT_LAYER_PIXEL_SIZE,
-        size
-    );
-}
-
-Chomp::GfxText* Chomp::Gfx::newTextLayer(const char* fontName, const uint16_t ptSize, const uint16_t pixelWidth, const uint16_t pixelHeight, Chomp::GfxSize* size)
-{
     if (!fontName) {
         return NULL;
     }
@@ -253,22 +242,12 @@ Chomp::GfxText* Chomp::Gfx::newTextLayer(const char* fontName, const uint16_t pt
     // get font data
     std::vector<uint8_t> fontData(fileSize, 0);
     asset.readFile(assetName.c_str(), 0, &fontData[0], fileSize);
-    // new texture
-    SDL_Texture* texture = SDL_CreateTexture(
-        renderer,
-        SDL_PIXELFORMAT_RGBA8888,
-        SDL_TEXTUREACCESS_TARGET,
-        pixelWidth,
-        pixelHeight
-    );
-    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     // new text layer
     return new Chomp::GfxText(
         renderer,
         &fontData[0],
         fileSize,
         ptSize,
-        texture,
         size
     );
 }
