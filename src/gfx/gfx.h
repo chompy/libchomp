@@ -67,9 +67,7 @@ namespace Chomp
         ~Gfx();
 
         /**
-         * Get size of window using a relative
-         * coordinate system based on the windows
-         * aspect ratio. (1.8 x 1.0 = 16:9)
+         * Get pixel size of window
          * @return Struct containing window size
          */
         Chomp::GfxSize getWindowSize();
@@ -81,24 +79,7 @@ namespace Chomp
         void setWindowTitle(const char* title);
 
         /**
-         * Convert relative size to pixel size.
-         * @param size Struct containing relative size
-         * @param width Buffer to fill with pixel width
-         * @param height Buffer to fill with pixel height
-         */
-        void toPixelSize(Chomp::GfxSize* size, uint16_t* width, uint16_t* height);
-
-        /**
-         * Convert pixel size to relative size.
-         * @param width Pixel width
-         * @param height Pixel height
-         * @return Struct containing relative size
-         */
-        Chomp::GfxSize fromPixelSize(const uint16_t width, const uint16_t height);
-
-        /**
-         * Get position of camera with relative coordinate
-         * system.
+         * Get pixel position of camera
          * @return Struct with camera coordinates
          */
         Chomp::GfxPosition getCameraPosition();

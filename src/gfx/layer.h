@@ -36,9 +36,8 @@ namespace Chomp
          * Constructor.
          * _renderer SDL renderer
          * _texture SDL texture to draw to
-         * _size Size of layer
          */
-        GfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture, Chomp::GfxSize* _size);
+        GfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture);
 
         /**
          * Destructor.
@@ -49,12 +48,6 @@ namespace Chomp
          * SDL texture to render to.
          */
         SDL_Texture* texture;
-
-        /**
-         * Size to render layer at in
-         * the relative coordinate system.    
-         */
-        Chomp::GfxSize size;
 
         /**
          * Defines render order.
@@ -73,75 +66,10 @@ namespace Chomp
         uint8_t flip;
 
         /**
-         * Convert relative size to pixel size relative to
-         * to the pixel size of this layer.
-         * @param _size Relative size to convert
-         * @param w Filled with pixel width
-         * @param h Filled with pixel height
+         * Get pixel size of layer.
+         * @return Layer size
          */
-        void toPixels(Chomp::GfxSize* _size, uint16_t* w, uint16_t* h);
-
-        /**
-         * Convert relative position to pixel position relative to
-         * to the pixel size of this layer.
-         * @param _pos Relative position to convert
-         * @param x Filled with pixel x
-         * @param y Filled with pixel y
-         */    
-        void toPixels(Chomp::GfxPosition* _pos, uint16_t* x, uint16_t* y);
-
-        /**
-         * Convert relative rect to pixels relative to
-         * to the pixel size of this layer.
-         * @param _rect Rect
-         * @param x Filled with pixel x
-         * @param y Filled with pixel y
-         * @param w Filled with pixel width
-         * @param h Filled with pixel height
-         */    
-        void toPixels(Chomp::GfxRect* _rect, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h);
-
-        /**
-         * Convert given pixel width and height to relative
-         * coordinate pixel size in this layer.
-         * @param w pixel width
-         * @param h pixel height
-         * @return Struct with relative size
-         */    
-        Chomp::GfxSize getPixelSize(const uint16_t w, const uint16_t h);
-
-        /**
-         * Convert given pixel x and y to relative
-         * coordinate pixel position in this layer.
-         * @param x pixel x
-         * @param y pixel y
-         * @return Struct with relative position
-         */
-        Chomp::GfxPosition getPixelPosition(const uint16_t x, const uint16_t y);
-
-        /**
-         * Get pixel width of layer.
-         * @return Pixel width
-         */
-        uint16_t getPixelWidth() { return pixelWidth; }
-
-        /**
-         * Get pixel height of layer.
-         * @return Pixel height
-         */
-        uint16_t getPixelHeight() { return pixelHeight; }
-
-        /**
-         * Get pixel width of one relative position unit.
-         * @return Pixel width
-         */
-        uint16_t getPixelUnitWidth() { return pixelUnitWidth; }
-
-        /**
-         * Get pixel height of one relative position unit.
-         * @return Pixel height
-         */
-        uint16_t getPixelUnitHeight() { return pixelUnitHeight; }
+        Chomp::GfxSize size();
 
         /**
          * Compare two rects for collision.
@@ -231,32 +159,6 @@ namespace Chomp
          * SDL Renderer
          */
         SDL_Renderer* renderer;
-
-        /**
-         * Pixel width of layer.
-         */
-        uint16_t pixelWidth;
-
-        /**
-         * Pixel height of layer.
-         */
-        uint16_t pixelHeight;
-
-        /**
-         * Pixel width of one unit for this layer.
-         */
-        uint16_t pixelUnitWidth;
-
-        /**
-         * Pixel height of one unit for this layer.
-         */
-        uint16_t pixelUnitHeight;
-
-        /**
-         * Calculate pixel unit sizes from pixel
-         * size of layer's SDL Texture.
-         */
-        void setPixelSize();
 
     };
 };

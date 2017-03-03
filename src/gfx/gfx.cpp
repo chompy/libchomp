@@ -84,13 +84,8 @@ Chomp::GfxSize Chomp::Gfx::getWindowSize()
     int ww,wh;
     SDL_GetWindowSize(window, &ww, &wh);
     Chomp::GfxSize size;
-    if (ww > wh) {
-        size.h = 1.0;
-        size.w = (float) ww / (float) wh;
-    } else {
-        size.w = 1.0;
-        size.h = (float) wh / (float) ww;
-    }
+    size.w = ww;
+    size.h = wh;
     return size;
 }
 
@@ -105,34 +100,6 @@ void Chomp::Gfx::setWindowTitle(const char* title)
 Chomp::GfxPosition Chomp::Gfx::getCameraPosition()
 {
     return camera;
-}
-
-void Chomp::Gfx::toPixelSize(Chomp::GfxSize* size, uint16_t* width, uint16_t* height)
-{
-    int ww,wh;
-    SDL_GetWindowSize(window, &ww, &wh);
-    if (ww > wh) {
-        *width = (uint16_t) abs( (size ? size->w : 1.0) * (float) wh );
-        *height = (uint16_t) abs( (size ? size->h : 1.0) * (float) wh );
-    } else {
-        *width = (uint16_t) abs( (size ? size->w : 1.0) * (float) ww );
-        *height = (uint16_t) abs( (size ? size->h : 1.0) * (float) ww );
-    }
-}
-
-Chomp::GfxSize Chomp::Gfx::fromPixelSize(const uint16_t width, const uint16_t height)
-{
-    Chomp::GfxSize size;
-    int ww,wh;
-    SDL_GetWindowSize(window, &ww, &wh);    
-    if (ww > wh) {
-        size.w = width / (float) wh;
-        size.h = height / (float) wh;
-    } else {
-        size.w = width / (float) ww;
-        size.h = height / (float) ww;
-    }
-    return size;
 }
 
 void Chomp::Gfx::setCameraPosition(Chomp::GfxPosition* position)
@@ -173,36 +140,34 @@ Chomp::GfxLayer* Chomp::Gfx::newLayer(Chomp::GfxSize* size)
     );
 }
 
-Chomp::GfxLayer* Chomp::Gfx::newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, Chomp::GfxSize* size)
+Chomp::GfxLayer* Chomp::Gfx::newLayer(Chomp::GfxSize* size)
 {
     SDL_Texture* texture = SDL_CreateTexture(
         renderer,
         SDL_PIXELFORMAT_RGBA8888,
         SDL_TEXTUREACCESS_TARGET,
-        pixelWidth,
-        pixelHeight
+        size->w,
+        size->h
     );
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     return new Chomp::GfxLayer(
         renderer,
-        texture,
-        size
+        texture
     );
 }
 
-Chomp::GfxLayer* Chomp::Gfx::newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame, Chomp::GfxSize* size)
+Chomp::GfxLayer* Chomp::Gfx::newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame)
 {
     if (!bitmap) {
         return NULL;
     }
     return new Chomp::GfxLayer(
         renderer,
-        Chomp::Bitmap::getTexture(renderer, bitmap, frame),
-        size
+        Chomp::Bitmap::getTexture(renderer, bitmap, frame)
     );
 }
 
-Chomp::GfxSprite* Chomp::Gfx::newSprite(const char* spriteName, Chomp::GfxSize* size)
+Chomp::GfxSprite* Chomp::Gfx::newSprite(const char* spriteName)
 {
     if (!spriteName) {
         return NULL;
@@ -224,7 +189,6 @@ Chomp::GfxSprite* Chomp::Gfx::newSprite(const char* spriteName, Chomp::GfxSize* 
     return new Chomp::GfxSprite(
         renderer,
         &bitmap[0],
-        size
     );
 }
 
@@ -260,12 +224,12 @@ void Chomp::Gfx::addLayerToRenderer(Chomp::GfxLayer* layer, Chomp::GfxRect* srcR
     RenderLayers renderLayer;
     renderLayer.srcRect.x = srcRect ? srcRect->x : 0;
     renderLayer.srcRect.y = srcRect ? srcRect->y : 0;
-    renderLayer.srcRect.w = srcRect ? srcRect->w : layer->size.w;
-    renderLayer.srcRect.h = srcRect ? srcRect->h : layer->size.h;
+    renderLayer.srcRect.w = srcRect ? srcRect->w : layer->size().w;
+    renderLayer.srcRect.h = srcRect ? srcRect->h : layer->size().h;
     renderLayer.dstRect.x = dstRect ? dstRect->x : 0;
     renderLayer.dstRect.y = dstRect ? dstRect->y : 0;
-    renderLayer.dstRect.w = dstRect ? dstRect->w : layer->size.w;
-    renderLayer.dstRect.h = dstRect ? dstRect->h : layer->size.h;
+    renderLayer.dstRect.w = dstRect ? dstRect->w : layer->size().w;
+    renderLayer.dstRect.h = dstRect ? dstRect->h : layer->size().h;
 
     renderLayer.layer = layer;
     renderLayers.push_back(renderLayer);
@@ -288,9 +252,8 @@ void Chomp::Gfx::render()
     setDrawColor(&originalColor);
     #endif
 
-    int windowPixelWidth,windowPixelHeight;
+    int windowPixelWidth, windowPixelHeight;
     SDL_GetWindowSize(window, &windowPixelWidth, &windowPixelHeight); 
-    uint16_t windowUnitSize = windowPixelWidth > windowPixelHeight ? windowPixelHeight : windowPixelWidth;
     std::sort(renderLayers.begin(), renderLayers.end());
 
     for (uint16_t i = 0; i < renderLayers.size(); i++) {
@@ -300,8 +263,6 @@ void Chomp::Gfx::render()
             renderLayer.layer,
             &renderLayer.srcRect,
             &renderLayer.dstRect,
-            windowUnitSize,
-            windowUnitSize
         );
 
     }

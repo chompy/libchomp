@@ -33,8 +33,8 @@ namespace Chomp
      */
     struct GfxSize
     {
-        float w; /**< width >*/
-        float h; /**< height >*/
+        int32_t w; /**< width >*/
+        int32_t h; /**< height >*/
     };
 
     /**
@@ -42,8 +42,8 @@ namespace Chomp
      */
     struct GfxPosition
     {
-        float x; /**< x position >*/
-        float y; /**< y position >*/
+        int32_t x; /**< x position >*/
+        int32_t y; /**< y position >*/
     };
 
     /**
@@ -51,10 +51,10 @@ namespace Chomp
      */
     struct GfxRect
     {
-        float x; /**< x position >*/
-        float y; /**< y position >*/
-        float w; /**< width >*/
-        float h; /**< height >*/
+        int32_t x; /**< x position >*/
+        int32_t y; /**< y position >*/
+        int32_t w; /**< width >*/
+        int32_t h; /**< height >*/
     };
 
     /**

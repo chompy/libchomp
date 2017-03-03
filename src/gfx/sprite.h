@@ -52,9 +52,8 @@ namespace Chomp
          * Constructor.
          * @param _renderer SDL Renderer
          * @param bitmap Bitmap data
-         * @param _size Size of layer
          */
-        GfxSprite(SDL_Renderer* _renderer, uint8_t* bitmap, Chomp::GfxSize* _size) : Chomp::GfxLayer(_renderer, NULL, _size)
+        GfxSprite(SDL_Renderer* _renderer, uint8_t* bitmap) : Chomp::GfxLayer(_renderer, NULL)
         {
             animationFramerate = 10;
             setTextures(bitmap);

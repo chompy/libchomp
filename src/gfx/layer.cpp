@@ -17,16 +17,13 @@
 
 #include "layer.h"
 
-Chomp::GfxLayer::GfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture, Chomp::GfxSize* _size)
+Chomp::GfxLayer::GfxLayer(SDL_Renderer* _renderer, SDL_Texture* _texture)
 {
     renderer = _renderer;
     texture = _texture;
-    size.w = _size ? _size->w : 1;
-    size.h = _size ? _size->h : 1;
     zIndex = 0;
     rotation = 0;
     flip = CHOMP_GFX_FLIP_NONE;
-    setPixelSize();
 }
 
 Chomp::GfxLayer::~GfxLayer()
@@ -36,41 +33,19 @@ Chomp::GfxLayer::~GfxLayer()
     }
 }
 
-void Chomp::GfxLayer::toPixels(Chomp::GfxSize* _size, uint16_t* w, uint16_t* h)
+Chomp::GfxSize Chomp::GfxLayer::size()
 {
-    *w = (uint16_t) abs( _size ? (float) _size->w * (float) pixelUnitWidth : pixelUnitWidth );
-    *h = (uint16_t) abs( _size ? (float) _size->h * (float) pixelUnitHeight : pixelUnitHeight );
-}
-
-void Chomp::GfxLayer::toPixels(Chomp::GfxPosition* pos, uint16_t* x, uint16_t* y)
-{
-    *x = (uint16_t) abs( pos ? (float) pos->x * (float) pixelUnitWidth : pixelUnitWidth );
-    *y = (uint16_t) abs( pos ? (float) pos->y * (float) pixelUnitHeight : pixelUnitHeight );
-}
-
-void Chomp::GfxLayer::toPixels(Chomp::GfxRect* rect, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h)
-{
-    *x = (uint16_t) abs( rect ? (float) rect->x * (float) pixelUnitWidth : pixelUnitWidth );
-    *y = (uint16_t) abs( rect ? (float) rect->y * (float) pixelUnitHeight : pixelUnitHeight );
-    *w = (uint16_t) abs( rect ? (float) rect->w * (float) pixelUnitWidth : pixelUnitWidth );
-    *h = (uint16_t) abs( rect ? (float) rect->h * (float) pixelUnitHeight : pixelUnitHeight );
-}
-
-Chomp::GfxSize Chomp::GfxLayer::getPixelSize(const uint16_t w, const uint16_t h)
-{
-    Chomp::GfxSize _size;
-    _size.w = (float) w / (float) pixelUnitWidth;
-    _size.h = (float) h / (float) pixelUnitHeight;
-    return _size;
-}
-
-Chomp::GfxPosition Chomp::GfxLayer::getPixelPosition(const uint16_t x, const uint16_t y)
-{
-    Chomp::GfxSize size = getPixelSize(x, y);
-    Chomp::GfxPosition pos;
-    pos.x = size.w;
-    pos.y = size.h;
-    return pos;
+    Chomp::GfxSize size;
+    size.w = 0;
+    size.h = 0;
+    if (!texture) {
+        return size;
+    }
+    int w, h;
+    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    size.w = w;
+    size.h = h;
+    return size;
 }
 
 bool Chomp::GfxLayer::hasCollision(Chomp::GfxRect* rect1, Chomp::GfxRect* rect2)
@@ -90,8 +65,8 @@ bool Chomp::GfxLayer::hasCollision(Chomp::GfxPosition* pos1, Chomp::GfxRect* rec
     Chomp::GfxRect rect1;
     rect1.x = pos1->x;
     rect1.y = pos1->y;
-    rect1.w = size.w;
-    rect1.h = size.h;
+    rect1.w = size().w;
+    rect1.h = size().h;
     return hasCollision(
         &rect1,
         rect2
@@ -111,8 +86,8 @@ bool Chomp::GfxLayer::hasCollision(Chomp::GfxPosition* pos1, Chomp::GfxLayer* la
     Chomp::GfxRect rect2;
     rect2.x = pos2->x;
     rect2.y = pos2->y;
-    rect2.w = layer2->size.w;
-    rect2.w = layer2->size.h;
+    rect2.w = layer2->size().w;
+    rect2.w = layer2->size().h;
     return hasCollision(
         &rect1,
         &rect2
@@ -194,14 +169,12 @@ void Chomp::GfxLayer::drawLayerToLayer(SDL_Renderer* renderer, Chomp::GfxLayer* 
         renderer,
         srcLayer,
         srcRect,
-        dstRect,
-        dstLayer->getPixelUnitWidth(),
-        dstLayer->getPixelUnitHeight()
+        dstRect
     );
 
 }
 
-void Chomp::GfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, Chomp::GfxLayer* srcLayer, Chomp::GfxRect* srcRect, Chomp::GfxRect* dstRect, uint16_t targetUnitWidth, uint16_t targetUnitHeight)
+void Chomp::GfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, Chomp::GfxLayer* srcLayer, Chomp::GfxRect* srcRect, Chomp::GfxRect* dstRect)
 {
 
     // must have renderer and source layer
@@ -210,16 +183,16 @@ void Chomp::GfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, Chomp::Gfx
     }
 
     SDL_Rect sdlSrcRect;
-    sdlSrcRect.x = srcRect ? srcRect->x * srcLayer->getPixelUnitWidth() : 0;
-    sdlSrcRect.y = srcRect ? srcRect->y * srcLayer->getPixelUnitHeight() : 0;
-    sdlSrcRect.w = srcRect ? srcRect->w * srcLayer->getPixelUnitWidth() : srcLayer->size.w * srcLayer->getPixelUnitWidth();
-    sdlSrcRect.h = srcRect ? srcRect->h * srcLayer->getPixelUnitHeight() : srcLayer->size.h * srcLayer->getPixelUnitHeight();
+    sdlSrcRect.x = srcRect ? srcRect->x : 0;
+    sdlSrcRect.y = srcRect ? srcRect->y : 0;
+    sdlSrcRect.w = srcRect ? srcRect->w : srcLayer->size().w;
+    sdlSrcRect.h = srcRect ? srcRect->h : srcLayer->size().h;
 
     SDL_Rect sdlDstRect;
-    sdlDstRect.x = dstRect ? dstRect->x * targetUnitWidth : 0;
-    sdlDstRect.y = dstRect ? dstRect->y * targetUnitHeight : 0;
-    sdlDstRect.w = dstRect ? dstRect->w * targetUnitWidth : targetUnitWidth * srcLayer->size.w;
-    sdlDstRect.h = dstRect ? dstRect->h * targetUnitHeight : targetUnitHeight * srcLayer->size.h;
+    sdlDstRect.x = dstRect ? dstRect->x : 0;
+    sdlDstRect.y = dstRect ? dstRect->y : 0;
+    sdlDstRect.w = dstRect ? dstRect->w : srcLayer->size().w;
+    sdlDstRect.h = dstRect ? dstRect->h : srcLayer->size().h;
 
     // if no rotations or flips then use basic render copy for speed
     if (srcLayer->rotation == 0 && srcLayer->flip == CHOMP_GFX_FLIP_NONE) {
@@ -263,27 +236,4 @@ void Chomp::GfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, Chomp::Gfx
         );
     }
 
-}
-
-void Chomp::GfxLayer::setPixelSize()
-{
-    if (texture) {
-        int _pixelWidth, _pixelHeight;
-        SDL_QueryTexture(
-            texture,
-            NULL,
-            NULL,
-            &_pixelWidth,
-            &_pixelHeight
-        );
-        pixelWidth = (uint16_t) _pixelWidth;
-        pixelHeight = (uint16_t) _pixelHeight;
-        pixelUnitWidth = pixelWidth / size.w;
-        pixelUnitHeight = pixelHeight / size.h;
-    } else {
-        pixelWidth = 1;
-        pixelHeight = 1;
-        pixelUnitWidth = 1;
-        pixelUnitHeight = 1;
-    }
 }
