@@ -64,11 +64,20 @@ std::vector<std::string> Chomp::GfxText::getLines(const char* text)
     if (!text || !font) {
         return lines;
     }
+    Chomp::GfxSize layerSize = getSize();
     std::string line;
     for(uint16_t i = 0; i < strlen(text); i++) {
         // null terminator
         if (text[i] == '\0') {
             break;
+        }
+        // get line width and check if line width
+        // is greater then layer width
+        int w;
+        TTF_SizeText(font, line.c_str(), &w, NULL);
+        if (w > layerSize.w) {
+            lines.push_back(line);
+            line.clear();
         }
         // new line
         if (text[i] == '\n') {
@@ -101,6 +110,9 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
         return;
     }
 
+    // get layer size
+    Chomp::GfxSize layerSize = getSize();
+
     // get current color
     uint8_t r,g,b,a;
     SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
@@ -127,8 +139,8 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
     std::vector<SDL_Surface*> textSurfaces;
 
     // iterate lines
-    uint32_t maxWidth = 0;
-    uint32_t totalHeight = 0;
+    uint32_t textMaxWidth = 0;
+    uint32_t textHeight = 0;
     for (uint16_t i = 0; i < lines.size(); i++) {
 
         std::string line = lines[i];
@@ -161,27 +173,15 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
             throw Chomp::SdlTtfException();
         }
 
-        if (textSurface->w > maxWidth) {
-            maxWidth = textSurface->w;
+        if (textSurface->w > textMaxWidth) {
+            textMaxWidth = textSurface->w;
         }
-        totalHeight += textSurface->h;
+        textHeight += textSurface->h;
 
         textSurfaces.push_back(textSurface);
 
     }
 
-    // create layer texture
-    uint32_t actualHeight = (size.h / size.w) * (float) maxWidth;
-    texture = SDL_CreateTexture(
-        renderer,
-        SDL_PIXELFORMAT_RGBA8888,
-        SDL_TEXTUREACCESS_TARGET,
-        maxWidth,
-        actualHeight
-    );
-    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderTarget(renderer, texture);
-    setPixelSize();
 
     // dest rect for drawing text surfaces
     SDL_Rect destRect;
@@ -192,15 +192,15 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
     {
         case CHOMP_GFX_TEXT_MIDDLE:
         {
-            if (totalHeight < actualHeight) {
-                destRect.y = (actualHeight / 2) - (totalHeight / 2);
+            if (textHeight < layerSize.h) {
+                destRect.y = (layerSize.h / 2) - (textHeight / 2);
             }
             break;
         }
         case CHOMP_GFX_TEXT_BOTTOM:
         {
-            if (totalHeight < actualHeight) {
-                destRect.y = actualHeight - totalHeight;
+            if (textHeight < layerSize.h) {
+                destRect.y = layerSize.h - textHeight;
             }  
             break;
         }
@@ -224,12 +224,12 @@ void Chomp::GfxText::setText(const char* text, uint8_t hAlign, uint8_t vAlign)
         {
             case CHOMP_GFX_TEXT_CENTER:
             {
-                destRect.x = (maxWidth / 2) - (textSurfaces[i]->w / 2);
+                destRect.x = (layerSize.w / 2) - (textMaxWidth / 2);
                 break;
             }
-            case CHOMP_GFX_TEXT_LEFT:
+            case CHOMP_GFX_TEXT_RIGHT:
             {
-                destRect.x = maxWidth - textSurfaces[i]->w;
+                destRect.x = layerSize.w - textMaxWidth;
                 break;
             }
         }

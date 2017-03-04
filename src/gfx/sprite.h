@@ -51,7 +51,7 @@ namespace Chomp
         /**
          * Constructor.
          * @param _renderer SDL Renderer
-         * @param bitmap Bitmap data
+         * @param bitmap Bitmap data 
          */
         GfxSprite(SDL_Renderer* _renderer, uint8_t* bitmap) : Chomp::GfxLayer(_renderer, NULL)
         {
@@ -61,6 +61,7 @@ namespace Chomp
             currentAnimation = NULL;
             lastAnimationTick = 0;
             animationIndex = 0;
+            setFrame(0);
         }
 
         /**

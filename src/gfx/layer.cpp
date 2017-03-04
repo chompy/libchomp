@@ -33,19 +33,19 @@ Chomp::GfxLayer::~GfxLayer()
     }
 }
 
-Chomp::GfxSize Chomp::GfxLayer::size()
+Chomp::GfxSize Chomp::GfxLayer::getSize()
 {
-    Chomp::GfxSize size;
-    size.w = 0;
-    size.h = 0;
+    Chomp::GfxSize _size;
+    _size.w = 0;
+    _size.h = 0;
     if (!texture) {
-        return size;
+        return _size;
     }
     int w, h;
     SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-    size.w = w;
-    size.h = h;
-    return size;
+    _size.w = w;
+    _size.h = h;
+    return _size;
 }
 
 bool Chomp::GfxLayer::hasCollision(Chomp::GfxRect* rect1, Chomp::GfxRect* rect2)
@@ -65,8 +65,8 @@ bool Chomp::GfxLayer::hasCollision(Chomp::GfxPosition* pos1, Chomp::GfxRect* rec
     Chomp::GfxRect rect1;
     rect1.x = pos1->x;
     rect1.y = pos1->y;
-    rect1.w = size().w;
-    rect1.h = size().h;
+    rect1.w = getSize().w;
+    rect1.h = getSize().h;
     return hasCollision(
         &rect1,
         rect2
@@ -81,13 +81,13 @@ bool Chomp::GfxLayer::hasCollision(Chomp::GfxPosition* pos1, Chomp::GfxLayer* la
     Chomp::GfxRect rect1;
     rect1.x = pos1->x;
     rect1.y = pos1->y;
-    rect1.w = size.w;
-    rect1.w = size.h;
+    rect1.w = getSize().w;
+    rect1.w = getSize().h;
     Chomp::GfxRect rect2;
     rect2.x = pos2->x;
     rect2.y = pos2->y;
-    rect2.w = layer2->size().w;
-    rect2.w = layer2->size().h;
+    rect2.w = layer2->getSize().w;
+    rect2.w = layer2->getSize().h;
     return hasCollision(
         &rect1,
         &rect2
@@ -105,28 +105,23 @@ void Chomp::GfxLayer::drawLine(Chomp::GfxPosition* pos1, Chomp::GfxPosition* pos
     if (!pos1 || !pos2) {
         return;
     }
-    uint16_t x1, y1, x2, y2;
-    toPixels(pos1, &x1, &y1);
-    toPixels(pos2, &x2, &y2);
     SDL_SetRenderTarget(renderer, texture);
     SDL_RenderDrawLine(
         renderer,
-        x1,
-        y1,
-        x2,
-        y2
+        pos1->x,
+        pos1->y,
+        pos2->x,
+        pos2->y
     );
 }
 
 void Chomp::GfxLayer::drawRect(Chomp::GfxRect* rect)
 {
-    uint16_t x, y, w, h;
     SDL_Rect sdlRect;
-    toPixels(rect, &x, &y, &w, &h);
-    sdlRect.x = x;
-    sdlRect.y = y;
-    sdlRect.w = w;
-    sdlRect.h = h;
+    sdlRect.x = rect ? rect->x : 0;
+    sdlRect.y = rect ? rect->y : 0;
+    sdlRect.w = rect ? rect->w : getSize().w;
+    sdlRect.h = rect ? rect->h : getSize().h;
     SDL_SetRenderTarget(renderer, texture);
     SDL_RenderDrawRect(renderer, &sdlRect);
 }
@@ -136,13 +131,11 @@ void Chomp::GfxLayer::drawFillRect(Chomp::GfxRect* rect)
     if (!rect) {
         return fill();
     }
-    uint16_t x, y, w, h;
     SDL_Rect sdlRect;
-    toPixels(rect, &x, &y, &w, &h);
-    sdlRect.x = x;
-    sdlRect.y = y;
-    sdlRect.w = w;
-    sdlRect.h = h;
+    sdlRect.x = rect->x;
+    sdlRect.y = rect->y;
+    sdlRect.w = rect->w;
+    sdlRect.h = rect->h;
     SDL_SetRenderTarget(renderer, texture);
     SDL_RenderFillRect(renderer, &sdlRect);
 }
@@ -185,14 +178,14 @@ void Chomp::GfxLayer::drawLayerToRenderTarget(SDL_Renderer* renderer, Chomp::Gfx
     SDL_Rect sdlSrcRect;
     sdlSrcRect.x = srcRect ? srcRect->x : 0;
     sdlSrcRect.y = srcRect ? srcRect->y : 0;
-    sdlSrcRect.w = srcRect ? srcRect->w : srcLayer->size().w;
-    sdlSrcRect.h = srcRect ? srcRect->h : srcLayer->size().h;
+    sdlSrcRect.w = srcRect ? srcRect->w : srcLayer->getSize().w;
+    sdlSrcRect.h = srcRect ? srcRect->h : srcLayer->getSize().h;
 
     SDL_Rect sdlDstRect;
     sdlDstRect.x = dstRect ? dstRect->x : 0;
     sdlDstRect.y = dstRect ? dstRect->y : 0;
-    sdlDstRect.w = dstRect ? dstRect->w : srcLayer->size().w;
-    sdlDstRect.h = dstRect ? dstRect->h : srcLayer->size().h;
+    sdlDstRect.w = dstRect ? dstRect->w : srcLayer->getSize().w;
+    sdlDstRect.h = dstRect ? dstRect->h : srcLayer->getSize().h;
 
     // if no rotations or flips then use basic render copy for speed
     if (srcLayer->rotation == 0 && srcLayer->flip == CHOMP_GFX_FLIP_NONE) {

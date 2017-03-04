@@ -133,15 +133,6 @@ void Chomp::Gfx::setCursorVisibility(bool state)
 
 Chomp::GfxLayer* Chomp::Gfx::newLayer(Chomp::GfxSize* size)
 {
-    return newLayer(
-        size->w * CHOMP_GFX_DEFAULT_LAYER_PIXEL_SIZE,
-        size->h * CHOMP_GFX_DEFAULT_LAYER_PIXEL_SIZE,
-        size
-    );
-}
-
-Chomp::GfxLayer* Chomp::Gfx::newLayer(Chomp::GfxSize* size)
-{
     SDL_Texture* texture = SDL_CreateTexture(
         renderer,
         SDL_PIXELFORMAT_RGBA8888,
@@ -188,7 +179,7 @@ Chomp::GfxSprite* Chomp::Gfx::newSprite(const char* spriteName)
     // new sprite layer
     return new Chomp::GfxSprite(
         renderer,
-        &bitmap[0],
+        &bitmap[0]
     );
 }
 
@@ -206,13 +197,22 @@ Chomp::GfxText* Chomp::Gfx::newTextLayer(const char* fontName, const uint16_t pt
     // get font data
     std::vector<uint8_t> fontData(fileSize, 0);
     asset.readFile(assetName.c_str(), 0, &fontData[0], fileSize);
+    // create texture
+    SDL_Texture* texture = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        size->w,
+        size->h
+    );
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     // new text layer
     return new Chomp::GfxText(
         renderer,
+        texture,
         &fontData[0],
         fileSize,
-        ptSize,
-        size
+        ptSize
     );
 }
 
@@ -224,12 +224,12 @@ void Chomp::Gfx::addLayerToRenderer(Chomp::GfxLayer* layer, Chomp::GfxRect* srcR
     RenderLayers renderLayer;
     renderLayer.srcRect.x = srcRect ? srcRect->x : 0;
     renderLayer.srcRect.y = srcRect ? srcRect->y : 0;
-    renderLayer.srcRect.w = srcRect ? srcRect->w : layer->size().w;
-    renderLayer.srcRect.h = srcRect ? srcRect->h : layer->size().h;
+    renderLayer.srcRect.w = srcRect ? srcRect->w : layer->getSize().w;
+    renderLayer.srcRect.h = srcRect ? srcRect->h : layer->getSize().h;
     renderLayer.dstRect.x = dstRect ? dstRect->x : 0;
     renderLayer.dstRect.y = dstRect ? dstRect->y : 0;
-    renderLayer.dstRect.w = dstRect ? dstRect->w : layer->size().w;
-    renderLayer.dstRect.h = dstRect ? dstRect->h : layer->size().h;
+    renderLayer.dstRect.w = dstRect ? dstRect->w : layer->getSize().w;
+    renderLayer.dstRect.h = dstRect ? dstRect->h : layer->getSize().h;
 
     renderLayer.layer = layer;
     renderLayers.push_back(renderLayer);
@@ -262,7 +262,7 @@ void Chomp::Gfx::render()
             renderer,
             renderLayer.layer,
             &renderLayer.srcRect,
-            &renderLayer.dstRect,
+            &renderLayer.dstRect
         );
 
     }

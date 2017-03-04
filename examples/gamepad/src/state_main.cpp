@@ -15,17 +15,17 @@ void ChompyStateMain::enter()
     // create active gamepad count text
     if (!activeGamepadCountText) {
         Chomp::GfxSize textLayerSize;
-        textLayerSize.w = .75;
-        textLayerSize.h = .1;
-        activeGamepadCountText = core->gfx.newTextLayer("ariali", 64, &textLayerSize);
+        textLayerSize.w = 640;
+        textLayerSize.h = 120;
+        activeGamepadCountText = core->gfx.newTextLayer("ariali", 36, &textLayerSize);
         activeGamepadCountText->setDrawMode(CHOMP_GFX_TEXT_DRAW_MODE_BLENDED);
     }
     // create active input text
     if (!activeInputText) {
         Chomp::GfxSize textLayerSize;
-        textLayerSize.w = 1.0;
-        textLayerSize.h = .85;
-        activeInputText = core->gfx.newTextLayer("ariali", 64, &textLayerSize);
+        textLayerSize.w = 640;
+        textLayerSize.h = 1000;
+        activeInputText = core->gfx.newTextLayer("ariali", 18, &textLayerSize);
         activeInputText->setDrawMode(CHOMP_GFX_TEXT_DRAW_MODE_BLENDED);
     }
 
@@ -48,14 +48,14 @@ void ChompyStateMain::update()
     setActiveInputText();
 
     Chomp::GfxRect dstRect;
-    dstRect.x = .1;
-    dstRect.y = .1;
-    dstRect.w = activeGamepadCountText->size.w;
-    dstRect.h = activeGamepadCountText->size.h;
+    dstRect.x = 0;
+    dstRect.y = 0;
+    dstRect.w = activeGamepadCountText->getSize().w;
+    dstRect.h = activeGamepadCountText->getSize().h;
     core->gfx.addLayerToRenderer(activeGamepadCountText, NULL, &dstRect);
-    dstRect.y = .25;
-    dstRect.w = activeInputText->size.w;
-    dstRect.h = activeInputText->size.h;
+    dstRect.y = 120;
+    dstRect.w = activeInputText->getSize().w;
+    dstRect.h = activeInputText->getSize().h;
     core->gfx.addLayerToRenderer(activeInputText, NULL, &dstRect);
 }
 
@@ -74,7 +74,7 @@ void ChompyStateMain::setActiveGamepadCountText()
     );
     activeGamepadCountText->setText(
         activeGamepadCountString,
-        CHOMP_GFX_TEXT_LEFT,
+        CHOMP_GFX_TEXT_CENTER,
         CHOMP_GFX_TEXT_MIDDLE
     );
 }

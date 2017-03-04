@@ -4,13 +4,9 @@ void ChompyStateMain::enter()
 {
     if (!layer) {
         Chomp::GfxSize size;
-        size.w = 1;
-        size.h = 1;
-        layer = core->gfx.newLayer(
-            1000,
-            1000,
-            &size
-        );
+        size.w = 640;
+        size.h = 480;
+        layer = core->gfx.newLayer(&size);
     }
 }
 
@@ -27,10 +23,10 @@ void ChompyStateMain::update()
     // layer position
     Chomp::GfxSize windowSize = core->gfx.getWindowSize();
     Chomp::GfxRect dstRect;
-    dstRect.x = (windowSize.w / 2) - (layer->size.w / 2);
-    dstRect.y = (windowSize.h / 2) - (layer->size.h / 2);
-    dstRect.w = layer->size.w;
-    dstRect.h = layer->size.h;
+    dstRect.x = (windowSize.w / 2) - (layer->getSize().w / 2);
+    dstRect.y = (windowSize.h / 2) - (layer->getSize().h / 2);
+    dstRect.w = layer->getSize().w;
+    dstRect.h = layer->getSize().h;
 
     // init color
     Chomp::GfxColor color;
@@ -46,21 +42,17 @@ void ChompyStateMain::update()
     // init rect
     Chomp::GfxRect rect;
 
-    // init mouse coords
-    uint16_t mx,my,mw,mh;
-
     // rect 1
-    rect.w = .7;
-    rect.h = .8;
+    rect.w = 480;
+    rect.h = 320;
     rect.x = 0;
-    rect.y = .1;
+    rect.y = 64;
 
-    rectToPixelCoords(&rect, &dstRect, &mx, &my, &mw, &mh);
     color.r = 255;
     color.g = 0;
     color.b = 0;
     color.a = 255;
-    if (core->input.mouse.pressed(CHOMP_INPUT_MOUSE_BUTTON_LEFT) && core->input.mouse.in(mx, my, mw, mh)) {
+    if (core->input.mouse.pressed(CHOMP_INPUT_MOUSE_BUTTON_LEFT) && core->input.mouse.in(rect.x, rect.y, rect.w, rect.h)) {
         color.r = 0;
         color.g = 0;
         color.b = 255;
@@ -70,16 +62,16 @@ void ChompyStateMain::update()
     layer->drawFillRect(&rect);
 
     // rect 2
-    rect.x = .8;
-    rect.y = .1;
-    rect.w = .2;
-    rect.h = .2;
-    rectToPixelCoords(&rect, &dstRect, &mx, &my, &mw, &mh);
+    rect.x = 500;
+    rect.y = 64;
+    rect.w = 120;
+    rect.h = 120;
+    
     color.r = 255;
     color.g = 0;
     color.b = 0;
     color.a = 255;
-    if (core->input.mouse.pressed(CHOMP_INPUT_MOUSE_BUTTON_LEFT) && core->input.mouse.in(mx, my, mw, mh)) {
+    if (core->input.mouse.pressed(CHOMP_INPUT_MOUSE_BUTTON_LEFT) && core->input.mouse.in(rect.x, rect.y, rect.w, rect.h)) {
         color.r = 0;
         color.g = 0;
         color.b = 255;
@@ -90,15 +82,4 @@ void ChompyStateMain::update()
 
 
     core->gfx.addLayerToRenderer(layer, NULL, &dstRect);
-}
-
-void ChompyStateMain::rectToPixelCoords(Chomp::GfxRect* rect, Chomp::GfxRect* offset, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h)
-{
-    Chomp::GfxSize size;
-    size.w = rect->x + offset->x;
-    size.h = rect->y + offset->y;
-    core->gfx.toPixelSize(&size, x, y);
-    size.w = rect->w;
-    size.h = rect->h;
-    core->gfx.toPixelSize(&size, w, h);
 }

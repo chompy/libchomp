@@ -112,30 +112,19 @@ namespace Chomp
         Chomp::GfxLayer* newLayer(Chomp::GfxSize* size);
 
         /**
-         * Create a render layer of given pixel size.
-         * @param pixelWidth Desired pixel width
-         * @param pixelHeight Desired pixel height
-         * @param Struct containing desired size of layer
-         * @return Pointer to layer
-         */
-        Chomp::GfxLayer* newLayer(const uint16_t pixelWidth, const uint16_t pixelHeight, Chomp::GfxSize* size);
-
-        /**
          * Create a render layer from bitmap data.
          * @param bitmap Bitmap data
          * @param frame Bitmap frame
-         * @param Struct containing desired size of layer
          * @return Pointer to layer
          */
-        Chomp::GfxLayer* newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame, Chomp::GfxSize* size);
+        Chomp::GfxLayer* newLayerFromBitmap(uint8_t* bitmap, const uint16_t frame);
 
         /**
          * Create a render layer from given sprite file.
          * @param spriteName Char array containing sprite filename
-         * @param Struct containing desired size of layer
          * @return Pointer to layer
          */
-        Chomp::GfxSprite* newSprite(const char* spriteName, Chomp::GfxSize* size);
+        Chomp::GfxSprite* newSprite(const char* spriteName);
 
         /**
          * Create a text render layer for displaying text

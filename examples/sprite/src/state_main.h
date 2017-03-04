@@ -1,19 +1,18 @@
-#ifndef CHOMPY_ANI_STATE
-#define CHOMPY_ANI_STATE
+#ifndef CHOMPY_MAIN_STATE
+#define CHOMPY_MAIN_STATE
 
 #include "state.h"
 
-class ChompyExampleState : public Chomp::State
+class ChompyStateMain : public Chomp::State
 {
 public:
 
     static const char CHOMPY_ASSET[];
     static const char CHOMPY_ANIM[];
 
-    ChompyExampleState(Chomp::Core* _core) : Chomp::State(_core)
+    ChompyStateMain(Chomp::Core* _core) : Chomp::State(_core)
     {
         chompySprite = NULL;
-        layer = NULL;
     }
 
     void enter();
@@ -22,9 +21,7 @@ public:
 
 protected:
 
-    Chomp::GfxLayer* layer;
     Chomp::GfxSprite* chompySprite;
-
 
 };
 

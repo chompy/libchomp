@@ -51,19 +51,18 @@ namespace Chomp
         /**
          * Constructor.
          * @param _renderer SDL Renderer
+         * @param _texture SDL texture to draw to
          * @param _fontData Byte array containing font data
          * @param fontDataSize Length of font data
          * @param fontPtSize Point size of font
-         * @param _texture SDL Texture to draw to
-         * @param _size Size of layer
          */
         GfxText(
             SDL_Renderer* _renderer,
+            SDL_Texture* _texture,
             uint8_t* _fontData,
             const uint32_t fontDataSize,
-            const uint16_t fontPtSize,
-            Chomp::GfxSize* _size
-        ) : Chomp::GfxLayer(_renderer, NULL, _size)
+            const uint16_t fontPtSize
+        ) : Chomp::GfxLayer(_renderer, _texture)
         {
             fontData = NULL;
             fontDataRW = NULL;

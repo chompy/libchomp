@@ -82,9 +82,6 @@ void Chomp::GfxSprite::setTextures(uint8_t* bitmap)
             )
         );
     }
-    if (setFrame(0)) {
-        setPixelSize();
-    }
 }
 
 void Chomp::GfxSprite::getAnimationData(uint8_t* bitmap)

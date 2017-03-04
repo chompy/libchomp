@@ -69,7 +69,7 @@ namespace Chomp
          * Get pixel size of layer.
          * @return Layer size
          */
-        Chomp::GfxSize size();
+        Chomp::GfxSize getSize();
 
         /**
          * Compare two rects for collision.
@@ -148,10 +148,8 @@ namespace Chomp
          * @param renderer SDL Renderer
          * @param srcLayer Section of source layer to render
          * @param dstLayer Section of render target to render to
-         * @param targetUnitWidth Pixel unit width of target
-         * @param targetUnitHeight Pixel unit height of target
          */
-        static void drawLayerToRenderTarget(SDL_Renderer* renderer, Chomp::GfxLayer* srcLayer, Chomp::GfxRect* srcRect, Chomp::GfxRect* dstRect, uint16_t targetUnitWidth, uint16_t targetUnitHeight);
+        static void drawLayerToRenderTarget(SDL_Renderer* renderer, Chomp::GfxLayer* srcLayer, Chomp::GfxRect* srcRect, Chomp::GfxRect* dstRect);
 
     protected:
 

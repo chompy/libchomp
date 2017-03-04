@@ -18,8 +18,6 @@ public:
 
 protected:
 
-    void rectToPixelCoords(Chomp::GfxRect* rect, Chomp::GfxRect* offset, uint16_t* x, uint16_t* y, uint16_t* w, uint16_t* h);
-
     Chomp::GfxLayer* layer;
 
 };

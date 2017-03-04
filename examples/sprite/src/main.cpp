@@ -3,11 +3,11 @@
 #include <iostream>
 
 #include "chomp.h"
-#include "state_chompy.h"
+#include "state_main.h"
 
 int main(int argc, char **argv) {
     Chomp::Entry chomp;
-    ChompyExampleState chompyState(&chomp.core);   
-    chomp.start(&chompyState);
+    ChompyStateMain mainState(&chomp.core);   
+    chomp.start(&mainState);
     return 1;
 }
