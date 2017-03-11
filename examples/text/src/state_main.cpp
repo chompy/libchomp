@@ -4,8 +4,8 @@ void ChompyStateMain::enter()
 {
     if (!textLayer) {
         Chomp::GfxSize layerSize;
-        layerSize.w = 1;
-        layerSize.h = 1;
+        layerSize.w = 640;
+        layerSize.h = 480;
         
         textLayer = core->gfx.newTextLayer("impact", 128, &layerSize);
         textLayer->setDrawMode(CHOMP_GFX_TEXT_DRAW_MODE_BLENDED);
@@ -37,9 +37,9 @@ void ChompyStateMain::update()
 {
     Chomp::GfxSize windowSize = core->gfx.getWindowSize();
     Chomp::GfxRect dstRect;
-    dstRect.x = (windowSize.w / 2) - (textLayer->size.w / 2);
-    dstRect.y = (windowSize.h / 2) - (textLayer->size.h / 2);
-    dstRect.w = textLayer->size.w;
-    dstRect.h = textLayer->size.h;
+    dstRect.x = (windowSize.w / 2) - (textLayer->getSize().w / 2);
+    dstRect.y = (windowSize.h / 2) - (textLayer->getSize().h / 2);
+    dstRect.w = textLayer->getSize().w;
+    dstRect.h = textLayer->getSize().h;
     core->gfx.addLayerToRenderer(textLayer, NULL, &dstRect);
 }

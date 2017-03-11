@@ -56,7 +56,7 @@ COMPILERS = {
 
 # default config
 config = {
-    "output" : "asset.dat" # output filepath
+    "output" : "assets.dat" # output filepath
 }
 
 # set config from arguments
