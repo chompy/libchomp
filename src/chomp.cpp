@@ -109,7 +109,7 @@ bool Chomp::Entry::loop(Chomp::Core* core)
                     case SDL_WINDOWEVENT_RESIZED:
                     case SDL_WINDOWEVENT_SIZE_CHANGED:
                     {
-                        // todo
+                        Chomp::State::resizeCurrentState();
                         break;
                     }
                 }
@@ -136,7 +136,7 @@ bool Chomp::Entry::loop(Chomp::Core* core)
     }
 
     // tick
-    Chomp::State::updateState();
+    Chomp::State::updateCurrentState();
 
     // draw
     core->gfx.render();

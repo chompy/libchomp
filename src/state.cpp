@@ -42,10 +42,17 @@ void Chomp::State::changeState(Chomp::State* s_currentState)
     }
 }
 
-void Chomp::State::updateState()
+void Chomp::State::updateCurrentState()
 {
     if (Chomp::State::s_currentState) {
         Chomp::State::s_currentState->update();
+    }
+}
+
+void Chomp::State::resizeCurrentState()
+{
+    if (Chomp::State::s_currentState) {
+        Chomp::State::s_currentState->resize();
     }
 }
 
@@ -60,6 +67,11 @@ void Chomp::State::exit()
 }
 
 void Chomp::State::update()
+{
+    
+}
+
+void Chomp::State::resize()
 {
     
 }

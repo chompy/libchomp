@@ -18,8 +18,11 @@ public:
     void enter();
     void exit();
     void update();
+    void resize();
 
 protected:
+
+    float scaleFactor;
 
     Chomp::GfxSprite* chompySprite;
 

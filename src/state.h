@@ -51,7 +51,12 @@ namespace Chomp
         /**
          * Call update method of current active state.
          */
-        static void updateState();
+        static void updateCurrentState();
+
+        /**
+         * Call resize method of current active state.
+         */
+        static void resizeCurrentState();
 
         /**
          * Called when state is made active.
@@ -67,6 +72,11 @@ namespace Chomp
          * Called every frame state is active.
          */
         virtual void update();
+
+        /**
+         * Called when main windows is resized.
+         */
+        virtual void resize();
 
     protected:
 
