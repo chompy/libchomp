@@ -76,7 +76,7 @@ namespace Chomp
          */
         Chomp::GfxSize getRemainingPixels();
 
-    }
+    };
 
 };
 
