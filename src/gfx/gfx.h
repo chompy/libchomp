@@ -29,6 +29,7 @@
 #include "layer.h"
 #include "sprite.h"
 #include "text.h"
+#include "grid.h"
 #include "../exception/sdl_exception.h"
 
 #define CHOMP_GFX_DEFAULT_WINDOW_W 640

@@ -17,6 +17,14 @@
 
 #include "grid.h"
 
+Chomp::GfxGrid::GfxGrid()
+{
+    pixelSize.w = 0;
+    pixelSize.h = 0;
+    gridCols = 0;
+    gridRows = 0;
+}
+
 Chomp::GfxGrid::GfxGrid(Chomp::GfxSize _pixelSize, uint16_t _gridCols, uint16_t _gridRows)
 {
     pixelSize = _pixelSize;

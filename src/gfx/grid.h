@@ -49,6 +49,11 @@ namespace Chomp
 
         /**
          * Constructor.
+         */
+        GfxGrid();
+
+        /**
+         * Constructor.
          * @param _pixelSize Pixel size of space to convert to grid\
          * @param _gridCols Columns in grid
          * @param _gridRows Rows in grid
