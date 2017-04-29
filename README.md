@@ -19,6 +19,14 @@ A C++ library and toolkit for 2D game development.
     You should have received a copy of the GNU General Public License
     along with Libchomp.  If not, see <http://www.gnu.org/licenses/>.
 
+## Disclaimer
+
+There is currently no documentation for this library, nor are there currently
+any plans to create documentation. This library was mostly created as a learning
+exercise and is now publicly available in the hopes that others might find it
+useful. Additionally it has been made available to show off my own talents as
+part of my personal portfolio.
+
 ## Dependencies
 
 * libSDL2
